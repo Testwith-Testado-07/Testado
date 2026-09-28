@@ -25,12 +25,6 @@ backend/
 3. Copy and paste the contents of `backend/migrations/01_rbac_security_policies.sql`.
 4. Click **Run**.
 
-#### Option B: Supabase CLI
-```bash
-supabase db push
-# Or apply directly via psql:
-psql $DATABASE_URL -f backend/migrations/01_rbac_security_policies.sql
-```
 
 ## Integration with Next.js App
 
