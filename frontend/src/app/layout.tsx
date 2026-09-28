@@ -18,9 +18,14 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Testado — Market Validation Platform",
+  title: "Testado — Real People. Real Insights. Real Problems.",
   description:
-    "Connect with real users who test your product and provide actionable feedback. Testado bridges Product Owners and Testers.",
+    "Testado helps businesses understand whether products, services, concepts and ideas are likely to work with their target customers before launch.",
+  icons: {
+    icon: "/assets/testado-logo.png",
+    shortcut: "/assets/testado-logo.png",
+    apple: "/assets/testado-logo.png",
+  },
 };
 
 export default function RootLayout({
