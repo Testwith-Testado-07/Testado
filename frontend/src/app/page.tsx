@@ -1,585 +1,544 @@
 "use client";
+
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-/* ─── Data ─────────────────────────────────────────── */
-const stats = [
-  { value: "12,400+", label: "Products Tested" },
-  { value: "$2.8M",   label: "Paid to Testers" },
-  { value: "98%",     label: "Owner Satisfaction" },
-  { value: "48h",     label: "Avg. First Feedback" },
-];
-
-const steps = [
-  {
-    num: "01",
-    role: "Owner",
-    roleColor: "#224F34",
-    roleBg: "rgba(34,79,52,0.1)",
-    title: "Create a Campaign",
-    desc: "Define your product, set questions, target the right audience, and set a reward budget.",
-  },
-  {
-    num: "02",
-    role: "Tester",
-    roleColor: "#2d6a45",
-    roleBg: "rgba(194,239,212,0.5)",
-    title: "Discover & Test",
-    desc: "Browse campaigns that match your profile, test the product, and submit detailed feedback.",
-  },
-  {
-    num: "03",
-    role: "Owner",
-    roleColor: "#224F34",
-    roleBg: "rgba(34,79,52,0.1)",
-    title: "Review & Approve",
-    desc: "Read each submission, approve quality feedback, and reject spam — all in your dashboard.",
-  },
-  {
-    num: "04",
-    role: "Tester",
-    roleColor: "#2d6a45",
-    roleBg: "rgba(194,239,212,0.5)",
-    title: "Earn Rewards",
-    desc: "Approved submissions automatically credit your wallet. Withdraw anytime.",
-  },
-];
-
-const features = [
-  { icon: "🎯", title: "Smart Audience Matching",    desc: "Target by country, device, age range, and interests. Campaigns are only shown to matching testers." },
-  { icon: "🔒", title: "Escrow-Protected Budget",    desc: "Campaign budget is locked in escrow when you publish. Funds only release on approved submissions." },
-  { icon: "⚡", title: "Real-Time Dashboard",         desc: "Watch submissions roll in live. Approve, reject, and comment — all from one clean interface." },
-  { icon: "💸", title: "Instant Tester Wallets",     desc: "Testers earn into an in-app wallet the moment a submission is approved. No waiting, no friction." },
-  { icon: "📊", title: "Structured Feedback",        desc: "Custom survey builder with multiple question types — rating, text, multiple choice, screenshots." },
-  { icon: "🛡️", title: "Enterprise-Grade Security", desc: "Row-level security, encrypted data, and role-based access control built in from day one." },
-];
-
-const testimonials = [
-  { quote: "We validated our pricing model in 72 hours. No more guessing — Testado gave us real data.", name: "Sarah Chen",  role: "Product Manager, Fintrek",   initials: "SC", stars: 5 },
-  { quote: "I earned $340 last month testing apps in my spare time. The campaigns are genuinely interesting.", name: "Marcus J.", role: "Tester, Lagos 🇳🇬",         initials: "MJ", stars: 5 },
-  { quote: "The quality of feedback from real users blew us away. This replaced 3 tools we were using.", name: "Priya Nair", role: "Founder, Loop Health",        initials: "PN", stars: 5 },
-];
-
-const marqueeItems = [
-  "Validate Products", "Real User Feedback", "Structured Insights", "Global Testers",
-  "Escrow Payments", "Launch with Confidence", "No More Guessing",
-];
-
-/* ─── Helpers ──────────────────────────────────────── */
-function StarRating({ count }: { count: number }) {
-  return (
-    <div style={{ display: "flex", gap: 3, marginBottom: 16 }}>
-      {Array.from({ length: count }).map((_, i) => (
-        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#FFC107">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-/* ─── Component ────────────────────────────────────── */
 export default function LandingPage() {
-  const [scrolled, setScrolled] = useState(false);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const G = "#224F34";   // forest green
+  const G = "#224F34"; // Forest green
   const MINT = "#C2EFD4";
 
+  const marqueeItems = [
+    "Validate Products",
+    "Real User Feedback",
+    "Structured Insights",
+    "Decision Support",
+    "Targeted Testers",
+    "Spot Friction Early",
+    "No More Guessing",
+  ];
+
+  const steps = [
+    {
+      num: "01",
+      title: "Define the question",
+      desc: "We understand what you are trying to prove, disprove or improve — and who the answer needs to come from.",
+    },
+    {
+      num: "02",
+      title: "Reach the right people",
+      desc: "We identify participants who fit your target customer profile so feedback is relevant, not just available.",
+    },
+    {
+      num: "03",
+      title: "Test & capture feedback",
+      desc: "Participants experience your product, service, concept or idea and respond to the areas that matter most.",
+    },
+    {
+      num: "04",
+      title: "Analyze what it means",
+      desc: "We look across responses for patterns, strengths, objections, confusion and signals that guide your next move.",
+    },
+  ];
+
   return (
-    <div style={{ background: "#F8F9FA", color: "#101828", fontFamily: "'Inter', sans-serif", overflowX: "hidden" }}>
+    <div style={{ background: "#F8F9FA", color: "#101828", fontFamily: "var(--font-inter), 'Inter', sans-serif", overflowX: "hidden" }}>
+      <Navbar />
 
-      {/* ── NAVBAR ──────────────────────────────────── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        padding: "0 48px", height: 68,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        background: scrolled ? "rgba(248,249,250,0.97)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid #e2e8e4" : "none",
-        transition: "all 0.3s ease",
-      }}>
-        {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 8,
-            background: G, display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 18, color: "#fff",
-          }}>T</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 20, color: G, letterSpacing: "-0.5px" }}>
-            Testado
-          </span>
-        </Link>
+      <main>
+        {/* ── HERO ─────────────────────────────────────── */}
+        <section
+          style={{
+            padding: "160px 40px 90px",
+            maxWidth: 1240,
+            margin: "0 auto",
+            textAlign: "center",
+            position: "relative",
+          }}
+        >
+          <span className="section-label">Consumer testing, built around real decisions</span>
+          <div className="divider" />
 
-        {/* Nav links */}
-        <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
-          {["How It Works", "Features", "Testimonials"].map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase().replace(/ /g, "-")}`}
-              className="nav-link"
-              style={{ fontFamily: "Inter", fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#344054", textDecoration: "none" }}
-            >
-              {item}
-            </a>
-          ))}
-        </div>
+          <h1
+            style={{
+              fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+              fontSize: "clamp(42px, 6vw, 76px)",
+              fontWeight: 800,
+              lineHeight: 1.1,
+              color: G,
+              maxWidth: 960,
+              margin: "24px auto 20px",
+            }}
+          >
+            Don’t Just Launch.<br />
+            <em style={{ fontStyle: "italic", fontWeight: 700 }}>Know Before You Bet on It.</em>
+          </h1>
 
-        {/* CTA buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Link href="/auth" className="btn-secondary" style={{ padding: "8px 20px", fontSize: 11 }}>
-            Sign In
-          </Link>
-          <Link href="/auth?mode=register" className="btn-primary" style={{ padding: "8px 20px", fontSize: 11 }}>
-            Get Started
-          </Link>
-        </div>
-      </nav>
-
-      {/* ── HERO ────────────────────────────────────── */}
-      <section style={{
-        minHeight: "100vh",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        paddingTop: 68,
-        overflow: "hidden",
-      }}>
-        {/* Left text column */}
-        <div style={{
-          display: "flex", flexDirection: "column", justifyContent: "center",
-          padding: "80px 64px 80px 80px",
-          position: "relative",
-        }}>
-          {/* Dot grid decoration */}
-          <div style={{
-            position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
-            backgroundImage: `radial-gradient(circle, ${G} 1px, transparent 1px)`,
-            backgroundSize: "20px 20px", opacity: 0.05, zIndex: 0,
-          }} />
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            {/* Eyebrow badge */}
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: MINT, border: `1px solid #9de0b8`,
-              borderRadius: 999, padding: "6px 16px", marginBottom: 28,
-              fontSize: 11, fontWeight: 700, color: G, letterSpacing: 1, textTransform: "uppercase",
-              animation: "fadeUp 0.5s ease forwards",
-            }}>
-              <span>✦</span>
-              <span>Now in Public Beta — Free to Join</span>
-            </div>
-
-            <h1 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(40px, 5vw, 68px)",
-              fontWeight: 800, lineHeight: 1.1, color: G,
-              marginBottom: 24, animation: "fadeUp 0.6s 0.1s ease both",
-            }}>
-              Validate Your<br />
-              Product With<br />
-              <em style={{ fontStyle: "italic", color: "#3a8255" }}>Real Users</em>
-            </h1>
-
-            <p style={{
-              fontSize: 17, color: "#667085", lineHeight: 1.75, maxWidth: 420,
-              marginBottom: 40, animation: "fadeUp 0.6s 0.2s ease both",
-            }}>
-              Testado connects Product Owners with a global network of paid Testers.
-              Launch a campaign, collect structured feedback, and ship with confidence.
-            </p>
-
-            <div style={{
-              display: "flex", gap: 12, flexWrap: "wrap",
-              animation: "fadeUp 0.6s 0.3s ease both",
-            }}>
-              <Link href="/auth?mode=register&role=owner" className="btn-primary" style={{ fontSize: 11, padding: "14px 28px" }}>
-                Start a Campaign →
-              </Link>
-              <Link href="/auth?mode=register&role=tester" className="btn-secondary" style={{ fontSize: 11, padding: "14px 28px" }}>
-                Earn as a Tester
-              </Link>
-            </div>
-
-            {/* Stats row */}
-            <div style={{
-              display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 0, marginTop: 56, paddingTop: 40,
-              borderTop: "1px solid #e2e8e4",
-              animation: "fadeUp 0.6s 0.4s ease both",
-            }}>
-              {stats.map((s, i) => (
-                <div key={s.label} style={{
-                  paddingRight: 24, borderRight: i < stats.length - 1 ? "1px solid #e2e8e4" : "none",
-                  paddingLeft: i > 0 ? 24 : 0,
-                }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: G }}>
-                    {s.value}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#98A2B3", marginTop: 4, fontWeight: 600, letterSpacing: 0.5 }}>
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right image column */}
-        <div style={{
-          background: `linear-gradient(160deg, ${G} 0%, #1a3d27 100%)`,
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          padding: "80px 60px", gap: 32, position: "relative", overflow: "hidden",
-        }}>
-          {/* Decorative circles */}
-          <div style={{ position: "absolute", top: -80, right: -80, width: 300, height: 300, borderRadius: "50%", border: `1px solid rgba(194,239,212,0.15)` }} />
-          <div style={{ position: "absolute", bottom: -60, left: -60, width: 200, height: 200, borderRadius: "50%", border: `1px solid rgba(194,239,212,0.1)` }} />
-
-          {/* Campaign preview card */}
-          <div style={{
-            background: "rgba(255,255,255,0.1)", backdropFilter: "blur(16px)",
-            border: "1px solid rgba(255,255,255,0.2)", borderRadius: 16,
-            padding: "24px 28px", width: "100%", maxWidth: 360,
-            animation: "fadeUp 0.6s 0.3s ease both",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 10, background: MINT, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>🚀</div>
-              <div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "#fff", fontSize: 15 }}>Mobile App Beta Test</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>Fintrek Inc. · Active</div>
-              </div>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
-              {[["$25", "per tester"], ["50", "testers"], ["72h", "deadline"]].map(([v, l]) => (
-                <div key={l} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "10px 12px", textAlign: "center" }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{v}</div>
-                  <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2 }}>{l}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-              Test our onboarding flow and payment screen. Submit screenshots + written feedback.
-            </div>
-            <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-              <div style={{ flex: 1, background: MINT, borderRadius: 6, padding: "10px", textAlign: "center", fontSize: 11, fontWeight: 700, color: G, letterSpacing: 1, textTransform: "uppercase" }}>
-                Apply Now
-              </div>
-            </div>
-          </div>
-
-          {/* Submission preview card */}
-          <div style={{
-            background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12,
-            padding: "16px 20px", width: "100%", maxWidth: 360,
-            animation: "fadeUp 0.6s 0.5s ease both",
-          }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10, fontWeight: 600 }}>
-              Latest Submissions
-            </div>
-            {[
-              { name: "Marcus J.", score: "4.8/5", status: "Approved", initials: "MJ" },
-              { name: "Aisha R.",  score: "4.6/5", status: "Pending",  initials: "AR" },
-              { name: "Tom K.",    score: "4.9/5", status: "Approved", initials: "TK" },
-            ].map((s) => (
-              <div key={s.name} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                <div style={{ width: 30, height: 30, borderRadius: "50%", background: "rgba(194,239,212,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: MINT, flexShrink: 0 }}>
-                  {s.initials}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{s.name}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>Rating: {s.score}</div>
-                </div>
-                <div style={{
-                  fontSize: 10, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", borderRadius: 999, padding: "3px 10px",
-                  background: s.status === "Approved" ? "rgba(194,239,212,0.2)" : "rgba(251,191,36,0.2)",
-                  color: s.status === "Approved" ? MINT : "#fbbf24",
-                }}>
-                  {s.status}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── MARQUEE BAND ────────────────────────────── */}
-      <div style={{
-        background: G, padding: "18px 0", overflow: "hidden",
-        borderTop: "1px solid #1a3d27", borderBottom: "1px solid #1a3d27",
-      }}>
-        <div className="marquee-track" style={{ display: "flex", gap: 48, width: "max-content", alignItems: "center" }}>
-          {[...marqueeItems, ...marqueeItems].map((item, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 24, flexShrink: 0 }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: 16, color: "#fff", letterSpacing: 0.5 }}>
-                {item}
-              </span>
-              <span style={{ color: MINT, fontSize: 18 }}>✦</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── HOW IT WORKS ────────────────────────────── */}
-      <section id="how-it-works" style={{ padding: "120px 80px", background: "#fff" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 80 }}>
-            <span className="section-label">How It Works</span>
-            <div className="divider" />
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 700, color: G, marginTop: 8,
-            }}>
-              Four Steps to <em style={{ fontStyle: "italic" }}>Validated Insights</em>
-            </h2>
-            <p style={{ fontSize: 16, color: "#667085", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>
-              A simple, transparent flow that works for both Product Owners and Testers.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
-            {steps.map((step, i) => (
-              <div
-                key={step.num}
-                className="card"
-                style={{ position: "relative", overflow: "hidden", padding: 32 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.borderColor = G; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "#e2e8e4"; }}
-              >
-                {/* Big bg number */}
-                <div style={{
-                  position: "absolute", top: -10, right: 12,
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 96, fontWeight: 800, color: "rgba(34,79,52,0.05)", lineHeight: 1, userSelect: "none",
-                }}>
-                  {step.num}
-                </div>
-
-                {/* Role chip */}
-                <div style={{
-                  display: "inline-flex", padding: "4px 14px",
-                  background: step.roleBg, color: step.roleColor,
-                  borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
-                  textTransform: "uppercase", marginBottom: 20,
-                }}>
-                  {step.role}
-                </div>
-
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 800, color: G, marginBottom: 12 }}>
-                  {step.num}
-                </div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#101828", marginBottom: 12 }}>
-                  {step.title}
-                </h3>
-                <p style={{ fontSize: 14, color: "#667085", lineHeight: 1.75 }}>{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURES ────────────────────────────────── */}
-      <section id="features" style={{ padding: "120px 80px", background: "#F8F9FA" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 80 }}>
-            <span className="section-label">Features</span>
-            <div className="divider" />
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 700, color: G, marginTop: 8,
-            }}>
-              Everything You Need,<br /><em style={{ fontStyle: "italic" }}>Nothing You Don&apos;t</em>
-            </h2>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="card"
-                style={{ display: "flex", flexDirection: "column", padding: 32 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = G; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "#e2e8e4"; }}
-              >
-                <div className="feature-icon">{f.icon}</div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#101828", marginBottom: 12 }}>
-                  {f.title}
-                </h3>
-                <p style={{ fontSize: 14, color: "#667085", lineHeight: 1.75 }}>{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SOCIAL PROOF BAR ────────────────────────── */}
-      <div style={{ background: G, padding: "48px 80px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 32 }}>
-          {[
-            { value: "3,000+", label: "Companies Onboarded" },
-            { value: "92,000+", label: "Feedback Submissions" },
-            { value: "4.9 / 5", label: "Average Rating" },
-            { value: "40+", label: "Countries Reached" },
-          ].map((s) => (
-            <div key={s.label} style={{ textAlign: "center", flex: "1 1 160px" }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: "#fff" }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: 1, fontWeight: 600, marginTop: 4 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── TESTIMONIALS ────────────────────────────── */}
-      <section id="testimonials" style={{ padding: "120px 80px", background: "#fff" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 80 }}>
-            <span className="section-label">Testimonials</span>
-            <div className="divider" />
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 700, color: G, marginTop: 8,
-            }}>
-              Loved by Owners<br /><em style={{ fontStyle: "italic" }}>and Testers Alike</em>
-            </h2>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-            {testimonials.map((t, i) => (
-              <div
-                key={t.name}
-                className="card"
-                style={{
-                  display: "flex", flexDirection: "column", padding: 36,
-                  background: i === activeTestimonial ? G : "#fff",
-                  borderColor: i === activeTestimonial ? G : "#e2e8e4",
-                  cursor: "pointer", transition: "all 0.3s ease",
-                }}
-                onClick={() => setActiveTestimonial(i)}
-                onMouseEnter={e => { if (i !== activeTestimonial) { e.currentTarget.style.borderColor = G; } }}
-                onMouseLeave={e => { if (i !== activeTestimonial) { e.currentTarget.style.borderColor = "#e2e8e4"; } }}
-              >
-                <StarRating count={t.stars} />
-                <p style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 18, lineHeight: 1.65, flex: 1, marginBottom: 24,
-                  color: i === activeTestimonial ? "#fff" : "#101828",
-                  fontStyle: "italic",
-                }}>
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div style={{
-                    width: 48, height: 48, borderRadius: "50%",
-                    background: i === activeTestimonial ? "rgba(194,239,212,0.25)" : MINT,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14,
-                    color: i === activeTestimonial ? "#fff" : G, flexShrink: 0,
-                  }}>
-                    {t.initials}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: i === activeTestimonial ? "#fff" : "#101828" }}>
-                      {t.name}
-                    </div>
-                    <div style={{ fontSize: 12, color: i === activeTestimonial ? "rgba(255,255,255,0.65)" : "#667085" }}>
-                      {t.role}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ─────────────────────────────────────── */}
-      <section style={{
-        padding: "120px 80px", textAlign: "center",
-        background: `linear-gradient(135deg, ${G} 0%, #1a3d27 100%)`,
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* Decorative rings */}
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, borderRadius: "50%", border: "1px solid rgba(194,239,212,0.1)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 400, height: 400, borderRadius: "50%", border: "1px solid rgba(194,239,212,0.15)", pointerEvents: "none" }} />
-
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 680, margin: "0 auto" }}>
-          <span style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: "rgba(194,239,212,0.7)", marginBottom: 20 }}>
-            Ready to Start?
-          </span>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 800, color: "#fff",
-            lineHeight: 1.2, marginBottom: 20,
-          }}>
-            Stop Guessing.<br /><em style={{ fontStyle: "italic", color: MINT }}>Start Validating.</em>
-          </h2>
-          <p style={{ fontSize: 17, color: "rgba(255,255,255,0.7)", marginBottom: 44, lineHeight: 1.75 }}>
-            Join 3,000+ companies using Testado to validate their products with real users before launch.
+          <p
+            style={{
+              fontSize: "clamp(16px, 2vw, 19px)",
+              color: "#475569",
+              maxWidth: 820,
+              margin: "0 auto 40px",
+              lineHeight: 1.7,
+            }}
+          >
+            Testado helps businesses find out how their target customers are likely to react to a
+            product, service, concept or idea — by putting it in front of the right people,
+            collecting structured feedback and analyzing what that feedback actually means.
           </p>
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/auth?mode=register&role=owner" className="btn-mint" style={{ fontSize: 11, padding: "14px 32px" }}>
-              Start Free as an Owner →
-            </Link>
-            <Link href="/auth?mode=register&role=tester" style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: "transparent", color: "#fff",
-              border: "2px solid rgba(255,255,255,0.4)",
-              borderRadius: 6, padding: "14px 32px", fontSize: 11,
-              fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-              textDecoration: "none", transition: "all 0.25s ease",
+
+          {/* Dual Choice Cards */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: 24,
+              maxWidth: 1040,
+              margin: "0 auto 36px",
+              textAlign: "left",
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#fff"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)"; }}
+          >
+            {/* For Testers Card */}
+            <div
+              className="card"
+              style={{
+                padding: "36px 32px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                background: "#ffffff",
+                border: "1.5px solid #e2e8e4",
+              }}
             >
-              Join as a Tester
-            </Link>
+              <div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    color: G,
+                    display: "block",
+                    marginBottom: 12,
+                  }}
+                >
+                  FOR PEOPLE
+                </span>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                    fontSize: 28,
+                    fontWeight: 700,
+                    color: G,
+                    marginBottom: 14,
+                  }}
+                >
+                  Become a Testado Tester
+                </h3>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
+                  Get access to eligible testing opportunities, share your honest experience, and{" "}
+                  <strong>build a flexible side-income stream</strong> from opportunities that match your interests.
+                </p>
+              </div>
+              <Link href="/testers" className="btn-secondary" style={{ alignSelf: "flex-start" }}>
+                Join as a Tester →
+              </Link>
+            </div>
+
+            {/* For Businesses Card */}
+            <div
+              className="card"
+              style={{
+                padding: "36px 32px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                background: "#ffffff",
+                border: `1.5px solid ${G}`,
+                boxShadow: "0 10px 30px rgba(34,79,52,0.06)",
+              }}
+            >
+              <div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    color: G,
+                    display: "block",
+                    marginBottom: 12,
+                  }}
+                >
+                  FOR BUSINESSES & IDEA OWNERS
+                </span>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                    fontSize: 28,
+                    fontWeight: 700,
+                    color: G,
+                    marginBottom: 14,
+                  }}
+                >
+                  Find Out If Your Idea Can Work
+                </h3>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
+                  We don’t just collect comments. We help you{" "}
+                  <strong>understand whether your offer is likely to work with the people you want to reach</strong> —
+                  and what needs to change before you commit more.
+                </p>
+              </div>
+              <Link href="/businesses" className="btn-primary" style={{ alignSelf: "flex-start" }}>
+                Start a Test →
+              </Link>
+            </div>
+          </div>
+
+          <p style={{ fontSize: 13, color: "#667085" }}>
+            Two paths. One purpose: better decisions made with real people in the picture.
+          </p>
+
+          {/* High-priority Clickable Instagram Callout Strip */}
+          <div style={{ maxWidth: 1040, margin: "36px auto 0" }}>
+            <div
+              style={{
+                background: `linear-gradient(135deg, ${G} 0%, #163d25 100%)`,
+                color: "#ffffff",
+                borderRadius: 16,
+                padding: "24px 32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 20,
+                textAlign: "left",
+                boxShadow: "0 12px 36px rgba(34,79,52,0.18)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    background: MINT,
+                    color: G,
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 20,
+                    fontWeight: 900,
+                    flexShrink: 0,
+                  }}
+                >
+                  ◎
+                </div>
+                <div>
+                  <strong style={{ fontSize: 16, display: "block" }}>
+                    Want to talk before you fill anything out?
+                  </strong>
+                  <p style={{ margin: "2px 0 0", fontSize: 14, color: "rgba(255,255,255,0.75)" }}>
+                    Message the Testado team directly on Instagram: @testwithtestado
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href="https://www.instagram.com/testwithtestado/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-mint"
+                style={{ fontSize: 11, padding: "10px 22px" }}
+              >
+                Open Instagram ↗
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ── MARQUEE BANNER ───────────────────────────── */}
+        <div style={{ background: G, padding: "16px 0", overflow: "hidden", whiteSpace: "nowrap" }}>
+          <div className="marquee-track" style={{ display: "inline-flex", gap: 60 }}>
+            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
+              <span
+                key={i}
+                style={{
+                  fontFamily: "var(--font-inter), 'Inter', sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  color: "rgba(194,239,212,0.9)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 16,
+                }}
+              >
+                {item}
+                <span style={{ color: MINT, opacity: 0.6 }}>✦</span>
+              </span>
+            ))}
           </div>
         </div>
-      </section>
 
-      {/* ── FOOTER ──────────────────────────────────── */}
-      <footer style={{
-        background: "#101828",
-        padding: "48px 80px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        flexWrap: "wrap", gap: 24,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: 8, background: G,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 16, color: "#fff",
-          }}>T</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 16, color: "#fff" }}>
-            Testado
-          </span>
-          <span style={{ fontSize: 12, color: "#667085", marginLeft: 8 }}>© 2026</span>
-        </div>
+        {/* ── WHAT WE DO ───────────────────────────────── */}
+        <section id="what-we-do" style={{ padding: "100px 40px", background: "#ffffff" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", marginBottom: 50 }}>
+              <span className="section-label">What We Do</span>
+              <div className="divider" />
+              <h2
+                style={{
+                  fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                  fontSize: "clamp(30px, 4vw, 48px)",
+                  fontWeight: 800,
+                  color: G,
+                  marginTop: 8,
+                  lineHeight: 1.2,
+                }}
+              >
+                Testado connects businesses with real people —<br />
+                <em style={{ fontStyle: "italic" }}>then turns their reactions into useful answers.</em>
+              </h2>
+            </div>
 
-        <div style={{ display: "flex", gap: 32, fontSize: 12, color: "#667085" }}>
-          {["Privacy", "Terms", "Contact"].map((l) => (
-            <Link key={l} href="#" style={{
-              color: "inherit", textDecoration: "none", fontWeight: 600, letterSpacing: 0.5,
-              transition: "color 0.2s",
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = MINT; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#667085"; }}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 32,
+              }}
             >
-              {l}
-            </Link>
-          ))}
-        </div>
+              <div className="card" style={{ padding: 36, background: "#fbfcfe" }}>
+                <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 22, color: G, marginBottom: 12 }}>
+                  For Businesses & Founders
+                </h4>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
+                  Businesses come to us when they want to know whether a product, service, concept or idea is
+                  likely to work with the people they are trying to reach. We help get it in front of relevant
+                  participants, collect structured feedback and analyze responses for patterns, strengths,
+                  friction and objections. That helps the business make a better-informed decision before going further.
+                </p>
+              </div>
 
-        <div style={{ fontSize: 12, color: "#667085" }}>
-          Built for builders. Powered by real feedback.
-        </div>
-      </footer>
+              <div className="card" style={{ padding: 36, background: "#fbfcfe" }}>
+                <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 22, color: G, marginBottom: 12 }}>
+                  For Real Everyday Testers
+                </h4>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
+                  For testers, Testado creates opportunities to participate in eligible product and idea tests,
+                  share honest feedback, and earn payment or rewards for completed opportunities. No selling or
+                  pitching required — just genuine human evaluation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── HOW TESTADO WORKS (4 STEPS) ──────────────── */}
+        <section style={{ padding: "100px 40px", background: "#F8F9FA" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", marginBottom: 60 }}>
+              <span className="section-label">How Testado Works</span>
+              <div className="divider" />
+              <h2
+                style={{
+                  fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                  fontSize: "clamp(30px, 4vw, 48px)",
+                  fontWeight: 800,
+                  color: G,
+                  marginTop: 8,
+                }}
+              >
+                We Turn Real Reactions into a Clearer Business Decision
+              </h2>
+              <p style={{ color: "#667085", fontSize: 16, maxWidth: 600, margin: "12px auto 0" }}>
+                A test is only useful when the feedback answers the question behind the test.
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: 20,
+              }}
+            >
+              {steps.map((s) => (
+                <div key={s.num} className="card" style={{ padding: 32 }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-inter), 'Inter', sans-serif",
+                      fontSize: 12,
+                      fontWeight: 900,
+                      color: G,
+                      background: "rgba(34,79,52,0.08)",
+                      width: "fit-content",
+                      padding: "4px 10px",
+                      borderRadius: 6,
+                      marginBottom: 20,
+                    }}
+                  >
+                    STEP {s.num}
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                      fontSize: 20,
+                      fontWeight: 700,
+                      color: G,
+                      marginBottom: 10,
+                    }}
+                  >
+                    {s.title}
+                  </h3>
+                  <p style={{ fontSize: 14, color: "#667085", lineHeight: 1.6 }}>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHY THIS MATTERS ─────────────────────────── */}
+        <section style={{ padding: "90px 40px", background: "#ffffff" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+            <span className="section-label">Why This Matters</span>
+            <div className="divider" />
+            <h2
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                fontSize: "clamp(28px, 4vw, 44px)",
+                fontWeight: 800,
+                color: G,
+                marginBottom: 16,
+              }}
+            >
+              A Launch Should Be a Decision — <em style={{ fontStyle: "italic" }}>Not a Guess.</em>
+            </h2>
+            <p style={{ color: "#475569", fontSize: 16, maxWidth: 740, margin: "0 auto 40px", lineHeight: 1.65 }}>
+              Early testing reveals what sounds good in theory, what makes sense in practice, and where the
+              product or message may lose people before more money and effort are committed.
+            </p>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: 20,
+              }}
+            >
+              <div
+                style={{
+                  padding: "24px 20px",
+                  borderRadius: 10,
+                  border: `1.5px solid ${G}`,
+                  background: "rgba(194,239,212,0.12)",
+                  fontWeight: 700,
+                  color: G,
+                  fontSize: 15,
+                }}
+              >
+                See how your target audience reacts
+              </div>
+              <div
+                style={{
+                  padding: "24px 20px",
+                  borderRadius: 10,
+                  border: `1.5px solid ${G}`,
+                  background: "rgba(194,239,212,0.12)",
+                  fontWeight: 700,
+                  color: G,
+                  fontSize: 15,
+                }}
+              >
+                Spot friction before it becomes expensive
+              </div>
+              <div
+                style={{
+                  padding: "24px 20px",
+                  borderRadius: 10,
+                  border: `1.5px solid ${G}`,
+                  background: "rgba(194,239,212,0.12)",
+                  fontWeight: 700,
+                  color: G,
+                  fontSize: 15,
+                }}
+              >
+                Make a stronger go / change / rethink decision
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── CALL TO ACTION ───────────────────────────── */}
+        <section
+          style={{
+            padding: "110px 40px",
+            textAlign: "center",
+            background: `linear-gradient(135deg, ${G} 0%, #163d25 100%)`,
+            position: "relative",
+            overflow: "hidden",
+            color: "#ffffff",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
+              width: 500,
+              height: 500,
+              borderRadius: "50%",
+              border: "1px solid rgba(194,239,212,0.12)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <div style={{ position: "relative", zIndex: 1, maxWidth: 720, margin: "0 auto" }}>
+            <span
+              style={{
+                display: "block",
+                fontSize: 11,
+                fontWeight: 800,
+                letterSpacing: 2.5,
+                textTransform: "uppercase",
+                color: MINT,
+                marginBottom: 16,
+              }}
+            >
+              Don’t Put the Whole Bet on a Guess
+            </span>
+            <h2
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                fontSize: "clamp(34px, 5vw, 56px)",
+                fontWeight: 800,
+                lineHeight: 1.15,
+                marginBottom: 18,
+              }}
+            >
+              Stop Guessing.<br />
+              <em style={{ fontStyle: "italic", color: MINT }}>Start Validating.</em>
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.75)", marginBottom: 36, lineHeight: 1.7 }}>
+              Tell Testado what you are building and what you need to know. We’ll start from the business question
+              and work toward a test that can actually answer it.
+            </p>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/businesses#business-form" className="btn-mint" style={{ padding: "14px 30px" }}>
+                Start a Test as a Business →
+              </Link>
+              <Link href="/testers" className="btn-secondary" style={{ color: "#ffffff", borderColor: "rgba(255,255,255,0.4)" }}>
+                Join as a Tester
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }
