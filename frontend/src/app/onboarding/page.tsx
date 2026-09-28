@@ -41,7 +41,6 @@ export default function OnboardingPage() {
     setter(list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
   };
 
-  const isLastStep = step === steps.length - 2; // step before "done"
   const isDone = steps[step]?.id === "done";
 
   return (

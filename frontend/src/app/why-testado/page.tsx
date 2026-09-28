@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 
 export default function WhyTestadoPage() {
   const G = "#224F34";
-  const MINT = "#C2EFD4";
 
   const pillars = [
     {

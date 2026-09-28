@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
-  const G = "#224F34";
   const MINT = "#C2EFD4";
 
   return (
@@ -24,17 +24,23 @@ export default function Footer() {
           {/* Brand Info */}
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <img
-                src="/assets/testado-logo.png"
-                alt="Testado"
+              <div
                 style={{
-                  height: 30,
-                  width: "auto",
                   background: "#ffffff",
                   borderRadius: 6,
-                  padding: "2px 6px",
+                  padding: "4px 8px",
+                  display: "inline-flex",
+                  alignItems: "center",
                 }}
-              />
+              >
+                <Image
+                  src="/assets/testado-logo.png"
+                  alt="Testado"
+                  width={110}
+                  height={26}
+                  style={{ height: "auto", width: "auto", maxHeight: 26 }}
+                />
+              </div>
             </div>
             <p
               style={{
