@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface OwnerLayoutProps {
   children: React.ReactNode;
@@ -14,15 +15,19 @@ export default function OwnerLayout({ children }: OwnerLayoutProps) {
           {/* Brand Header */}
           <div className="p-6 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/25">
-                T
+              <div className="rounded-md bg-white p-1 shrink-0">
+                <Image
+                  src="/assets/testado-logo-transparent.png"
+                  alt="Testado"
+                  width={1531}
+                  height={382}
+                  loading="eager"
+                  style={{ width: 128, height: 'auto', display: 'block' }}
+                />
               </div>
-              <div>
-                <span className="font-bold text-base tracking-tight text-white">Testado</span>
-                <span className="ml-2 rounded-md bg-indigo-500/10 px-2 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20">
-                  Owner
-                </span>
-              </div>
+              <span className="rounded-md bg-indigo-500/10 px-2 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20">
+                Owner
+              </span>
             </div>
           </div>
 

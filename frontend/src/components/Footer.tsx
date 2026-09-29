@@ -28,33 +28,20 @@ export default function Footer() {
                 style={{
                   background: "#ffffff",
                   borderRadius: 6,
-                  padding: "4px 8px",
+                  padding: 4,
                   display: "inline-flex",
                   alignItems: "center",
                 }}
               >
                 <Image
-                  src="/assets/testado-logo.png"
+                  src="/assets/testado-logo-transparent.png"
                   alt="Testado"
-                  width={110}
-                  height={26}
-                  style={{ height: "auto", width: "auto", maxHeight: 26 }}
+                  width={1531}
+                  height={382}
+                  style={{ width: 170, height: "auto", display: "block" }}
                 />
               </div>
             </div>
-            <p
-              style={{
-                fontFamily: "var(--font-inter), 'Inter', sans-serif",
-                fontSize: 11,
-                fontWeight: 800,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                color: MINT,
-                marginBottom: 10,
-              }}
-            >
-              REAL PEOPLE. REAL INSIGHTS. REAL PROBLEMS.
-            </p>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, maxWidth: 360 }}>
               We help businesses make better launch decisions using structured testing and real customer feedback.
             </p>

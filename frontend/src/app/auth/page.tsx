@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -47,23 +48,14 @@ function AuthContent() {
           href="/"
           style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 40, justifyContent: "center" }}
         >
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 12,
-              background: "linear-gradient(135deg, #6c63ff, #00d4aa)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              fontSize: 18,
-              color: "white",
-            }}
-          >
-            T
-          </div>
-          <span style={{ fontWeight: 800, fontSize: 22, color: "var(--foreground)" }}>Testado</span>
+          <Image
+            src="/assets/testado-logo-transparent.png"
+            alt="Testado - Real People. Real Insights. Real Problems."
+            width={1531}
+            height={382}
+            loading="eager"
+            style={{ width: 280, height: "auto", objectFit: "contain" }}
+          />
         </Link>
 
         <div className="card" style={{ padding: 36 }}>

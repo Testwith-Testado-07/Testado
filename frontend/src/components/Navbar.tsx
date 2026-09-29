@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -50,19 +51,18 @@ export default function Navbar() {
       >
         {/* Brand Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <img
-            src="/assets/testado-logo.png"
+          <Image
+            src="/assets/testado-logo-transparent.png"
             alt="Testado"
-            style={{
-              height: 32,
-              width: "auto",
-              objectFit: "contain",
-            }}
+            width={1531}
+            height={382}
+            loading="eager"
+            style={{ width: 160, height: "auto", objectFit: "contain" }}
           />
         </Link>
 
         {/* Desktop Links */}
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }} className="hidden md:flex">
+        <div style={{ gap: 28, alignItems: "center" }} className="hidden md:flex">
           {navLinks.map((l) => {
             const isActive = pathname === l.href;
             return (
@@ -82,7 +82,7 @@ export default function Navbar() {
         </div>
 
         {/* CTA Buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }} className="hidden md:flex">
+        <div style={{ alignItems: "center", gap: 12 }} className="hidden md:flex">
           <Link
             href="/auth"
             style={{

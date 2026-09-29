@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 interface NavItem {
@@ -26,15 +27,16 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           textDecoration: "none", marginBottom: 36,
         }}
       >
-        <div
-          style={{
-            width: 36, height: 36, borderRadius: 10,
-            background: "linear-gradient(135deg, #6c63ff, #00d4aa)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontWeight: 800, fontSize: 16, color: "white", flexShrink: 0,
-          }}
-        >T</div>
-        <span style={{ fontWeight: 800, fontSize: 18, color: "var(--foreground)" }}>Testado</span>
+        <span style={{ background: "#ffffff", borderRadius: 6, padding: 4, display: "inline-flex", flexShrink: 0 }}>
+          <Image
+            src="/assets/testado-logo-transparent.png"
+            alt="Testado - Real People. Real Insights. Real Problems."
+            width={1531}
+            height={382}
+            loading="eager"
+            style={{ width: 150, height: "auto", display: "block" }}
+          />
+        </span>
       </Link>
 
       {/* Role pill */}

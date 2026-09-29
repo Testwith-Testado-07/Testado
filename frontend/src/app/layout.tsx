@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   description:
     "Testado helps businesses understand whether products, services, concepts and ideas are likely to work with their target customers before launch.",
   icons: {
-    icon: "/assets/testado-logo.png",
-    shortcut: "/assets/testado-logo.png",
-    apple: "/assets/testado-logo.png",
+    icon: "/assets/testado-logo-transparent.png",
+    shortcut: "/assets/testado-logo-transparent.png",
+    apple: "/assets/testado-logo-transparent.png",
   },
 };
 

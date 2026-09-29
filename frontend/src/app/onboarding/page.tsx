@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const OWNER_STEPS = [
   { id: "company", label: "Company Details" },
@@ -61,16 +62,15 @@ export default function OnboardingPage() {
       <div style={{ width: "100%", maxWidth: 560, position: "relative", zIndex: 1 }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center", marginBottom: 28 }}>
-            <div
-              style={{
-                width: 36, height: 36, borderRadius: 10,
-                background: "linear-gradient(135deg, #6c63ff, #00d4aa)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontWeight: 800, fontSize: 16, color: "white",
-              }}
-            >T</div>
-            <span style={{ fontWeight: 800, fontSize: 20 }}>Testado</span>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
+            <Image
+              src="/assets/testado-logo-transparent.png"
+              alt="Testado - Real People. Real Insights. Real Problems."
+              width={1531}
+              height={382}
+              loading="eager"
+              style={{ width: 220, height: "auto", objectFit: "contain" }}
+            />
           </div>
 
           {/* Progress */}
