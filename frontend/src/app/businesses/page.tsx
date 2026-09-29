@@ -8,6 +8,7 @@ export default function BusinessesPage() {
   const G = "#224F34";
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -21,14 +22,34 @@ export default function BusinessesPage() {
     consent: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.consent) return;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setSubmissionError("");
+
+    try {
+      const response = await fetch("/api/business-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        setSubmissionError(
+          response.status === 503
+            ? "Email delivery is not configured yet. Your request was not sent."
+            : "We couldn't send your request. Please try again shortly."
+        );
+        return;
+      }
+
       setSubmitted(true);
-    }, 600);
+    } catch {
+      setSubmissionError("We couldn't send your request. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -389,6 +410,12 @@ export default function BusinessesPage() {
                       I confirm that the information submitted is suitable for an initial enquiry and does not contain confidential information.
                     </span>
                   </label>
+
+                  {submissionError && (
+                    <p role="alert" style={{ color: "#b42318", fontSize: 13, margin: 0 }}>
+                      {submissionError}
+                    </p>
+                  )}
 
                   <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start" }}>
                     {loading ? "Submitting..." : "Talk to Testado about my test →"}
