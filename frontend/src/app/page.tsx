@@ -8,16 +8,6 @@ export default function LandingPage() {
   const G = "#224F34"; // Forest green
   const MINT = "#C2EFD4";
 
-  const marqueeItems = [
-    "Validate Products",
-    "Real User Feedback",
-    "Structured Insights",
-    "Decision Support",
-    "Targeted Testers",
-    "Spot Friction Early",
-    "No More Guessing",
-  ];
-
   const steps = [
     {
       num: "01",
@@ -256,31 +246,6 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
-        {/* ── MARQUEE BANNER ───────────────────────────── */}
-        <div style={{ background: G, padding: "16px 0", overflow: "hidden", whiteSpace: "nowrap" }}>
-          <div className="marquee-track" style={{ display: "inline-flex", gap: 60 }}>
-            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
-              <span
-                key={i}
-                style={{
-                  fontFamily: "var(--font-inter), 'Inter', sans-serif",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: 2,
-                  textTransform: "uppercase",
-                  color: "rgba(194,239,212,0.9)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 16,
-                }}
-              >
-                {item}
-                <span style={{ color: MINT, opacity: 0.6 }}>✦</span>
-              </span>
-            ))}
-          </div>
-        </div>
 
         {/* ── WHAT WE DO ───────────────────────────────── */}
         <section id="what-we-do" style={{ padding: "100px 40px", background: "#ffffff" }}>
