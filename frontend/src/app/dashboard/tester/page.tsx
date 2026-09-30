@@ -76,6 +76,8 @@ export default function TesterDiscover() {
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <select
+            id="campaign-sort"
+            name="sort"
             style={{
               background: "var(--card)", border: "1px solid var(--card-border)",
               borderRadius: 10, padding: "10px 16px", color: "var(--foreground)",

@@ -267,10 +267,12 @@ export default function BusinessesPage() {
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div>
-                    <label className="label">
+                    <label className="label" htmlFor="business-name">
                       Your name <span style={{ color: G }}>*</span>
                     </label>
                     <input
+                      id="business-name"
+                      name="name"
                       className="input"
                       required
                       placeholder="Your full name"
@@ -281,10 +283,12 @@ export default function BusinessesPage() {
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="business-company">
                         Business / Brand <span style={{ color: G }}>*</span>
                       </label>
                       <input
+                        id="business-company"
+                        name="company"
                         className="input"
                         required
                         placeholder="Company name"
@@ -293,10 +297,12 @@ export default function BusinessesPage() {
                       />
                     </div>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="business-phone">
                         Phone number <span style={{ color: G }}>*</span>
                       </label>
                       <input
+                        id="business-phone"
+                        name="phone"
                         className="input"
                         type="tel"
                         required
@@ -308,10 +314,12 @@ export default function BusinessesPage() {
                   </div>
 
                   <div>
-                    <label className="label">
+                    <label className="label" htmlFor="business-email">
                       Email address <span style={{ color: G }}>*</span>
                     </label>
                     <input
+                      id="business-email"
+                      name="email"
                       className="input"
                       type="email"
                       required
@@ -323,10 +331,12 @@ export default function BusinessesPage() {
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="business-test-type">
                         Testing type <span style={{ color: G }}>*</span>
                       </label>
                       <select
+                        id="business-test-type"
+                        name="testType"
                         className="input"
                         required
                         value={formData.testType}
@@ -341,9 +351,11 @@ export default function BusinessesPage() {
                     </div>
 
                     <div>
-                      <label className="label">Stage</label>
+                      <label className="label" htmlFor="business-stage">Stage</label>
                       <select
                         className="input"
+                        id="business-stage"
+                        name="stage"
                         value={formData.stage}
                         onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
                       >
@@ -356,10 +368,12 @@ export default function BusinessesPage() {
                   </div>
 
                   <div>
-                    <label className="label">
+                    <label className="label" htmlFor="business-target-customer">
                       Target customer <span style={{ color: G }}>*</span>
                     </label>
                     <textarea
+                      id="business-target-customer"
+                      name="targetCustomer"
                       className="input"
                       rows={3}
                       required
@@ -370,10 +384,12 @@ export default function BusinessesPage() {
                   </div>
 
                   <div>
-                    <label className="label">
+                    <label className="label" htmlFor="business-decision-question">
                       Decision or question to answer <span style={{ color: G }}>*</span>
                     </label>
                     <textarea
+                      id="business-decision-question"
+                      name="decisionQuestion"
                       className="input"
                       rows={3}
                       required
@@ -401,6 +417,8 @@ export default function BusinessesPage() {
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>
                     <input
                       type="checkbox"
+                      id="business-consent"
+                      name="consent"
                       required
                       checked={formData.consent}
                       onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}

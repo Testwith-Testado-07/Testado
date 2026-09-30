@@ -23,6 +23,15 @@ function readOptionalText(value: unknown, maxLength: number): string | null {
     return text.length <= maxLength ? text : null;
 }
 
+function readRecipients(value: string | undefined): string[] {
+    if (!value) return [];
+
+    return value
+        .split(",")
+        .map((recipient) => recipient.trim())
+        .filter((recipient) => recipient.length > 0);
+}
+
 export async function POST(request: Request) {
     const contentLength = Number(request.headers.get("content-length") ?? 0);
     if (contentLength > 16_384) {
@@ -69,10 +78,10 @@ export async function POST(request: Request) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipient = process.env.BUSINESS_REQUEST_TO_EMAIL;
+    const recipients = readRecipients(process.env.BUSINESS_REQUEST_TO_EMAIL);
     const sender = process.env.BUSINESS_REQUEST_FROM_EMAIL;
 
-    if (!apiKey || !recipient || !sender) {
+    if (!apiKey || recipients.length === 0 || !sender) {
         return Response.json({ error: "Email delivery is not configured." }, { status: 503 });
     }
 
@@ -94,7 +103,7 @@ export async function POST(request: Request) {
     try {
         const { error } = await new Resend(apiKey).emails.send({
             from: sender,
-            to: recipient,
+            to: recipients,
             replyTo: email,
             subject: "New Testado business test request",
             text: message,

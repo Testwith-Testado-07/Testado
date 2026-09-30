@@ -191,10 +191,12 @@ export default function TestersPage() {
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div>
-                    <label className="label">
+                    <label className="label" htmlFor="tester-name">
                       Full name <span style={{ color: G }}>*</span>
                     </label>
                     <input
+                      id="tester-name"
+                      name="name"
                       className="input"
                       required
                       placeholder="Your full name"
@@ -205,10 +207,12 @@ export default function TestersPage() {
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="tester-phone">
                         Phone number <span style={{ color: G }}>*</span>
                       </label>
                       <input
+                        id="tester-phone"
+                        name="phone"
                         className="input"
                         type="tel"
                         required
@@ -218,10 +222,12 @@ export default function TestersPage() {
                       />
                     </div>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="tester-email">
                         Email address <span style={{ color: G }}>*</span>
                       </label>
                       <input
+                        id="tester-email"
+                        name="email"
                         className="input"
                         type="email"
                         required
@@ -234,10 +240,12 @@ export default function TestersPage() {
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="tester-city">
                         City <span style={{ color: G }}>*</span>
                       </label>
                       <input
+                        id="tester-city"
+                        name="city"
                         className="input"
                         required
                         placeholder="e.g. Mumbai, Pune, Bangalore"
@@ -246,10 +254,12 @@ export default function TestersPage() {
                       />
                     </div>
                     <div>
-                      <label className="label">
+                      <label className="label" htmlFor="tester-age">
                         Age Confirmation <span style={{ color: G }}>*</span>
                       </label>
                       <select
+                        id="tester-age"
+                        name="age"
                         className="input"
                         required
                         value={formData.age}
@@ -265,9 +275,11 @@ export default function TestersPage() {
                   </div>
 
                   <div>
-                    <label className="label">How often would you like to test?</label>
+                    <label className="label" htmlFor="tester-frequency">How often would you like to test?</label>
                     <select
                       className="input"
+                      id="tester-frequency"
+                      name="frequency"
                       value={formData.frequency}
                       onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
                     >
@@ -278,9 +290,11 @@ export default function TestersPage() {
                   </div>
 
                   <div>
-                    <label className="label">What kinds of products interest you?</label>
+                    <label className="label" htmlFor="tester-interests">What kinds of products interest you?</label>
                     <input
                       className="input"
+                      id="tester-interests"
+                      name="interests"
                       placeholder="e.g. mobile apps, tech, gaming, fashion, food delivery, finance"
                       value={formData.interests}
                       onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
@@ -288,10 +302,12 @@ export default function TestersPage() {
                   </div>
 
                   <div>
-                    <label className="label">Why would you like to become a tester?</label>
+                    <label className="label" htmlFor="tester-why">Why would you like to become a tester?</label>
                     <textarea
                       className="input"
                       rows={3}
+                      id="tester-why"
+                      name="why"
                       placeholder="Tell us a little about yourself and what you enjoy testing."
                       value={formData.why}
                       onChange={(e) => setFormData({ ...formData, why: e.target.value })}
@@ -315,6 +331,8 @@ export default function TestersPage() {
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>
                     <input
                       type="checkbox"
+                      id="tester-consent"
+                      name="consent"
                       required
                       checked={formData.consent}
                       onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}

@@ -124,13 +124,15 @@ export default function NewCampaignPage() {
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 28 }}>Campaign Basics</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
               <div>
-                <label className="label">Campaign Title *</label>
-                <input className="input" placeholder="e.g. Mobile App UX Feedback" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <label className="label" htmlFor="campaign-title">Campaign Title *</label>
+                <input id="campaign-title" name="title" className="input" placeholder="e.g. Mobile App UX Feedback" value={title} onChange={(e) => setTitle(e.target.value)} />
               </div>
               <div>
-                <label className="label">Description *</label>
+                <label className="label" htmlFor="campaign-description">Description *</label>
                 <textarea
                   className="input"
+                  id="campaign-description"
+                  name="description"
                   rows={4}
                   placeholder="Describe what you want testers to do and what kind of feedback you're looking for..."
                   value={description}
@@ -139,25 +141,27 @@ export default function NewCampaignPage() {
                 />
               </div>
               <div>
-                <label className="label">Product URL *</label>
-                <input className="input" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
+                <label className="label" htmlFor="campaign-product-url">Product URL *</label>
+                <input id="campaign-product-url" name="productUrl" className="input" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <div>
-                  <label className="label">Reward per Tester (USD) *</label>
+                  <label className="label" htmlFor="campaign-reward">Reward per Tester (USD) *</label>
                   <div style={{ position: "relative" }}>
                     <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }}>$</span>
                     <input
                       className="input" type="number" placeholder="8.00" min="1"
+                      id="campaign-reward" name="rewardPerTester"
                       value={rewardPerTester} onChange={(e) => setRewardPerTester(e.target.value)}
                       style={{ paddingLeft: 28 }}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="label">Max Testers *</label>
+                  <label className="label" htmlFor="campaign-max-testers">Max Testers *</label>
                   <input
                     className="input" type="number" placeholder="50" min="1"
+                    id="campaign-max-testers" name="maxTesters"
                     value={maxTesters} onChange={(e) => setMaxTesters(e.target.value)}
                   />
                 </div>
@@ -206,6 +210,8 @@ export default function NewCampaignPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <span style={{ color: "var(--muted)", fontWeight: 700, fontSize: 12, minWidth: 20 }}>Q{i + 1}</span>
                     <select
+                      id={`question-type-${q.id}`}
+                      name={`question-type-${q.id}`}
                       value={q.type}
                       onChange={(e) => updateQuestion(q.id, "type", e.target.value)}
                       style={{
@@ -230,6 +236,8 @@ export default function NewCampaignPage() {
                   </div>
                   <input
                     className="input"
+                    id={`question-text-${q.id}`}
+                    name={`question-text-${q.id}`}
                     placeholder="Enter your question..."
                     value={q.text}
                     onChange={(e) => updateQuestion(q.id, "text", e.target.value)}
@@ -262,16 +270,18 @@ export default function NewCampaignPage() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               <div>
-                <label className="label">Countries (comma-separated)</label>
+                <label className="label" htmlFor="campaign-countries">Countries (comma-separated)</label>
                 <input
                   className="input"
+                  id="campaign-countries"
+                  name="targetCountries"
                   placeholder="e.g. United States, United Kingdom, India"
                   value={targetCountries}
                   onChange={(e) => setTargetCountries(e.target.value)}
                 />
               </div>
               <div>
-                <label className="label">Age Ranges</label>
+                <div className="label">Age Ranges</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["18–24", "25–34", "35–44", "45–54", "55+"].map((age) => (
                     <button
@@ -315,8 +325,10 @@ export default function NewCampaignPage() {
               ].map((item) => (
                 <div
                   key={item.label}
-                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: "12px 0", borderBottom: "1px solid var(--card-border)" }}
+                  style={{
+                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                    padding: "12px 0", borderBottom: "1px solid var(--card-border)"
+                  }}
                 >
                   <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>{item.label}</span>
                   <span style={{ fontSize: 14, fontWeight: 600 }}>{item.value}</span>

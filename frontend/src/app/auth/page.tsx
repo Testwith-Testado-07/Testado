@@ -71,7 +71,7 @@ function AuthContent() {
           {/* Role selector (register only) */}
           {mode === "register" && (
             <div style={{ marginBottom: 28 }}>
-              <label className="label">I am a...</label>
+              <div className="label">I am a...</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 {(["owner", "tester"] as const).map((r) => (
                   <button
@@ -114,9 +114,11 @@ function AuthContent() {
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {mode === "register" && (
               <div>
-                <label className="label">Full Name</label>
+                <label className="label" htmlFor="auth-name">Full Name</label>
                 <input
                   className="input"
+                  id="auth-name"
+                  name="name"
                   type="text"
                   placeholder="Alex Johnson"
                   value={name}
@@ -126,9 +128,11 @@ function AuthContent() {
               </div>
             )}
             <div>
-              <label className="label">Email</label>
+              <label className="label" htmlFor="auth-email">Email</label>
               <input
                 className="input"
+                id="auth-email"
+                name="email"
                 type="email"
                 placeholder="you@company.com"
                 value={email}
@@ -137,9 +141,11 @@ function AuthContent() {
               />
             </div>
             <div>
-              <label className="label">Password</label>
+              <label className="label" htmlFor="auth-password">Password</label>
               <input
                 className="input"
+                id="auth-password"
+                name="password"
                 type="password"
                 placeholder={mode === "register" ? "Min. 8 characters" : "Your password"}
                 value={password}

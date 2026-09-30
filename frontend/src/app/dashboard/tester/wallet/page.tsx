@@ -112,11 +112,13 @@ export default function TesterWallet() {
             </p>
             <form onSubmit={handleWithdraw} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <label className="label">Amount (USD)</label>
+                <label className="label" htmlFor="withdraw-amount">Amount (USD)</label>
                 <div style={{ position: "relative" }}>
                   <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }}>$</span>
                   <input
                     className="input"
+                    id="withdraw-amount"
+                    name="amount"
                     type="number"
                     placeholder="0.00"
                     min="5"

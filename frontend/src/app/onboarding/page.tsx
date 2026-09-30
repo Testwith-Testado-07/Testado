@@ -104,13 +104,15 @@ export default function OnboardingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <div>
-                <label className="label">Company Name *</label>
-                <input className="input" placeholder="Acme Inc." value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                <label className="label" htmlFor="onboarding-company">Company Name *</label>
+                <input id="onboarding-company" name="companyName" className="input" placeholder="Acme Inc." value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
               </div>
               <div>
-                <label className="label">Industry</label>
+                <label className="label" htmlFor="onboarding-industry">Industry</label>
                 <select
                   className="input"
+                  id="onboarding-industry"
+                  name="industry"
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
                   style={{ appearance: "none" }}
@@ -120,8 +122,8 @@ export default function OnboardingPage() {
                 </select>
               </div>
               <div>
-                <label className="label">Website (optional)</label>
-                <input className="input" placeholder="https://yourcompany.com" value={website} onChange={(e) => setWebsite(e.target.value)} />
+                <label className="label" htmlFor="onboarding-website">Website (optional)</label>
+                <input id="onboarding-website" name="website" className="input" placeholder="https://yourcompany.com" value={website} onChange={(e) => setWebsite(e.target.value)} />
               </div>
               <button
                 className="btn-primary"
@@ -144,7 +146,7 @@ export default function OnboardingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <div>
-                <label className="label">Age Range *</label>
+                <div className="label">Age Range *</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {AGE_RANGES.map((a) => (
                     <button
@@ -163,7 +165,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div>
-                <label className="label">Gender</label>
+                <div className="label">Gender</div>
                 <div style={{ display: "flex", gap: 8 }}>
                   {["Male", "Female", "Non-binary", "Prefer not to say"].map((g) => (
                     <button
@@ -182,9 +184,11 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div>
-                <label className="label">Country *</label>
+                <label className="label" htmlFor="onboarding-country">Country *</label>
                 <input
                   className="input"
+                  id="onboarding-country"
+                  name="country"
                   placeholder="e.g. United States"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
@@ -211,7 +215,7 @@ export default function OnboardingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               <div>
-                <label className="label">Interests (pick a few)</label>
+                <div className="label">Interests (pick a few)</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {INTERESTS.map((interest) => (
                     <button
@@ -230,7 +234,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div>
-                <label className="label">Devices you use</label>
+                <div className="label">Devices you use</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {DEVICES.map((device) => (
                     <button
