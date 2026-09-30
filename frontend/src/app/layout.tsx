@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${playfair.variable}`}>
-      <body className={inter.className}>{children}</body>
+      <body suppressHydrationWarning className={inter.className}>{children}</body>
     </html>
   );
 }
