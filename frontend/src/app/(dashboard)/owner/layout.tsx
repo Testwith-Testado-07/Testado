@@ -22,7 +22,8 @@ export default function OwnerLayout({ children }: OwnerLayoutProps) {
                   width={1531}
                   height={382}
                   loading="eager"
-                  style={{ width: 128, height: 'auto', display: 'block' }}
+                  sizes="128px"
+                  style={{ width: 128, height: 32, display: 'block' }}
                 />
               </div>
               <span className="rounded-md bg-indigo-500/10 px-2 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20">

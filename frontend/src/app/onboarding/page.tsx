@@ -69,7 +69,8 @@ export default function OnboardingPage() {
               width={1531}
               height={382}
               loading="eager"
-              style={{ width: 220, height: "auto", objectFit: "contain" }}
+              sizes="220px"
+              style={{ width: 220, height: 55, objectFit: "contain" }}
             />
           </div>
 

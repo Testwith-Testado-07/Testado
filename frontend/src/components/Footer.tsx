@@ -38,7 +38,8 @@ export default function Footer() {
                   alt="Testado"
                   width={1531}
                   height={382}
-                  style={{ width: 170, height: "auto", display: "block" }}
+                  sizes="170px"
+                  style={{ width: 170, height: 42, display: "block" }}
                 />
               </div>
             </div>

@@ -34,7 +34,8 @@ export function Sidebar({ role, navItems }: SidebarProps) {
             width={1531}
             height={382}
             loading="eager"
-            style={{ width: 150, height: "auto", display: "block" }}
+            sizes="150px"
+            style={{ width: 150, height: 37, display: "block" }}
           />
         </span>
       </Link>

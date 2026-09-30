@@ -22,7 +22,8 @@ export default function TesterLayout({ children }: TesterLayoutProps) {
                   width={1531}
                   height={382}
                   loading="eager"
-                  style={{ width: 128, height: 'auto', display: 'block' }}
+                  sizes="128px"
+                  style={{ width: 128, height: 32, display: 'block' }}
                 />
               </div>
               <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold text-emerald-400 border border-emerald-500/20">

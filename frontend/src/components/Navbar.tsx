@@ -57,7 +57,8 @@ export default function Navbar() {
             width={1531}
             height={382}
             loading="eager"
-            style={{ width: 160, height: "auto", objectFit: "contain" }}
+            sizes="160px"
+            style={{ width: 160, height: 40, objectFit: "contain" }}
           />
         </Link>
 

@@ -54,7 +54,8 @@ function AuthContent() {
             width={1531}
             height={382}
             loading="eager"
-            style={{ width: 280, height: "auto", objectFit: "contain" }}
+            sizes="280px"
+            style={{ width: 280, height: 70, objectFit: "contain" }}
           />
         </Link>
 
@@ -119,6 +120,7 @@ function AuthContent() {
                   className="input"
                   id="auth-name"
                   name="name"
+                  autoComplete="name"
                   type="text"
                   placeholder="Alex Johnson"
                   value={name}
@@ -133,6 +135,7 @@ function AuthContent() {
                 className="input"
                 id="auth-email"
                 name="email"
+                autoComplete="username"
                 type="email"
                 placeholder="you@company.com"
                 value={email}
@@ -146,6 +149,7 @@ function AuthContent() {
                 className="input"
                 id="auth-password"
                 name="password"
+                autoComplete={mode === "register" ? "new-password" : "current-password"}
                 type="password"
                 placeholder={mode === "register" ? "Min. 8 characters" : "Your password"}
                 value={password}
