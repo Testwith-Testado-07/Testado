@@ -27,198 +27,108 @@ function AuthContent() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Background orbs */}
-      <div className="orb" style={{ width: 500, height: 500, background: "rgba(108,99,255,0.12)", top: -100, left: -150 }} />
-      <div className="orb" style={{ width: 400, height: 400, background: "rgba(0,212,170,0.08)", bottom: -100, right: -100 }} />
+    <div className="auth-page">
+      <section className="auth-story">
+        <Link href="/" className="auth-story-logo">Testado</Link>
+        <div className="auth-story-content">
+          <span className="auth-eyebrow">The Testado portal</span>
+          <h1>Make better decisions before launch.</h1>
+          <p>
+            One place for business owners to run sharper tests and for testers to turn honest feedback into opportunity.
+          </p>
+          <ul className="auth-proof-list">
+            <li><span>01</span> Structured testing for real-world decisions</li>
+            <li><span>02</span> Matched opportunities for thoughtful testers</li>
+            <li><span>03</span> Clear feedback without the guesswork</li>
+          </ul>
+        </div>
+        <div className="auth-story-footer">Real people. Real insights. Real problems.</div>
+      </section>
 
-      <div style={{ width: "100%", maxWidth: 480, position: "relative", zIndex: 1 }}>
-        {/* Logo */}
-        <Link
-          href="/"
-          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 40, justifyContent: "center" }}
-        >
+      <main className="auth-main">
+        <div className="auth-topline">
+          <span>Secure access</span>
+          <Link href="/">Back to website</Link>
+        </div>
+
+        <div className="auth-form-wrap">
           <Image
             src="/assets/testado-logo-transparent.png"
-            alt="Testado - Real People. Real Insights. Real Problems."
+            alt="Testado"
             width={1531}
             height={382}
             loading="eager"
-            sizes="280px"
-            style={{ width: 280, height: 70, objectFit: "contain" }}
+            sizes="220px"
+            className="auth-logo"
           />
-        </Link>
-
-        <div className="card" style={{ padding: 36 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, textAlign: "center" }}>
-            {mode === "login" ? "Welcome back" : "Create your account"}
-          </h1>
-          <p style={{ fontSize: 14, color: "var(--muted)", textAlign: "center", marginBottom: 32 }}>
-            {mode === "login"
-              ? "Sign in to your Testado account"
-              : "Join thousands of owners and testers"}
-          </p>
-
-          {/* Role selector (register only) */}
-          {mode === "register" && (
-            <div style={{ marginBottom: 28 }}>
-              <div className="label">I am a...</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                {(["owner", "tester"] as const).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r)}
-                    style={{
-                      padding: "16px 12px",
-                      borderRadius: 12,
-                      border: `2px solid ${role === r ? (r === "owner" ? "#6c63ff" : "#00d4aa") : "var(--card-border)"}`,
-                      background: role === r
-                        ? (r === "owner" ? "rgba(108,99,255,0.12)" : "rgba(0,212,170,0.12)")
-                        : "transparent",
-                      cursor: "pointer",
-                      transition: "all 0.15s",
-                      textAlign: "center",
-                    }}
-                  >
-                    <div style={{ fontSize: 26, marginBottom: 6 }}>{r === "owner" ? "🏢" : "🧪"}</div>
-                    <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize: 14,
-                        color: role === r
-                          ? (r === "owner" ? "#6c63ff" : "#00d4aa")
-                          : "var(--foreground)",
-                      }}
-                    >
-                      {r === "owner" ? "Product Owner" : "Tester"}
-                    </div>
-                    <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
-                      {r === "owner" ? "Launch campaigns" : "Earn rewards"}
-                    </div>
-                  </button>
-                ))}
-              </div>
+          <div className="auth-form-card">
+            <div className="auth-heading">
+              <span className="auth-form-kicker">{mode === "login" ? "Welcome back" : "Join Testado"}</span>
+              <h2>{mode === "login" ? "Sign in to your account" : "Create your account"}</h2>
+              <p>
+                {mode === "login"
+                  ? "Access your testing workspace and keep your next decision moving."
+                  : "Choose your path and start building better product decisions."}
+              </p>
             </div>
-          )}
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {mode === "register" && (
-              <div>
-                <label className="label" htmlFor="auth-name">Full Name</label>
-                <input
-                  className="input"
-                  id="auth-name"
-                  name="name"
-                  autoComplete="name"
-                  type="text"
-                  placeholder="Alex Johnson"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+              <div className="auth-role-group">
+                <div className="label">I am joining as</div>
+                <div className="auth-role-options">
+                  {(["owner", "tester"] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className={`auth-role-option${role === r ? " selected" : ""}`}
+                    >
+                      <span className="auth-role-icon">{r === "owner" ? "◈" : "◌"}</span>
+                      <span>
+                        <strong>{r === "owner" ? "Product owner" : "Tester"}</strong>
+                        <small>{r === "owner" ? "Launch and learn" : "Test and earn"}</small>
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-            <div>
-              <label className="label" htmlFor="auth-email">Email</label>
-              <input
-                className="input"
-                id="auth-email"
-                name="email"
-                autoComplete="username"
-                type="email"
-                placeholder="you@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="label" htmlFor="auth-password">Password</label>
-              <input
-                className="input"
-                id="auth-password"
-                name="password"
-                autoComplete={mode === "register" ? "new-password" : "current-password"}
-                type="password"
-                placeholder={mode === "register" ? "Min. 8 characters" : "Your password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary"
-              style={{
-                width: "100%",
-                justifyContent: "center",
-                padding: "14px",
-                fontSize: 15,
-                opacity: loading ? 0.7 : 1,
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? (
-                <>
-                  <span
-                    style={{
-                      width: 16,
-                      height: 16,
-                      border: "2px solid rgba(255,255,255,0.3)",
-                      borderTopColor: "white",
-                      borderRadius: "50%",
-                      display: "inline-block",
-                      animation: "spin 0.8s linear infinite",
-                    }}
-                  />
-                  {mode === "login" ? "Signing in..." : "Creating account..."}
-                </>
-              ) : mode === "login" ? (
-                "Sign In →"
-              ) : (
-                "Create Account →"
+            <form onSubmit={handleSubmit} className="auth-form">
+              {mode === "register" && (
+                <div>
+                  <label className="label" htmlFor="auth-name">Full name</label>
+                  <input className="input" id="auth-name" name="name" autoComplete="name" type="text" placeholder="Alex Johnson" value={name} onChange={(e) => setName(e.target.value)} required />
+                </div>
               )}
-            </button>
-          </form>
+              <div>
+                <label className="label" htmlFor="auth-email">Email address</label>
+                <input className="input" id="auth-email" name="email" autoComplete="username" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </div>
+              <div>
+                <div className="auth-field-heading">
+                  <label className="label" htmlFor="auth-password">Password</label>
+                  {mode === "login" && <button type="button" className="auth-text-button">Forgot password?</button>}
+                </div>
+                <input className="input" id="auth-password" name="password" autoComplete={mode === "register" ? "new-password" : "current-password"} type="password" placeholder={mode === "register" ? "At least 8 characters" : "Your password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              </div>
 
-          <div style={{ textAlign: "center", marginTop: 24, fontSize: 14, color: "var(--muted)" }}>
-            {mode === "login" ? (
-              <>
-                Don&apos;t have an account?{" "}
-                <button
-                  onClick={() => setMode("register")}
-                  style={{ color: "#6c63ff", fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}
-                >
-                  Sign up free
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  onClick={() => setMode("login")}
-                  style={{ color: "#6c63ff", fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}
-                >
-                  Sign in
-                </button>
-              </>
-            )}
+              <button type="submit" disabled={loading} className="btn-primary auth-submit">
+                {loading ? <><span className="auth-spinner" />{mode === "login" ? "Signing in..." : "Creating account..."}</> : mode === "login" ? "Sign in to Testado" : "Create my account"}
+              </button>
+            </form>
+
+            <div className="auth-switch">
+              {mode === "login" ? (
+                <>New to Testado? <button type="button" onClick={() => setMode("register")} className="auth-text-button">Create an account</button></>
+              ) : (
+                <>Already have an account? <button type="button" onClick={() => setMode("login")} className="auth-text-button">Sign in</button></>
+              )}
+            </div>
           </div>
+          <p className="auth-legal">By continuing, you agree to use Testado for genuine testing and feedback.</p>
         </div>
-      </div>
+      </main>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
