@@ -15,7 +15,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseAnonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   // If Supabase environment variables are missing during early dev/build, bypass gracefully
   if (!supabaseUrl || !supabaseAnonKey) {
