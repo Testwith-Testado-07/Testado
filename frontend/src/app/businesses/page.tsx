@@ -36,10 +36,11 @@ export default function BusinessesPage() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
         setSubmissionError(
           response.status === 503
             ? "Email delivery is not configured yet. Your request was not sent."
-            : "We couldn't send your request. Please try again shortly."
+            : (errorData?.error || "We couldn't send your request. Please try again shortly.")
         );
         return;
       }

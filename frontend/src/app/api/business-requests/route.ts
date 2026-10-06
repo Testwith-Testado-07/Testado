@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.RESEND_API_KEY;
     const recipients = readRecipients(process.env.BUSINESS_REQUEST_TO_EMAIL);
-    const sender = process.env.BUSINESS_REQUEST_FROM_EMAIL;
+    const sender = process.env.BUSINESS_REQUEST_FROM_EMAIL?.replace(/^["']|["']$/g, "").trim();
 
     if (!apiKey || recipients.length === 0 || !sender) {
         return Response.json({ error: "Email delivery is not configured." }, { status: 503 });
@@ -100,8 +100,9 @@ export async function POST(request: Request) {
         `Additional information:\n${additionalInfo || "Not provided"}`,
     ].join("\n");
 
+    const resend = new Resend(apiKey);
     try {
-        const { error } = await new Resend(apiKey).emails.send({
+        const { error } = await resend.emails.send({
             from: sender,
             to: recipients,
             replyTo: email,
@@ -110,12 +111,40 @@ export async function POST(request: Request) {
         });
 
         if (error) {
-            console.error("Resend rejected a business request email.");
-            return Response.json({ error: "Email delivery failed." }, { status: 502 });
+            // If batch send fails (e.g. Resend sandbox restrictions on non-owner emails),
+            // attempt each recipient individually so delivered emails still go through.
+            let anyDelivered = false;
+            let lastErrorMessage = error.message;
+
+            for (const recipient of recipients) {
+                try {
+                    const single = await resend.emails.send({
+                        from: sender,
+                        to: [recipient],
+                        replyTo: email,
+                        subject: "New Testado business test request",
+                        text: message,
+                    });
+
+                    if (!single.error) {
+                        anyDelivered = true;
+                    } else {
+                        console.warn(`Could not deliver business request to ${recipient}: ${single.error.message}`);
+                        lastErrorMessage = single.error.message;
+                    }
+                } catch (sendErr) {
+                    console.warn(`Failed sending to ${recipient}:`, sendErr);
+                }
+            }
+
+            if (!anyDelivered) {
+                return Response.json({ error: lastErrorMessage || "Email delivery failed." }, { status: 502 });
+            }
         }
-    } catch {
-        console.error("Business request email delivery failed.");
-        return Response.json({ error: "Email delivery failed." }, { status: 502 });
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Email delivery failed.";
+        console.error("Business request email delivery failed:", message);
+        return Response.json({ error: message }, { status: 502 });
     }
 
     return Response.json({ ok: true });

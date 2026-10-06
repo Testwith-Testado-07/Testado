@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/Toast";
 
 function AuthContent() {
   const searchParams = useSearchParams();
@@ -16,14 +18,56 @@ function AuthContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const { toast } = useToast();
+  const supabase = createClient();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate auth — redirect to dashboard
-    setTimeout(() => {
-      window.location.href = role === "owner" ? "/dashboard/owner" : "/dashboard/tester";
-    }, 1200);
+
+    try {
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success("Signed in successfully!");
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        if (!data.user) throw new Error("User creation failed");
+
+        // Create profile with role
+        const { error: profileError } = await supabase.from("profiles").insert({
+          id: data.user.id,
+          full_name: name,
+          role: role,
+        });
+        if (profileError) throw profileError;
+        toast.success("Account created successfully!");
+      }
+
+      // Redirect based on role
+      // For login, we should ideally fetch the role from profiles first
+      let userRole = role;
+      if (mode === "login") {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .single();
+        if (profile) userRole = profile.role;
+      }
+
+      window.location.href = userRole === "owner" ? "/dashboard/owner" : "/dashboard/tester";
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
