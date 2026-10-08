@@ -15,7 +15,7 @@ export default function OwnerLayout({ children }: OwnerLayoutProps) {
           {/* Brand Header */}
           <div className="p-6 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="rounded-md bg-white p-1 shrink-0">
+              <div className="p-1 shrink-0">
                 <Image
                   src="/assets/testado-logo-transparent.png"
                   alt="Testado"

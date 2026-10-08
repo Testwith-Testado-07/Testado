@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 interface NavItem {
   href: string;
@@ -14,8 +16,71 @@ interface SidebarProps {
   navItems: NavItem[];
 }
 
+interface UserProfile {
+  name: string;
+  email: string;
+  initials: string;
+}
+
+function useCurrentUser(): UserProfile {
+  const [profile, setProfile] = useState<UserProfile>({
+    name: "Loading...",
+    email: "",
+    initials: "?",
+  });
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Try profiles table first for full_name, fall back to user_metadata
+      let fullName = user.user_metadata?.full_name || user.user_metadata?.name;
+
+      try {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (profileData?.full_name) {
+          fullName = profileData.full_name;
+        }
+      } catch (err) {
+        console.warn("Could not query profiles:", err);
+      }
+
+      if (!fullName) {
+        fullName = user.email?.split("@")[0] || "User";
+      }
+
+      const email = user.email || "";
+      const initials = fullName
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+
+      setProfile({ name: fullName, email, initials });
+    })();
+  }, []);
+
+  return profile;
+}
+
 export function Sidebar({ role, navItems }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const user = useCurrentUser();
+  const supabase = createClient();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/auth");
+  };
 
   return (
     <aside className="sidebar">
@@ -27,7 +92,7 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           textDecoration: "none", marginBottom: 36,
         }}
       >
-        <span style={{ background: "#ffffff", borderRadius: 6, padding: 4, display: "inline-flex", flexShrink: 0 }}>
+        <span style={{ display: "inline-flex", flexShrink: 0 }}>
           <Image
             src="/assets/testado-logo-transparent.png"
             alt="Testado - Real People. Real Insights. Real Problems."
@@ -35,7 +100,7 @@ export function Sidebar({ role, navItems }: SidebarProps) {
             height={382}
             loading="eager"
             sizes="150px"
-            style={{ width: 150, height: 37, display: "block" }}
+            style={{ width: 150, height: 37, display: "block", filter: "brightness(0) invert(1)" }}
           />
         </span>
       </Link>
@@ -46,9 +111,9 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           display: "inline-flex", alignItems: "center", gap: 6,
           padding: "5px 12px", borderRadius: 999, marginBottom: 28,
           fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8,
-          background: role === "owner" ? "rgba(108,99,255,0.15)" : "rgba(0,212,170,0.15)",
-          color: role === "owner" ? "#a78bfa" : "#00d4aa",
-          border: `1px solid ${role === "owner" ? "rgba(108,99,255,0.3)" : "rgba(0,212,170,0.3)"}`,
+          background: role === "owner" ? "rgba(194,239,212,0.15)" : "rgba(58,130,85,0.2)",
+          color: role === "owner" ? "var(--mint)" : "var(--mint-dark)",
+          border: `1px solid ${role === "owner" ? "rgba(194,239,212,0.3)" : "rgba(58,130,85,0.4)"}`,
         }}
       >
         <span>{role === "owner" ? "🏢" : "🧪"}</span>
@@ -71,27 +136,36 @@ export function Sidebar({ role, navItems }: SidebarProps) {
       </nav>
 
       {/* Bottom */}
-      <div style={{ borderTop: "1px solid var(--card-border)", paddingTop: 20, marginTop: 20 }}>
+      <div style={{ borderTop: "1px solid rgba(194,239,212,0.15)", paddingTop: 20, marginTop: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "0 8px", marginBottom: 16 }}>
           <div
             style={{
-              width: 34, height: 34, borderRadius: "50%",
-              background: role === "owner" ? "rgba(108,99,255,0.25)" : "rgba(0,212,170,0.25)",
+              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+              background: role === "owner" ? "rgba(194,239,212,0.2)" : "rgba(58,130,85,0.25)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontWeight: 700, fontSize: 13,
-              color: role === "owner" ? "#a78bfa" : "#00d4aa",
+              color: "var(--mint)",
+              border: "1px solid rgba(194,239,212,0.25)",
             }}
           >
-            {role === "owner" ? "AJ" : "MK"}
+            {user.initials}
           </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 600 }}>{role === "owner" ? "Alex Johnson" : "Maria Kim"}</div>
-            <div style={{ fontSize: 11, color: "var(--muted)" }}>{role === "owner" ? "alex@acme.com" : "maria@email.com"}</div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {user.name}
+            </div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {user.email}
+            </div>
           </div>
         </div>
-        <Link href="/auth" className="sidebar-link" style={{ color: "#ff6b9d" }}>
+        <button
+          onClick={handleSignOut}
+          className="sidebar-link"
+          style={{ color: "rgba(255,107,107,0.9)", background: "none", border: "none", width: "100%", cursor: "pointer", textAlign: "left" }}
+        >
           <span>🚪</span> Sign Out
-        </Link>
+        </button>
       </div>
     </aside>
   );

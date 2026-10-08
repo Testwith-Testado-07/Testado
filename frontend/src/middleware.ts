@@ -45,8 +45,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   });
 
   const { pathname } = request.nextUrl;
-  const isOwnerRoute = pathname.startsWith('/owner');
-  const isTesterRoute = pathname.startsWith('/tester');
+  const isOwnerRoute = pathname.startsWith('/owner') || pathname.startsWith('/dashboard/owner');
+  const isTesterRoute = pathname.startsWith('/tester') || pathname.startsWith('/dashboard/tester');
 
   // Verify auth session against Supabase Auth
   const {
@@ -63,13 +63,21 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // 3. Fetch the user's role and enforce boundaries
   if (user && (isOwnerRoute || isTesterRoute)) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single<ProfileRoleQuery>();
+    let role = (user.user_metadata?.role as UserRole) || undefined;
 
-    const role = profile?.role;
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle<ProfileRoleQuery>();
+
+      if (profile?.role) {
+        role = profile.role;
+      }
+    } catch {
+      // Graceful fallback to user_metadata
+    }
 
     const copyCookiesAndRedirect = (destination: string): NextResponse => {
       const redirectUrl = request.nextUrl.clone();
@@ -89,11 +97,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // - If role is 'tester' and path starts with /owner, redirect to /tester/dashboard
     // - If role is 'owner' and path starts with /tester, redirect to /owner/dashboard
     if (role === 'tester' && isOwnerRoute) {
-      return copyCookiesAndRedirect('/tester/dashboard');
+      return copyCookiesAndRedirect('/dashboard/tester');
     }
 
     if (role === 'owner' && isTesterRoute) {
-      return copyCookiesAndRedirect('/owner/dashboard');
+      return copyCookiesAndRedirect('/dashboard/owner');
     }
   }
 
@@ -101,5 +109,12 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ['/owner/:path*', '/tester/:path*'],
+  matcher: [
+    '/owner/:path*',
+    '/tester/:path*',
+    '/dashboard/owner/:path*',
+    '/dashboard/tester/:path*',
+    '/dashboard/owner',
+    '/dashboard/tester',
+  ],
 };
