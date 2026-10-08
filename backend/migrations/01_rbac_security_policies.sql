@@ -1,6 +1,7 @@
 -- ============================================================================
 -- Testado RBAC & Security Migration: Step 1 Database RLS Policies
--- Description: Sets up roles, profiles, campaigns, and submissions with strict RLS.
+-- Description: Sets up roles, profiles, campaigns, submissions, auto-creation triggers,
+--              and RLS policies for Testado.
 -- ============================================================================
 
 -- 1. Create user role enum type if not already defined
@@ -13,11 +14,26 @@ END $$;
 -- 2. Profiles Table
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    role user_role NOT NULL,
+    role user_role NOT NULL DEFAULT 'owner'::user_role,
     full_name TEXT,
+    username TEXT UNIQUE,
+    bio TEXT,
+    avatar_url TEXT,
+    website TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
+
+-- Ensure all columns exist even if profiles table already existed
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role user_role NOT NULL DEFAULT 'owner'::user_role;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS full_name TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_url TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS website TEXT;
+
+-- Index for username lookups
+CREATE INDEX IF NOT EXISTS profiles_username_idx ON public.profiles(username);
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
@@ -50,24 +66,57 @@ AS $$
     WHERE id = auth.uid();
 $$;
 
--- RLS: Profiles
+-- RLS: Profiles SELECT (Authenticated users can read profiles)
 DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
-CREATE POLICY "Users can view own profile"
+DROP POLICY IF EXISTS "Authenticated users can view profiles" ON public.profiles;
+CREATE POLICY "Authenticated users can view profiles"
     ON public.profiles
     FOR SELECT
     TO authenticated
-    USING (auth.uid() = id);
+    USING (true);
 
+-- RLS: Profiles INSERT (Users can insert their own profile)
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
+
+-- RLS: Profiles UPDATE (Users can update their own profile)
 DROP POLICY IF EXISTS "Users can update own profile non-role fields" ON public.profiles;
-CREATE POLICY "Users can update own profile non-role fields"
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+CREATE POLICY "Users can update own profile"
     ON public.profiles
     FOR UPDATE
     TO authenticated
     USING (auth.uid() = id)
     WITH CHECK (
         auth.uid() = id
-        AND role = (SELECT role FROM public.profiles WHERE id = auth.uid())
+        AND role = public.get_current_role()
     );
+
+-- Trigger: Create a profile once when an auth user is created.
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+    INSERT INTO public.profiles (id, full_name, role)
+    VALUES (
+        NEW.id,
+        COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+        CASE
+            WHEN NEW.raw_user_meta_data->>'role' = 'tester' THEN 'tester'::public.user_role
+            ELSE 'owner'::public.user_role
+        END
+    )
+    ON CONFLICT (id) DO NOTHING;
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 3. Campaigns Table
 CREATE TABLE IF NOT EXISTS public.campaigns (
@@ -76,7 +125,7 @@ CREATE TABLE IF NOT EXISTS public.campaigns (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     reward_amount NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
-    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'completed', 'archived')),
+    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'paused', 'completed', 'archived')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
@@ -144,7 +193,7 @@ CREATE TABLE IF NOT EXISTS public.submissions (
 
 ALTER TABLE public.submissions ENABLE ROW LEVEL SECURITY;
 
--- RLS: Submissions SELECT (Testers can only view their own submissions)
+-- RLS: Submissions SELECT (Testers can view their own submissions)
 DROP POLICY IF EXISTS "Testers can view own submissions" ON public.submissions;
 CREATE POLICY "Testers can view own submissions"
     ON public.submissions
@@ -179,3 +228,15 @@ CREATE POLICY "Testers can insert own submissions"
         auth.uid() = tester_id
         AND public.has_role('tester'::user_role)
     );
+
+-- 5. Backfill profiles for existing auth users without changing Auth confirmation state.
+INSERT INTO public.profiles (id, full_name, role)
+SELECT
+    id,
+    COALESCE(raw_user_meta_data->>'full_name', 'User'),
+    CASE
+        WHEN raw_user_meta_data->>'role' = 'tester' THEN 'tester'::public.user_role
+        ELSE 'owner'::public.user_role
+    END
+FROM auth.users
+ON CONFLICT (id) DO NOTHING;
