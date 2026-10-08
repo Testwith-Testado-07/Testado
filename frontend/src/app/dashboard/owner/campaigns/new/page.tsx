@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
   { href: "/dashboard/owner", icon: "📊", label: "Overview" },
@@ -25,8 +26,10 @@ interface Question {
 
 export default function NewCampaignPage() {
   const router = useRouter();
+  const supabase = createClient();
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Form state
   const [title, setTitle] = useState("");
@@ -61,9 +64,43 @@ export default function NewCampaignPage() {
 
   const totalBudget = parseFloat(rewardPerTester || "0") * parseInt(maxTesters || "0");
 
-  const handleLaunch = () => {
+  const handleLaunch = async () => {
     setSubmitting(true);
-    setTimeout(() => router.push("/dashboard/owner"), 1500);
+    setSubmitError("");
+
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Sign in to publish a campaign.");
+      if (!Number.isFinite(Number(rewardPerTester)) || Number(rewardPerTester) <= 0) {
+        throw new Error("Enter a reward greater than zero.");
+      }
+      if (!Number.isInteger(Number(maxTesters)) || Number(maxTesters) <= 0) {
+        throw new Error("Enter a whole number of testers greater than zero.");
+      }
+      if (questions.length === 0 || questions.some((question) => !question.text.trim())) {
+        throw new Error("Add text to every survey question before publishing.");
+      }
+
+      const { error } = await supabase.from("campaigns").insert({
+        owner_id: user.id,
+        title: title.trim(),
+        description: description.trim(),
+        product_url: productUrl.trim(),
+        reward_amount: Number(rewardPerTester),
+        max_testers: Number(maxTesters),
+        questions,
+        target_countries: targetCountries.split(",").map((country) => country.trim()).filter(Boolean),
+        target_ages: targetAges,
+        status: "active",
+      });
+      if (error) throw error;
+
+      router.push("/dashboard/owner/campaigns");
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "The campaign could not be published.");
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -142,7 +179,7 @@ export default function NewCampaignPage() {
               </div>
               <div>
                 <label className="label" htmlFor="campaign-product-url">Product URL *</label>
-                <input id="campaign-product-url" name="productUrl" className="input" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
+                <input id="campaign-product-url" name="productUrl" type="url" className="input" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <div>
@@ -311,6 +348,11 @@ export default function NewCampaignPage() {
         {step === 3 && (
           <div className="card" style={{ padding: 36 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 28 }}>Review & Launch</h2>
+            {submitError && (
+              <p role="alert" style={{ color: "#ff6b9d", fontSize: 14, marginBottom: 20 }}>
+                {submitError}
+              </p>
+            )}
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {/* Summary items */}
               {[
@@ -342,9 +384,7 @@ export default function NewCampaignPage() {
                   fontSize: 13, color: "var(--muted)", lineHeight: 1.7,
                 }}
               >
-                💡 <strong style={{ color: "#00d4aa" }}>Heads up:</strong> Launching this campaign will lock{" "}
-                <strong style={{ color: "white" }}>${totalBudget.toFixed(2)}</strong> from your wallet balance into escrow.
-                Funds are only released when you approve submissions.
+                Your product test will be published for testers to discover. You can review applications from your Campaigns page.
               </div>
             </div>
 

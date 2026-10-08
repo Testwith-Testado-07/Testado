@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const OWNER_STEPS = [
   { id: "company", label: "Company Details" },
@@ -21,8 +22,12 @@ const DEVICES = ["iOS", "Android", "Desktop (Mac)", "Desktop (Windows)", "Tablet
 const AGE_RANGES = ["18–24", "25–34", "35–44", "45–54", "55+"];
 
 export default function OnboardingPage() {
-  // Simulated: detect role from URL or default to 'tester'
-  const [role] = useState<"owner" | "tester">("tester"); // change to 'owner' to test owner flow
+  const router = useRouter();
+  const [role, setRole] = useState<"owner" | "tester" | null>(null);
+  const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const steps = role === "owner" ? OWNER_STEPS : TESTER_STEPS;
   const [step, setStep] = useState(0);
 
@@ -38,11 +43,94 @@ export default function OnboardingPage() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
 
+  useEffect(() => {
+    const supabase = createClient();
+    let cancelled = false;
+
+    const loadProfile = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Sign in to complete your profile.");
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role, company_name, industry, website, age_range, gender, country, interests, devices")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profileError) throw profileError;
+
+      if (cancelled) return;
+      setUserId(user.id);
+      setRole(
+        profile?.role === "owner" || profile?.role === "tester"
+          ? profile.role
+          : user.user_metadata?.role === "owner" ? "owner" : "tester"
+      );
+      setCompanyName(profile?.company_name || "");
+      setIndustry(profile?.industry || "");
+      setWebsite(profile?.website || "");
+      setAgeRange(profile?.age_range || "");
+      setGender(profile?.gender || "");
+      setCountry(profile?.country || "");
+      setSelectedInterests(profile?.interests || []);
+      setSelectedDevices(profile?.devices || []);
+    };
+
+    loadProfile()
+      .catch((error: unknown) => {
+        if (!cancelled) setErrorMessage(error instanceof Error ? error.message : "Your profile could not be loaded.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const finishSetup = async () => {
+    if (!role || !userId) return;
+
+    setSaving(true);
+    setErrorMessage("");
+    try {
+      const supabase = createClient();
+      const profileUpdates = role === "owner"
+        ? {
+            company_name: companyName.trim(),
+            industry: industry || null,
+            website: website.trim() || null,
+          }
+        : {
+            age_range: ageRange,
+            gender: gender || null,
+            country: country.trim(),
+            interests: selectedInterests,
+            devices: selectedDevices,
+          };
+      const { error } = await supabase.from("profiles").update(profileUpdates).eq("id", userId);
+      if (error) throw error;
+      router.push(role === "owner" ? "/dashboard/owner" : "/dashboard/tester");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Your profile could not be saved.");
+      setSaving(false);
+    }
+  };
+
   const toggleItem = (item: string, list: string[], setter: (v: string[]) => void) => {
     setter(list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
   };
 
   const isDone = steps[step]?.id === "done";
+
+  if (loading) {
+    return <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "var(--muted)" }}>Loading your profile…</main>;
+  }
+
+  if (!role) {
+    return <main role="alert" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#ff6b9d" }}>{errorMessage}</main>;
+  }
 
   return (
     <div
@@ -60,6 +148,7 @@ export default function OnboardingPage() {
       <div className="orb" style={{ width: 400, height: 400, background: "rgba(0,212,170,0.08)", bottom: -100, left: -100 }} />
 
       <div style={{ width: "100%", maxWidth: 560, position: "relative", zIndex: 1 }}>
+        {errorMessage && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{errorMessage}</p>}
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
@@ -276,13 +365,15 @@ export default function OnboardingPage() {
                 ? "Your company profile is ready. Time to create your first campaign."
                 : "Your profile is live! Start discovering test campaigns that match your interests."}
             </p>
-            <Link
-              href={role === "owner" ? "/dashboard/owner" : "/dashboard/tester"}
+            <button
+              type="button"
+              onClick={finishSetup}
+              disabled={saving}
               className="btn-primary"
-              style={{ fontSize: 16, padding: "14px 32px", textDecoration: "none" }}
+              style={{ fontSize: 16, padding: "14px 32px" }}
             >
-              Go to Dashboard →
-            </Link>
+              {saving ? "Saving…" : "Go to Dashboard →"}
+            </button>
           </div>
         )}
       </div>

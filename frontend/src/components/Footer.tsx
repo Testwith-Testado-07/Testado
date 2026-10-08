@@ -26,9 +26,6 @@ export default function Footer() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div
                 style={{
-                  background: "#ffffff",
-                  borderRadius: 6,
-                  padding: 4,
                   display: "inline-flex",
                   alignItems: "center",
                 }}
@@ -44,7 +41,7 @@ export default function Footer() {
               </div>
             </div>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, maxWidth: 360 }}>
-              We help businesses make better launch decisions using structured testing and real customer feedback.
+              We connect product owners with testers so teams can validate products and testers can discover real opportunities.
             </p>
           </div>
 
@@ -109,9 +106,6 @@ export default function Footer() {
               <a href="tel:+919325694956" style={{ color: "#ffffff", textDecoration: "none", fontWeight: 600 }}>
                 +91 9325694956
               </a>
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)" }}>
-                Evenings: 5:00 PM – 11:30 PM IST
-              </span>
             </div>
           </div>
         </div>
@@ -131,9 +125,6 @@ export default function Footer() {
           }}
         >
           <div>© 2026 Testado. All rights reserved.</div>
-          <div style={{ color: "rgba(255,255,255,0.4)" }}>
-            No payments are currently made through this website.
-          </div>
         </div>
       </div>
     </footer>

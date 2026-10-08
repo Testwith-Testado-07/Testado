@@ -1,191 +1,256 @@
 "use client";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
   { href: "/dashboard/tester", icon: "🔍", label: "Discover" },
-  { href: "/dashboard/tester/submissions", icon: "📨", label: "My Submissions" },
+  { href: "/dashboard/tester/submissions", icon: "📨", label: "My Applications" },
   { href: "/dashboard/tester/wallet", icon: "💰", label: "Wallet" },
 ];
 
-const campaigns = [
-  {
-    id: "c1",
-    title: "Mobile App UX Feedback",
-    company: "Acme Inc.",
-    reward: 8,
-    estimatedTime: "15–20 min",
-    testers: 42,
-    maxTesters: 60,
-    tags: ["iOS", "UX", "Fintech"],
-    description: "Test our new mobile banking app and share your honest thoughts on usability, design, and any friction points you encounter.",
-    deadline: "Oct 5, 2026",
-    match: 98,
-  },
-  {
-    id: "c2",
-    title: "E-commerce Checkout Flow",
-    company: "ShopWave",
-    reward: 6,
-    estimatedTime: "10–15 min",
-    testers: 33,
-    maxTesters: 100,
-    tags: ["Desktop", "E-commerce"],
-    description: "Walk through our checkout process on desktop and identify any friction points or confusing steps. Written feedback required.",
-    deadline: "Oct 12, 2026",
-    match: 91,
-  },
-  {
-    id: "c3",
-    title: "SaaS Onboarding Review",
-    company: "Flowdesk",
-    reward: 12,
-    estimatedTime: "25–35 min",
-    testers: 10,
-    maxTesters: 40,
-    tags: ["SaaS", "Productivity", "Desktop"],
-    description: "Sign up for our SaaS tool and complete the onboarding. Tell us where you got confused and what could be improved.",
-    deadline: "Oct 8, 2026",
-    match: 87,
-  },
-  {
-    id: "c4",
-    title: "AI Writing Assistant Beta",
-    company: "WordMind",
-    reward: 15,
-    estimatedTime: "30–40 min",
-    testers: 5,
-    maxTesters: 30,
-    tags: ["AI Tools", "Desktop", "Mac"],
-    description: "Try our AI writing assistant for a real writing task and rate its suggestions, accuracy, and overall usefulness.",
-    deadline: "Oct 3, 2026",
-    match: 82,
-  },
-];
+interface ProductCampaign {
+  id: string;
+  title: string;
+  description: string;
+  product_url: string;
+  reward_amount: number | string;
+  max_testers: number;
+  target_countries: string[];
+  target_ages: string[];
+  created_at: string;
+}
+
+interface CampaignApplication {
+  campaign_id: string;
+  status: "pending" | "accepted" | "rejected";
+}
 
 export default function TesterDiscover() {
+  const [firstName, setFirstName] = useState("");
+  const [testerId, setTesterId] = useState("");
+  const [campaigns, setCampaigns] = useState<ProductCampaign[]>([]);
+  const [applications, setApplications] = useState<CampaignApplication[]>([]);
+  const [sortBy, setSortBy] = useState("newest");
+  const [loading, setLoading] = useState(true);
+  const [applyingTo, setApplyingTo] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const supabase = createClient();
+    let cancelled = false;
+
+    const loadCampaigns = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Sign in to discover product tests.");
+
+      if (!cancelled) {
+        setTesterId(user.id);
+        const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "";
+        setFirstName(fullName.split(" ")[0]);
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("country, age_range")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profileError) throw profileError;
+
+      const { data, error } = await supabase
+        .from("campaigns")
+        .select("id, title, description, product_url, reward_amount, max_testers, target_countries, target_ages, created_at")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+
+      const availableCampaigns = ((data || []) as ProductCampaign[]).filter((campaign) => {
+        const countryMatches = campaign.target_countries.length === 0
+          || (!!profile?.country && campaign.target_countries.some(
+            (country) => country.trim().toLowerCase() === profile.country.trim().toLowerCase()
+          ));
+        const ageMatches = campaign.target_ages.length === 0
+          || (!!profile?.age_range && campaign.target_ages.includes(profile.age_range));
+        return countryMatches && ageMatches;
+      });
+      if (!cancelled) setCampaigns(availableCampaigns);
+
+      const { data: applicationRows, error: applicationError } = await supabase
+        .from("campaign_applications")
+        .select("campaign_id, status")
+        .eq("tester_id", user.id);
+      if (applicationError) throw applicationError;
+      if (!cancelled) setApplications((applicationRows || []) as CampaignApplication[]);
+    };
+
+    loadCampaigns()
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setErrorMessage(error instanceof Error ? error.message : "Product tests could not be loaded.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const applyToCampaign = async (campaignId: string) => {
+    if (!testerId) {
+      setErrorMessage("Sign in to apply for a product test.");
+      return;
+    }
+
+    setApplyingTo(campaignId);
+    setErrorMessage("");
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("campaign_applications")
+        .insert({ campaign_id: campaignId, tester_id: testerId })
+        .select("campaign_id, status")
+        .single();
+      if (error) throw error;
+      setApplications((current) => [...current, data as CampaignApplication]);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Your application could not be sent.");
+    } finally {
+      setApplyingTo("");
+    }
+  };
+
+  const sortedCampaigns = [...campaigns].sort((left, right) => {
+    if (sortBy === "reward") return Number(right.reward_amount) - Number(left.reward_amount);
+    return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
+  });
   return (
     <DashboardLayout role="tester" navItems={NAV}>
-      {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>Discover Campaigns 🔍</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>
+            Discover Product Tests 🔍{firstName ? `, ${firstName}` : ""}
+          </h1>
           <p style={{ color: "var(--muted)", fontSize: 14 }}>
-            Showing {campaigns.length} campaigns matched to your profile.
+            {loading
+              ? "Loading available product tests…"
+              : errorMessage
+                ? "Product tests could not be loaded."
+                : `${campaigns.length} active product ${campaigns.length === 1 ? "test" : "tests"} available.`}
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <div>
           <select
             id="campaign-sort"
             name="sort"
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
             style={{
               background: "var(--card)", border: "1px solid var(--card-border)",
               borderRadius: 10, padding: "10px 16px", color: "var(--foreground)",
               fontSize: 13, fontWeight: 600, cursor: "pointer",
             }}
           >
-            <option>Sort: Best Match</option>
-            <option>Sort: Highest Reward</option>
-            <option>Sort: Newest First</option>
-            <option>Sort: Fewest Testers</option>
+            <option value="newest">Sort: Newest First</option>
+            <option value="reward">Sort: Highest Reward</option>
           </select>
         </div>
       </div>
 
-      {/* Stats strip */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>
-        {[
-          { label: "Available Now", value: campaigns.length, icon: "📋", color: "#6c63ff" },
-          { label: "Potential Earnings", value: `$${campaigns.reduce((a, c) => a + c.reward, 0)}`, icon: "💸", color: "#00d4aa" },
-          { label: "Your Match Rate", value: "94%", icon: "🎯", color: "#ff6b9d" },
-        ].map((s) => (
-          <div key={s.label} className="card" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ fontSize: 28 }}>{s.icon}</div>
-            <div>
-              <div style={{ fontWeight: 800, fontSize: 22, color: s.color }}>{s.value}</div>
-              <div style={{ fontSize: 12, color: "var(--muted)" }}>{s.label}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {errorMessage && (
+        <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{errorMessage}</p>
+      )}
 
-      {/* Campaign cards grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 20 }}>
-        {campaigns.map((c) => (
-          <div
-            key={c.id}
-            className="card"
-            style={{ display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", padding: 0, transition: "all 0.2s" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#6c63ff55"; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(108,99,255,0.15)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-          >
-            {/* Card header */}
-            <div style={{ padding: "20px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      {!loading && !errorMessage && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
+          {[
+            { label: "Available Now", value: campaigns.length, icon: "📋", color: "#6c63ff" },
+            { label: "Applications Sent", value: applications.length, icon: "📨", color: "#00d4aa" },
+          ].map((s) => (
+            <div key={s.label} className="card" style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ fontSize: 28 }}>{s.icon}</div>
               <div>
-                <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, marginBottom: 4 }}>{c.company}</div>
-                <h3 style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3, marginBottom: 0 }}>{c.title}</h3>
-              </div>
-              <div
-                style={{
-                  background: "rgba(0,212,170,0.12)", border: "1px solid rgba(0,212,170,0.25)",
-                  borderRadius: 10, padding: "8px 14px", textAlign: "center", flexShrink: 0, marginLeft: 12,
-                }}
-              >
-                <div style={{ fontWeight: 800, fontSize: 20, color: "#00d4aa" }}>${c.reward}</div>
-                <div style={{ fontSize: 10, color: "var(--muted)", fontWeight: 600 }}>REWARD</div>
+                <div style={{ fontWeight: 800, fontSize: 22, color: s.color }}>{s.value}</div>
+                <div style={{ fontSize: 12, color: "var(--muted)" }}>{s.label}</div>
               </div>
             </div>
+          ))}
+        </div>
+      )}
 
-            {/* Match score */}
-            <div style={{ padding: "12px 20px 0" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ flex: 1, height: 4, background: "var(--card-border)", borderRadius: 3 }}>
-                  <div style={{ height: 4, width: `${c.match}%`, background: c.match > 90 ? "#00d4aa" : "#6c63ff", borderRadius: 3 }} />
-                </div>
-                <span style={{ fontSize: 11, fontWeight: 700, color: c.match > 90 ? "#00d4aa" : "#a78bfa" }}>
-                  {c.match}% match
-                </span>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: "14px 20px", flex: 1 }}>
-              <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 14 }}>
-                {c.description}
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
-                {c.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 999,
-                      background: "rgba(108,99,255,0.1)", color: "#a78bfa",
-                      border: "1px solid rgba(108,99,255,0.2)",
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: 16, fontSize: 12, color: "var(--muted)" }}>
-                <span>⏱ {c.estimatedTime}</span>
-                <span>👥 {c.testers}/{c.maxTesters} testers</span>
-                <span>📅 Due {c.deadline}</span>
-              </div>
-            </div>
-
-            {/* Action */}
-            <div style={{ padding: "0 20px 20px" }}>
-              <Link
-                href={`/dashboard/tester/campaigns/${c.id}`}
-                className="btn-primary"
-                style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}
-              >
-                View & Apply →
-              </Link>
-            </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 20 }}>
+        {loading ? (
+          <p style={{ color: "var(--muted)" }}>Loading product tests…</p>
+        ) : errorMessage ? null : sortedCampaigns.length === 0 ? (
+          <div className="card" style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40 }}>
+            <h2 style={{ fontSize: 18, marginBottom: 8 }}>No product tests are live yet</h2>
+            <p style={{ color: "var(--muted)", fontSize: 14 }}>Check back soon when product owners publish a test.</p>
           </div>
-        ))}
+        ) : sortedCampaigns.map((c) => {
+          const application = applications.find((item) => item.campaign_id === c.id);
+          return (
+            <div
+              key={c.id}
+              className="card"
+              style={{ display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", padding: 0, transition: "all 0.2s" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#6c63ff55"; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(108,99,255,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              <div style={{ padding: "20px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, marginBottom: 4 }}>PRODUCT TEST</div>
+                  <h3 style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3, marginBottom: 0 }}>{c.title}</h3>
+                </div>
+                <div
+                  style={{
+                    background: "rgba(0,212,170,0.12)", border: "1px solid rgba(0,212,170,0.25)",
+                    borderRadius: 10, padding: "8px 14px", textAlign: "center", flexShrink: 0, marginLeft: 12,
+                  }}
+                >
+                  <div style={{ fontWeight: 800, fontSize: 20, color: "#00d4aa" }}>${Number(c.reward_amount).toFixed(2)}</div>
+                  <div style={{ fontSize: 10, color: "var(--muted)", fontWeight: 600 }}>REWARD</div>
+                </div>
+              </div>
+
+              <div style={{ padding: "14px 20px", flex: 1 }}>
+                <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 14 }}>
+                  {c.description}
+                </p>
+                <p style={{ fontSize: 12, color: "var(--muted)" }}>
+                  Up to {c.max_testers} testers
+                  {c.target_countries.length > 0 && ` · ${c.target_countries.join(", ")}`}
+                  {c.target_ages.length > 0 && ` · Ages ${c.target_ages.join(", ")}`}
+                </p>
+                {c.product_url && (
+                  <a href={c.product_url} target="_blank" rel="noopener noreferrer" style={{ color: "#a78bfa", fontSize: 13 }}>
+                    Open product ↗
+                  </a>
+                )}
+              </div>
+
+              <div style={{ padding: "0 20px 20px" }}>
+                {application ? (
+                  <span className={`badge badge-${application.status}`} style={{ display: "inline-flex" }}>
+                    Application {application.status}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => applyToCampaign(c.id)}
+                    disabled={applyingTo === c.id}
+                    style={{ width: "100%", justifyContent: "center" }}
+                  >
+                    {applyingTo === c.id ? "Sending application…" : "Apply to test →"}
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </DashboardLayout>
   );
