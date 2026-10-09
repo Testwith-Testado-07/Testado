@@ -13,6 +13,7 @@ export default function TestersPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -25,14 +26,35 @@ export default function TestersPage() {
     consent: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.consent) return;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+
+    setSubmissionError("");
+    try {
+      const response = await fetch("/api/tester-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        setSubmissionError(
+          response.status === 503
+            ? "Email delivery is not configured yet. Your application was not sent."
+            : (errorData?.error || "We couldn't send your application. Please try again shortly.")
+        );
+        return;
+      }
+
       setSubmitted(true);
-    }, 600);
+    } catch {
+      setSubmissionError("We couldn't send your application. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -266,6 +288,7 @@ export default function TestersPage() {
                       name="name"
                       className="input"
                       required
+                      autoComplete="name"
                       placeholder="Your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -283,6 +306,7 @@ export default function TestersPage() {
                         className="input"
                         type="tel"
                         required
+                        autoComplete="tel"
                         placeholder="Your phone number"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -298,6 +322,7 @@ export default function TestersPage() {
                         className="input"
                         type="email"
                         required
+                        autoComplete="email"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -315,6 +340,7 @@ export default function TestersPage() {
                         name="city"
                         className="input"
                         required
+                        autoComplete="address-level2"
                         placeholder="e.g. Mumbai, Delhi, Bangalore"
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
@@ -409,6 +435,12 @@ export default function TestersPage() {
                       I understand that applying is 100% free, testing opportunities depend on profile matching, and payments/rewards apply to eligible opportunities I complete.
                     </span>
                   </label>
+
+                  {submissionError && (
+                    <p role="alert" style={{ color: "#dc2626", fontSize: 13, margin: 0 }}>
+                      {submissionError}
+                    </p>
+                  )}
 
                   <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start", padding: "13px 30px" }}>
                     {loading ? "Submitting..." : "Apply Free to Become a Tester ↗"}
