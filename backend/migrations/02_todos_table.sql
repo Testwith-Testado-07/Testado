@@ -48,15 +48,3 @@ CREATE POLICY "Users can delete their own todos"
     FOR DELETE
     TO authenticated
     USING ((SELECT auth.uid()) = user_id);
-
--- 5. Optional Demo / Development Policy:
--- If you want to test the UI before logging in as an authenticated user,
--- you can uncomment the policy below to allow anon access during local testing:
-/*
-CREATE POLICY "Allow anon demo access"
-    ON public.todos
-    FOR ALL
-    TO anon
-    USING (true)
-    WITH CHECK (true);
-*/

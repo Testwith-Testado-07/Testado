@@ -1,42 +1,55 @@
 @import "tailwindcss";
 
-/* ─── Rivo Design Tokens ────────────────────────────── */
+/* ─── Testado Blue & White Design Tokens ────────────── */
 :root {
-  /* Primary palette — Rivo forest green */
-  --green-dark: #224F34;
-  --green-mid: #2d6a45;
-  --green-light: #3a8255;
-  --mint: #C2EFD4;
-  --mint-light: #e0f7ea;
-  --mint-dark: #9de0b8;
+  /* Darker Blue Palette */
+  --navy-dark: #06101d;
+  --navy-mid: #0a1728;
+  --navy-light: #0f2240;
+  --ink: #07172e;
 
-  /* Neutrals */
-  --bg: #F8F9FA;
-  --bg-off: #f1f4f2;
-  --surface: #ffffff;
-  --border: #e2e8e4;
-  --border-dark: #c8d5cc;
+  /* Blue Accents & Primaries */
+  --blue-primary: #2563eb;
+  --blue-hover: #1d4ed8;
+  --blue-mid: #3b82f6;
+  --blue-light: #78a8ff;
+  --blue-soft: #dbeafe;
+  --blue-badge: #eef4ff;
 
-  /* Text */
-  --text-primary: #101828;
-  --text-body: #344054;
-  --text-muted: #667085;
-  --text-light: #98A2B3;
+  /* Lightish Blue Sections & Neutrals */
+  --bg: #f4f8fd;          /* Very lightish blue background */
+  --bg-subtle: #edf3fb;   /* Alternating soft lightish blue */
+  --surface: #ffffff;     /* Clean crisp white for cards */
+  --border: #dbe5f2;      /* Light blue-tinted border */
+  --border-dark: #bfd3eb;
+
+  /* Text Colors */
+  --text-primary: #081426; /* Dark navy for main headings */
+  --text-body: #334155;    /* Crisp body slate */
+  --text-muted: #64748b;   /* Muted secondary copy */
+  --text-light: #94a3b8;
 
   /* Accent */
-  --star: #FFC107;
+  --star: #f59e0b;
 
-  /* Legacy dashboard compatibility */
-  --background: #F8F9FA;
-  --foreground: #101828;
+  /* Backward compatibility mappings (replacing old green tokens) */
+  --green-dark: #0a1728;
+  --green-mid: #2563eb;
+  --green-light: #3b82f6;
+  --mint: #dbeafe;
+  --mint-light: #eff6ff;
+  --mint-dark: #93c5fd;
+
+  --background: #f4f8fd;
+  --foreground: #081426;
   --card: #ffffff;
-  --card-border: #e2e8e4;
-  --primary: #224F34;
-  --primary-dark: #1a3d27;
-  --secondary: #C2EFD4;
-  --accent: #3a8255;
-  --muted: #667085;
-  --muted-bg: #f1f4f2;
+  --card-border: #dbe5f2;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --secondary: #dbeafe;
+  --accent: #3b82f6;
+  --muted: #64748b;
+  --muted-bg: #edf3fb;
 }
 
 /* ─── Base Reset ────────────────────────────────────── */
@@ -74,34 +87,34 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--green-dark);
+  background: var(--blue-primary);
 }
 
 /* ─── Buttons ───────────────────────────────────────── */
 .btn-primary {
-  background: var(--green-dark);
+  background: var(--blue-primary);
   color: #ffffff;
-  border: 2px solid var(--green-dark);
-  border-radius: 6px;
+  border: 2px solid var(--blue-primary);
+  border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
-  background: var(--green-mid);
-  border-color: var(--green-mid);
+  background: var(--blue-hover);
+  border-color: var(--blue-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 79, 52, 0.3);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active {
@@ -110,15 +123,14 @@ body {
 
 .btn-secondary {
   background: transparent;
-  color: var(--green-dark);
-  border: 2px solid var(--green-dark);
-  border-radius: 6px;
+  color: var(--blue-primary);
+  border: 2px solid var(--blue-primary);
+  border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.25s ease;
   display: inline-flex;
@@ -128,23 +140,23 @@ body {
 }
 
 .btn-secondary:hover {
-  background: var(--green-dark);
+  background: var(--blue-primary);
   color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.2);
 }
 
 .btn-teal,
 .btn-mint {
-  background: var(--mint);
-  color: var(--green-dark);
-  border: 2px solid var(--mint-dark);
-  border-radius: 6px;
+  background: var(--blue-badge);
+  color: var(--blue-primary);
+  border: 1.5px solid var(--blue-soft);
+  border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.25s ease;
   display: inline-flex;
@@ -155,8 +167,8 @@ body {
 
 .btn-teal:hover,
 .btn-mint:hover {
-  background: var(--mint-dark);
-  border-color: var(--green-mid);
+  background: var(--blue-soft);
+  border-color: var(--blue-mid);
   transform: translateY(-2px);
 }
 
@@ -164,14 +176,16 @@ body {
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 28px;
   transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(7, 23, 46, 0.04);
 }
 
 .card:hover {
-  border-color: var(--green-dark);
-  box-shadow: 0 8px 32px rgba(34, 79, 52, 0.1);
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 14px 38px rgba(37, 99, 235, 0.1);
+  transform: translateY(-3px);
 }
 
 /* ─── Inputs ────────────────────────────────────────── */
@@ -179,7 +193,7 @@ body {
   width: 100%;
   background: #ffffff;
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px 16px;
   color: var(--text-primary);
   font-size: 15px;
@@ -189,8 +203,8 @@ body {
 }
 
 .input:focus {
-  border-color: var(--green-dark);
-  box-shadow: 0 0 0 3px rgba(34, 79, 52, 0.08);
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .input::placeholder {
@@ -211,18 +225,25 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
+  gap: 6px;
+  padding: 5px 14px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 
 .badge-active {
-  background: rgba(34, 79, 52, 0.12);
-  color: var(--green-dark);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue-primary);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.badge-free {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
 .badge-draft {
@@ -236,8 +257,8 @@ body {
 }
 
 .badge-approved {
-  background: rgba(34, 79, 52, 0.12);
-  color: var(--green-dark);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue-primary);
 }
 
 .badge-rejected {
@@ -254,7 +275,8 @@ body {
 .sidebar {
   width: 260px;
   min-height: 100vh;
-  background: var(--green-dark);
+  background: linear-gradient(180deg, #06101e 0%, #0a1728 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   padding: 28px 16px;
@@ -278,13 +300,14 @@ body {
 }
 
 .sidebar-link:hover {
-  background: rgba(194, 239, 212, 0.15);
-  color: var(--mint);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
 }
 
 .sidebar-link.active {
-  background: rgba(194, 239, 212, 0.2);
-  color: var(--mint);
+  background: rgba(37, 99, 235, 0.25);
+  color: #78a8ff;
+  border: 1px solid rgba(120, 168, 255, 0.3);
   font-weight: 700;
 }
 
@@ -292,44 +315,48 @@ body {
   margin-left: 260px;
   padding: 40px;
   min-height: 100vh;
+  background: var(--bg);
 }
 
 /* ─── Stat card ─────────────────────────────────────── */
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 24px;
   position: relative;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(7, 23, 46, 0.03);
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(34, 79, 52, 0.12);
+  box-shadow: 0 12px 35px rgba(37, 99, 235, 0.08);
 }
 
 /* ─── Section typography helpers ────────────────────── */
 .section-label {
   font-family: var(--font-inter), 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2.5px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--green-mid);
+  color: var(--blue-primary);
   margin-bottom: 12px;
-  display: block;
+  display: inline-block;
+  background: #eef4ff;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 99, 235, 0.15);
 }
 
 /* ─── Nav link with underline ───────────────────────── */
 .nav-link {
   position: relative;
   color: var(--text-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
   text-decoration: none;
   padding-bottom: 4px;
   transition: color 0.2s;
@@ -342,12 +369,12 @@ body {
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--green-dark);
+  background: var(--blue-primary);
   transition: width 0.25s ease;
 }
 
 .nav-link:hover {
-  color: var(--green-dark);
+  color: var(--blue-primary);
 }
 
 .nav-link:hover::after {
@@ -389,7 +416,7 @@ body {
 .divider {
   width: 48px;
   height: 3px;
-  background: var(--green-dark);
+  background: var(--blue-primary);
   margin: 16px auto;
   border-radius: 2px;
 }
@@ -408,7 +435,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--green-dark);
+  background: radial-gradient(circle at 84% 14%, rgba(37, 115, 255, 0.35), transparent 45%), linear-gradient(135deg, #06101e, #0a1728 60%, #0d203f);
   color: #ffffff;
   position: relative;
   overflow: hidden;
@@ -421,9 +448,9 @@ body {
   bottom: -140px;
   width: 420px;
   height: 420px;
-  border: 1px solid rgba(194, 239, 212, 0.22);
+  border: 1px solid rgba(120, 168, 255, 0.2);
   border-radius: 50%;
-  box-shadow: 0 0 0 42px rgba(194, 239, 212, 0.04), 0 0 0 84px rgba(194, 239, 212, 0.03);
+  box-shadow: 0 0 0 42px rgba(120, 168, 255, 0.04), 0 0 0 84px rgba(120, 168, 255, 0.02);
 }
 
 .auth-story-logo {
@@ -447,7 +474,7 @@ body {
 .auth-eyebrow,
 .auth-form-kicker {
   display: block;
-  color: var(--mint);
+  color: var(--blue-light);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2.2px;
@@ -489,7 +516,7 @@ body {
 }
 
 .auth-proof-list span {
-  color: var(--mint);
+  color: var(--blue-light);
   font-size: 11px;
   letter-spacing: 1px;
 }
@@ -523,10 +550,11 @@ body {
 }
 
 .auth-topline a {
-  color: var(--green-dark);
+  color: var(--blue-primary);
   text-decoration: none;
   letter-spacing: 0;
   text-transform: none;
+  font-weight: 700;
 }
 
 .auth-form-wrap {
@@ -546,8 +574,8 @@ body {
   padding: clamp(28px, 4vw, 44px);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 18px 50px rgba(34, 79, 52, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(6, 16, 29, 0.08);
 }
 
 .auth-heading {
@@ -590,7 +618,7 @@ body {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--green-mid);
+  color: var(--blue-primary);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -598,7 +626,7 @@ body {
 }
 
 .auth-text-button:hover {
-  color: var(--green-dark);
+  color: var(--blue-hover);
   text-decoration: underline;
 }
 
@@ -607,7 +635,7 @@ body {
   min-height: 50px;
   justify-content: center;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .auth-spinner {
@@ -635,8 +663,8 @@ body {
   align-items: center;
   gap: 10px;
   padding: 13px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
   background: var(--surface);
   color: var(--text-body);
   text-align: left;
@@ -646,12 +674,12 @@ body {
 
 .auth-role-option:hover,
 .auth-role-option.selected {
-  border-color: var(--green-mid);
-  background: var(--mint-light);
+  border-color: var(--blue-primary);
+  background: #eff6ff;
 }
 
 .auth-role-icon {
-  color: var(--green-mid);
+  color: var(--blue-primary);
   font-size: 23px;
   line-height: 1;
 }
@@ -663,6 +691,7 @@ body {
 
 .auth-role-option strong {
   font-size: 12px;
+  color: var(--text-primary);
 }
 
 .auth-role-option small {

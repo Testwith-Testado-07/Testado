@@ -16,10 +16,10 @@ interface ToastItemProps {
 }
 
 const ICONS: Record<ToastType, string> = {
-  success: "✓",
-  error: "✕",
-  info: "ℹ",
-  warning: "⚠",
+  success: "Check",
+  error: "Error",
+  info: "Info",
+  warning: "Warn",
 };
 
 const COLORS: Record<ToastType, { bg: string; border: string; text: string; icon: string }> = {

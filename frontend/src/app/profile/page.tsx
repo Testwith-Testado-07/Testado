@@ -87,8 +87,8 @@ export default function ProfilePage() {
       onBlur: () => setFocusedField(null),
       style: {
         ...inputStyle,
-        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#224F34" : "#e2e8e4",
-        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(34,79,52,0.08)" : "none",
+        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#2563eb" : "#dbe5f2",
+        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
       },
     };
   }
@@ -137,7 +137,7 @@ export default function ProfilePage() {
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
         {/* Nav */}
         <div style={{ marginBottom: 28 }}>
-          <Link href="/" style={{ color: "#224F34", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
+          <Link href="/" style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
             ← Back to Home
           </Link>
         </div>
@@ -149,10 +149,10 @@ export default function ProfilePage() {
           ) : (
             <div style={{
               width: 72, height: 72, borderRadius: "50%",
-              background: "linear-gradient(135deg, #224F34, #3a8255)",
+              background: "linear-gradient(135deg, #06101d, #2563eb)",
               display: "flex", alignItems: "center", justifyContent: "center",
               color: "#fff", fontWeight: 800, fontSize: 24, flexShrink: 0,
-              boxShadow: "0 4px 14px rgba(34,79,52,0.3)",
+              boxShadow: "0 4px 14px rgba(37,99,235,0.3)",
             }}>
               {getInitials(profile.full_name ?? null, user?.email ?? null)}
             </div>
@@ -165,13 +165,13 @@ export default function ProfilePage() {
               </>
             ) : (
               <>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: "#101828", margin: 0 }}>
+                <h1 style={{ fontSize: 22, fontWeight: 800, color: "#07172e", margin: 0 }}>
                   {profile.full_name || "Your Profile"}
                 </h1>
-                <p style={{ fontSize: 13, color: "#667085", margin: "3px 0 0" }}>
+                <p style={{ fontSize: 13, color: "#64748b", margin: "3px 0 0" }}>
                   {user?.email}
                   {profile.role && (
-                    <span style={{ marginLeft: 8, background: "#C2EFD4", color: "#224F34", padding: "2px 8px", borderRadius: 20, fontWeight: 700, fontSize: 11 }}>
+                    <span style={{ marginLeft: 8, background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", padding: "2px 8px", borderRadius: 20, fontWeight: 700, fontSize: 11 }}>
                       {profile.role}
                     </span>
                   )}
@@ -185,15 +185,15 @@ export default function ProfilePage() {
         {!loading && !user && (
           <div style={{ background: "#FEF2F2", border: "1px solid #FCA5A5", borderRadius: 12, padding: 24, textAlign: "center" }}>
             <p style={{ color: "#991B1B", fontWeight: 600, margin: "0 0 12px" }}>You must be signed in to edit your profile.</p>
-            <Link href="/auth" style={{ background: "#224F34", color: "#fff", padding: "10px 20px", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+            <Link href="/auth" style={{ background: "#2563eb", color: "#fff", padding: "10px 20px", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               Sign In
             </Link>
           </div>
         )}
 
         {!loading && user && (
-          <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #e2e8e4", padding: "36px 40px", boxShadow: "0 10px 40px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: "#224F34", margin: "0 0 24px" }}>Edit Profile</h2>
+          <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #dbe5f2", padding: "36px 40px", boxShadow: "0 10px 40px rgba(7,23,46,0.05)" }}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: "#07172e", margin: "0 0 24px" }}>Edit Profile</h2>
 
             <form onSubmit={handleSave} noValidate>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
@@ -202,7 +202,7 @@ export default function ProfilePage() {
                   <input
                     id="full-name"
                     type="text"
-                    placeholder="Jane Smith"
+                    placeholder="Your full name"
                     value={profile.full_name ?? ""}
                     onChange={(e) => set("full_name", e.target.value)}
                     {...fieldProps("full_name")}
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                     <input
                       id="username"
                       type="text"
-                      placeholder="janesmith"
+                      placeholder="Username"
                       value={profile.username ?? ""}
                       onChange={(e) => set("username", e.target.value.toLowerCase())}
                       {...fieldProps("username")}
@@ -239,8 +239,8 @@ export default function ProfilePage() {
                   onBlur={() => setFocusedField(null)}
                   style={{
                     ...inputStyle, resize: "vertical",
-                    borderColor: errors.bio ? "#FCA5A5" : focusedField === "bio" ? "#224F34" : "#e2e8e4",
-                    boxShadow: focusedField === "bio" && !errors.bio ? "0 0 0 3px rgba(34,79,52,0.08)" : "none",
+                    borderColor: errors.bio ? "#FCA5A5" : focusedField === "bio" ? "#2563eb" : "#dbe5f2",
+                    boxShadow: focusedField === "bio" && !errors.bio ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
                   }}
                 />
                 {errors.bio && <p style={{ color: "#DC2626", fontSize: 12, marginTop: 4 }}>{errors.bio}</p>}
@@ -268,10 +268,11 @@ export default function ProfilePage() {
                 disabled={saving}
                 style={{
                   width: "100%", padding: "13px",
-                  background: saving ? "#9de0b8" : "#224F34",
+                  background: saving ? "#93c5fd" : "#2563eb",
                   color: "#fff", border: "none", borderRadius: 10,
                   fontWeight: 700, fontSize: 15, cursor: saving ? "not-allowed" : "pointer",
                   fontFamily: "inherit", transition: "all 0.2s",
+                  boxShadow: "0 4px 14px rgba(37,99,235,0.25)",
                 }}
               >
                 {saving ? "Saving…" : "Save Profile"}

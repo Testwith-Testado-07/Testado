@@ -111,12 +111,11 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           display: "inline-flex", alignItems: "center", gap: 6,
           padding: "5px 12px", borderRadius: 999, marginBottom: 28,
           fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8,
-          background: role === "owner" ? "rgba(194,239,212,0.15)" : "rgba(58,130,85,0.2)",
-          color: role === "owner" ? "var(--mint)" : "var(--mint-dark)",
-          border: `1px solid ${role === "owner" ? "rgba(194,239,212,0.3)" : "rgba(58,130,85,0.4)"}`,
+          background: role === "owner" ? "rgba(37, 99, 235, 0.2)" : "rgba(120, 168, 255, 0.15)",
+          color: role === "owner" ? "#78a8ff" : "#93c5fd",
+          border: `1px solid ${role === "owner" ? "rgba(37, 99, 235, 0.4)" : "rgba(120, 168, 255, 0.3)"}`,
         }}
       >
-        <span>{role === "owner" ? "🏢" : "🧪"}</span>
         {role === "owner" ? "Product Owner" : "Tester"}
       </div>
 
@@ -136,16 +135,16 @@ export function Sidebar({ role, navItems }: SidebarProps) {
       </nav>
 
       {/* Bottom */}
-      <div style={{ borderTop: "1px solid rgba(194,239,212,0.15)", paddingTop: 20, marginTop: 20 }}>
+      <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.1)", paddingTop: 20, marginTop: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "0 8px", marginBottom: 16 }}>
           <div
             style={{
               width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-              background: role === "owner" ? "rgba(194,239,212,0.2)" : "rgba(58,130,85,0.25)",
+              background: "rgba(37, 99, 235, 0.25)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontWeight: 700, fontSize: 13,
-              color: "var(--mint)",
-              border: "1px solid rgba(194,239,212,0.25)",
+              color: "#78a8ff",
+              border: "1px solid rgba(120, 168, 255, 0.3)",
             }}
           >
             {user.initials}
@@ -164,7 +163,7 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           className="sidebar-link"
           style={{ color: "rgba(255,107,107,0.9)", background: "none", border: "none", width: "100%", cursor: "pointer", textAlign: "left" }}
         >
-          <span>🚪</span> Sign Out
+          Sign Out
         </button>
       </div>
     </aside>

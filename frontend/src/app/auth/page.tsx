@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -13,7 +13,6 @@ function AuthContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [emailSent, setEmailSent] = useState(false);
   const { toast } = useToast();
   const supabase = createClient();
 
@@ -24,13 +23,6 @@ function AuthContent() {
     try {
       if (mode === "login") {
         const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password });
-
-        // Email not confirmed — show the confirmation screen with resend option
-        if (error?.message?.toLowerCase().includes("email not confirmed")) {
-          setEmailSent(true);
-          setLoading(false);
-          return;
-        }
 
         if (error) throw error;
 
@@ -69,14 +61,6 @@ function AuthContent() {
           },
         });
 
-        // User already exists but unconfirmed — treat as "check email"
-        if (error?.message?.toLowerCase().includes("already registered") || error?.message?.toLowerCase().includes("user already registered")) {
-          setEmailSent(true);
-          toast.success("Account already exists — check your email for the confirmation link.");
-          setLoading(false);
-          return;
-        }
-
         if (error) throw error;
         if (!data.user) throw new Error("User creation failed");
 
@@ -87,35 +71,27 @@ function AuthContent() {
             full_name: name,
             role: role,
           });
-        } catch (profileError: any) {
-          console.warn("Profile upsert notice:", profileError?.message);
+        } catch (profileError: unknown) {
+          console.warn("Profile upsert notice:", profileError);
         }
 
-        // Email confirmation required — no session yet
         if (!data.session) {
-          setEmailSent(true);
-          toast.success("Check your email to confirm your account!");
-          setLoading(false);
-          return;
+          throw new Error(
+            "Email confirmation is enabled in Supabase. Disable it in your project's Auth settings to allow direct sign-in."
+          );
         }
 
         toast.success("Account created successfully!");
         window.location.href = role === "owner" ? "/dashboard/owner" : "/dashboard/tester";
       }
-    } catch (err: any) {
-      toast.error(err.message || "An unexpected error occurred. Please try again.");
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleResendEmail = async () => {
-    try {
-      const { error } = await supabase.auth.resend({ type: "signup", email });
-      if (error) throw error;
-      toast.success("Confirmation email resent! Check your inbox.");
-    } catch (err: any) {
-      toast.error(err.message || "Could not resend email.");
     }
   };
 
@@ -145,33 +121,6 @@ function AuthContent() {
         </div>
 
         <div className="auth-form-wrap">
-          {emailSent ? (
-            <div style={{ textAlign: "center", padding: "60px 0" }}>
-              <div style={{ fontSize: 64, marginBottom: 16 }}>📧</div>
-              <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12, fontFamily: "var(--font-playfair), Georgia, serif" }}>
-                Confirm your email
-              </h2>
-              <p style={{ color: "var(--text-muted)", fontSize: 15, lineHeight: 1.7, marginBottom: 28 }}>
-                We sent a confirmation link to <strong>{email}</strong>.<br />
-                Click it to activate your account, then come back to sign in.
-              </p>
-              <button
-                className="btn-primary"
-                onClick={handleResendEmail}
-                style={{ justifyContent: "center", width: "100%", marginBottom: 16 }}
-              >
-                Resend confirmation email
-              </button>
-              <button
-                className="auth-text-button"
-                onClick={() => { setEmailSent(false); setMode("login"); }}
-                style={{ fontSize: 14 }}
-              >
-                ← Back to sign in
-              </button>
-            </div>
-          ) : (
-            <>
               <Image
                 src="/assets/testado-logo-transparent.png"
                 alt="Testado"
@@ -224,7 +173,7 @@ function AuthContent() {
                         name="name"
                         autoComplete="name"
                         type="text"
-                        placeholder="Alex Johnson"
+                        placeholder="Your Full Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -279,8 +228,6 @@ function AuthContent() {
                 </div>
               </div>
               <p className="auth-legal">By continuing, you agree to use Testado for genuine testing and feedback.</p>
-            </>
-          )}
         </div>
       </main>
 

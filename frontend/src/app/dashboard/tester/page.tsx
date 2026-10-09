@@ -53,7 +53,7 @@ export default function TesterDiscover() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("country, age_range")
+        .select("age_range")
         .eq("id", user.id)
         .maybeSingle();
       if (profileError) throw profileError;
@@ -66,13 +66,9 @@ export default function TesterDiscover() {
       if (error) throw error;
 
       const availableCampaigns = ((data || []) as ProductCampaign[]).filter((campaign) => {
-        const countryMatches = campaign.target_countries.length === 0
-          || (!!profile?.country && campaign.target_countries.some(
-            (country) => country.trim().toLowerCase() === profile.country.trim().toLowerCase()
-          ));
         const ageMatches = campaign.target_ages.length === 0
           || (!!profile?.age_range && campaign.target_ages.includes(profile.age_range));
-        return countryMatches && ageMatches;
+        return ageMatches;
       });
       if (!cancelled) setCampaigns(availableCampaigns);
 
@@ -196,7 +192,7 @@ export default function TesterDiscover() {
               key={c.id}
               className="card"
               style={{ display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", padding: 0, transition: "all 0.2s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#6c63ff55"; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(108,99,255,0.15)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(37, 99, 235, 0.4)"; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 35px rgba(37, 99, 235, 0.12)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
             >
               <div style={{ padding: "20px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -206,12 +202,12 @@ export default function TesterDiscover() {
                 </div>
                 <div
                   style={{
-                    background: "rgba(0,212,170,0.12)", border: "1px solid rgba(0,212,170,0.25)",
+                    background: "#eff6ff", border: "1.5px solid #bfdbfe",
                     borderRadius: 10, padding: "8px 14px", textAlign: "center", flexShrink: 0, marginLeft: 12,
                   }}
                 >
-                  <div style={{ fontWeight: 800, fontSize: 20, color: "#00d4aa" }}>${Number(c.reward_amount).toFixed(2)}</div>
-                  <div style={{ fontSize: 10, color: "var(--muted)", fontWeight: 600 }}>REWARD</div>
+                  <div style={{ fontWeight: 800, fontSize: 20, color: "#2563eb" }}>${Number(c.reward_amount).toFixed(2)}</div>
+                  <div style={{ fontSize: 10, color: "#1d4ed8", fontWeight: 700 }}>REWARD</div>
                 </div>
               </div>
 
@@ -221,11 +217,11 @@ export default function TesterDiscover() {
                 </p>
                 <p style={{ fontSize: 12, color: "var(--muted)" }}>
                   Up to {c.max_testers} testers
-                  {c.target_countries.length > 0 && ` · ${c.target_countries.join(", ")}`}
+                  {c.target_countries.length > 0 && ` · Preferred countries: ${c.target_countries.join(", ")}`}
                   {c.target_ages.length > 0 && ` · Ages ${c.target_ages.join(", ")}`}
                 </p>
                 {c.product_url && (
-                  <a href={c.product_url} target="_blank" rel="noopener noreferrer" style={{ color: "#a78bfa", fontSize: 13 }}>
+                  <a href={c.product_url} target="_blank" rel="noopener noreferrer" style={{ color: "#2563eb", fontSize: 13, fontWeight: 600 }}>
                     Open product ↗
                   </a>
                 )}

@@ -4,10 +4,10 @@ export const runtime = "nodejs";
 
 const allowedTestTypes = new Set(["Product", "Service", "Idea", "Concept"]);
 const allowedStages = new Set([
-    "Just an idea",
-    "Prototype",
-    "Ready to test",
-    "Already launched",
+    "Concept / Idea",
+    "Prototype / MVP",
+    "Ready to launch",
+    "Already launched (Optimizing)",
 ]);
 
 function readText(value: unknown, maxLength: number): string | null {

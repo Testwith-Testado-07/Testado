@@ -5,7 +5,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function BusinessesPage() {
-  const G = "#224F34";
+  const BLUE_HEADINGS = "#07172e";
+  const BLUE_PRIMARY = "#2563eb";
+  const BLUE_ACCENT = "#78a8ff";
+  const BG_LIGHT_BLUE = "#f4f8fd";
+  const BG_ALT_BLUE = "#edf3fb";
+
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
@@ -15,7 +20,7 @@ export default function BusinessesPage() {
     email: "",
     phone: "",
     testType: "",
-    stage: "Ready to test",
+    stage: "Concept / Idea",
     targetCustomer: "",
     decisionQuestion: "",
     additionalInfo: "",
@@ -54,113 +59,173 @@ export default function BusinessesPage() {
   };
 
   return (
-    <div style={{ background: "#F8F9FA", color: "#101828", fontFamily: "var(--font-inter), 'Inter', sans-serif" }}>
+    <div style={{ background: BG_LIGHT_BLUE, color: "#081426", fontFamily: "var(--font-inter), 'Inter', sans-serif", overflowX: "hidden" }}>
       <Navbar />
 
       <main>
-        {/* ── HERO ─────────────────────────────────────── */}
-        <section style={{ padding: "160px 40px 80px", maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-          <span className="section-label">For Businesses & Idea Owners</span>
-          <div className="divider" />
-          <h1
-            style={{
-              fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-              fontSize: "clamp(36px, 5.5vw, 64px)",
-              fontWeight: 800,
-              color: G,
-              lineHeight: 1.15,
-              maxWidth: 960,
-              margin: "20px auto",
-            }}
-          >
-            Before You Spend More, Find Out Whether the Market is{" "}
-            <em style={{ fontStyle: "italic" }}>Likely to Say Yes.</em>
-          </h1>
-          <p style={{ fontSize: 18, color: "#475569", maxWidth: 820, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            Testado helps you put your product, service, concept or idea in front of people who match your
-            target customer — then we analyze the feedback to help you understand what is working, what is not,
-            and what should change.
-          </p>
+        {/* ── HERO ────────────────────── */}
+        <section
+          style={{
+            padding: "160px 40px 90px",
+            background: "linear-gradient(135deg, #06101d 0%, #0a1728 55%, #0f2240 100%)",
+            color: "#ffffff",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "6px 16px",
+                borderRadius: 999,
+                background: "rgba(120, 168, 255, 0.12)",
+                color: BLUE_ACCENT,
+                border: "1px solid rgba(120, 168, 255, 0.25)",
+                fontSize: 12,
+                fontWeight: 800,
+                letterSpacing: 1.5,
+                textTransform: "uppercase",
+                marginBottom: 16,
+              }}
+            >
+              For Businesses & Product Leaders • Market Intelligence
+            </span>
+            <div style={{ width: 48, height: 3, background: BLUE_PRIMARY, margin: "12px auto 20px", borderRadius: 2 }} />
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: 20,
-              maxWidth: 900,
-              margin: "0 auto",
-              textAlign: "left",
-            }}
-          >
-            <div className="card" style={{ padding: 28, borderLeft: `4px solid ${G}` }}>
-              <strong style={{ display: "block", color: G, fontSize: 16, marginBottom: 6 }}>
-                Not just “collect feedback.”
-              </strong>
-              <span style={{ color: "#667085", fontSize: 14, lineHeight: 1.6 }}>
-                We structure the test around the decision you need to make and look for meaningful patterns in the responses.
-              </span>
-            </div>
+            <h1
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                fontSize: "clamp(36px, 5.5vw, 68px)",
+                fontWeight: 800,
+                color: "#ffffff",
+                lineHeight: 1.15,
+                maxWidth: 1020,
+                margin: "20px auto",
+                letterSpacing: "-0.5px",
+              }}
+            >
+              De-Risk Your Launch with Validated{" "}
+              <span style={{ color: BLUE_ACCENT }}>Market Insights</span> Before You Burn Capital.
+            </h1>
+            <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#cbd5e1", maxWidth: 840, margin: "0 auto 40px", lineHeight: 1.75 }}>
+              Companies don&apos;t succeed on casual opinions. They succeed on <strong>validated customer intelligence</strong>.
+              Testado puts your product, app, or concept directly before your verified target demographic to measure demand, uncover buyer friction, and deliver high-conviction decision data.
+            </p>
 
-            <div className="card" style={{ padding: 28, borderLeft: `4px solid ${G}` }}>
-              <strong style={{ display: "block", color: G, fontSize: 16, marginBottom: 6 }}>
-                Not just “ask people if they like it.”
-              </strong>
-              <span style={{ color: "#667085", fontSize: 14, lineHeight: 1.6 }}>
-                We help you see the reasons behind reactions — interest, confusion, friction, appeal, objections and adoption signals.
-              </span>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 24,
+                maxWidth: 960,
+                margin: "0 auto",
+                textAlign: "left",
+              }}
+            >
+              <div
+                style={{
+                  padding: 30,
+                  borderRadius: 16,
+                  border: "1px solid rgba(120, 168, 255, 0.2)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                <strong style={{ display: "block", color: BLUE_ACCENT, fontSize: 17, marginBottom: 8, fontWeight: 700 }}>
+                  Not Casual Opinions — Deep Market Insights
+                </strong>
+                <span style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.65 }}>
+                  We evaluate purchase intent, price sensitivity, value proposition clarity, and competitor positioning across your genuine target market.
+                </span>
+              </div>
+
+              <div
+                style={{
+                  padding: 30,
+                  borderRadius: 16,
+                  border: "1px solid rgba(120, 168, 255, 0.2)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                <strong style={{ display: "block", color: BLUE_ACCENT, fontSize: 17, marginBottom: 8, fontWeight: 700 }}>
+                  Not “Do You Like It?” — Actionable Decision Data
+                </strong>
+                <span style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.65 }}>
+                  We uncover why potential buyers hesitate, what objections cause drop-off, and exactly what must be refined before scaling paid acquisition.
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ── ANALYSIS BAND ────────────────────────────── */}
-        <section style={{ padding: "90px 40px", background: "#ffffff" }}>
+        {/* ── ANALYSIS BAND (Lightish Blue Section) ──────────────── */}
+        <section style={{ padding: "95px 40px", background: "#ffffff", borderBottom: "1px solid #dbe5f2" }}>
           <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: 50 }}>
-              <span className="section-label">What We Help You Learn</span>
+            <div style={{ textAlign: "center", marginBottom: 54 }}>
+              <span className="section-label">Actionable Market Intelligence</span>
               <div className="divider" />
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-                  fontSize: "clamp(28px, 4vw, 44px)",
+                  fontSize: "clamp(28px, 4vw, 46px)",
                   fontWeight: 800,
-                  color: G,
+                  color: BLUE_HEADINGS,
+                  marginTop: 8,
                 }}
               >
-                The Real Value is in the Analysis After the Feedback
+                The Real Value is in the Market Insight Analysis
               </h2>
-              <p style={{ color: "#667085", fontSize: 15, maxWidth: 680, margin: "12px auto 0" }}>
-                A useful test helps you understand where the offer is strong, where it loses people, and what to do next.
+              <p style={{ color: "#64748b", fontSize: 16, maxWidth: 700, margin: "12px auto 0" }}>
+                Raw comments are noisy. We synthesize real user behaviors into concrete market intelligence your leadership team can act on.
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 28 }}>
-              <div className="card" style={{ padding: 36 }}>
-                <h3 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 22, color: G, marginBottom: 10 }}>
-                  What people respond to
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 30 }}>
+              <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f4f8fd)", border: "1px solid #dbe5f2" }}>
+                <div style={{ display: "inline-block", background: "#eff6ff", color: BLUE_PRIMARY, padding: "4px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800, marginBottom: 14 }}>
+                  BEHAVIORAL SIGNALS
+                </div>
+                <h3 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 12 }}>
+                  What Your Target Market Reveals
                 </h3>
-                <p style={{ color: "#667085", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
-                  We examine first impressions, perceived value, product appeal, clarity, usability and purchase intent.
+                <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.65, marginBottom: 20 }}>
+                  We observe and analyze initial perception, perceived value, feature adoption, and actual willingness to pay.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {["What immediately makes sense", "What creates interest or excitement", "What creates hesitation or confusion"].map((s) => (
-                    <div key={s} style={{ padding: "10px 14px", borderRadius: 8, background: "#f1f4f2", color: G, fontSize: 13, fontWeight: 700 }}>
-                      ✓ {s}
+                  {[
+                    "Immediate value proposition comprehension",
+                    "Purchase intent and pricing sensitivity thresholds",
+                    "Onboarding friction and points of confusion",
+                    "Perceived differentiation versus existing alternatives",
+                  ].map((s) => (
+                    <div key={s} style={{ padding: "11px 14px", borderRadius: 10, background: "#eff6ff", color: "#1e3a8a", fontSize: 13, fontWeight: 700, border: "1px solid #dbeafe" }}>
+                      {s}
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="card" style={{ padding: 36 }}>
-                <h3 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 22, color: G, marginBottom: 10 }}>
-                  What the responses are telling you
+              <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f4f8fd)", border: "1px solid #dbe5f2" }}>
+                <div style={{ display: "inline-block", background: "#eff6ff", color: BLUE_PRIMARY, padding: "4px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800, marginBottom: 14 }}>
+                  STRATEGIC DELIVERABLES
+                </div>
+                <h3 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 12 }}>
+                  Executive Decision Metrics
                 </h3>
-                <p style={{ color: "#667085", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
-                  We identify recurring themes and signals that help you decide whether to proceed, adjust, or rethink.
+                <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.65, marginBottom: 20 }}>
+                  We look across all participant interactions to deliver synthesized market insights that eliminate guesswork.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {["Patterns across relevant participants", "Repeated objections or friction points", "Areas worth changing before launch"].map((s) => (
-                    <div key={s} style={{ padding: "10px 14px", borderRadius: 8, background: "#f1f4f2", color: G, fontSize: 13, fontWeight: 700 }}>
-                      ✦ {s}
+                  {[
+                    "Recurring customer objections & dealbreaker patterns",
+                    "Target demographic readiness and demand indicators",
+                    "Prioritized pre-launch product improvements",
+                    "High-conviction Go / Iterate / Rethink recommendation",
+                  ].map((s) => (
+                    <div key={s} style={{ padding: "11px 14px", borderRadius: 10, background: "#eff6ff", color: "#1e3a8a", fontSize: 13, fontWeight: 700, border: "1px solid #dbeafe" }}>
+                      {s}
                     </div>
                   ))}
                 </div>
@@ -169,8 +234,8 @@ export default function BusinessesPage() {
           </div>
         </section>
 
-        {/* ── INTAKE FORM SECTION ──────────────────────── */}
-        <section id="business-form" style={{ padding: "90px 40px", background: "#F8F9FA" }}>
+        {/* ── INTAKE FORM SECTION (Very Lightish Blue Background) ──── */}
+        <section id="business-form" style={{ padding: "95px 40px", background: BG_ALT_BLUE }}>
           <div
             style={{
               maxWidth: 1140,
@@ -185,91 +250,99 @@ export default function BusinessesPage() {
             <div
               className="card"
               style={{
-                background: G,
+                background: "linear-gradient(145deg, #06101d 0%, #0b1d35 100%)",
                 color: "#ffffff",
                 padding: 36,
                 position: "sticky",
                 top: 100,
+                border: "1px solid rgba(120, 168, 255, 0.2)",
+                boxShadow: "0 18px 50px rgba(6, 16, 29, 0.2)",
               }}
             >
+              <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, color: BLUE_ACCENT, textTransform: "uppercase" }}>
+                LAUNCH VALIDATION
+              </span>
               <h3
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: 26,
                   lineHeight: 1.2,
-                  marginBottom: 12,
+                  margin: "8px 0 12px",
+                  color: "#ffffff",
                 }}
               >
-                Start with the business question.
+                Define Your Market Objective
               </h3>
-              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
-                The stronger the question, the more useful the test. Tell us what you are building, who you want
-                to understand, and what decision you need help making.
+              <p style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.65, marginBottom: 28 }}>
+                The clearer your business question, the more decisive the market insights. Share what you are building, who your target customer is, and what you need to validate.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {[
-                  { n: "01", b: "Tell us what you have", s: "Product, service, idea or concept." },
-                  { n: "02", b: "Tell us who matters", s: "Describe the customer you need feedback from." },
-                  { n: "03", b: "Tell us what you need to know", s: "Share the question or decision behind the test." },
-                  { n: "04", b: "We discuss the test", s: "We’ll contact you to understand requirements and next steps." },
+                  { n: "01", b: "Your Product or Offer", s: "App, service, physical product, or concept." },
+                  { n: "02", b: "Target Demographic", s: "Describe the specific market persona to evaluate it." },
+                  { n: "03", b: "Key Market Question", s: "What critical uncertainty must be proven before launch?" },
+                  { n: "04", b: "Test & Insights Scoping", s: "We design the test protocol and deliver clear market data." },
                 ].map((step) => (
                   <div
                     key={step.n}
                     style={{
-                      padding: "12px 16px",
-                      borderRadius: 8,
-                      background: "rgba(255,255,255,0.08)",
-                      border: "1px solid rgba(255,255,255,0.12)",
+                      padding: "14px 16px",
+                      borderRadius: 12,
+                      background: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid rgba(120, 168, 255, 0.15)",
                     }}
                   >
-                    <b style={{ display: "block", fontSize: 13, color: "var(--mint)", marginBottom: 2 }}>
+                    <b style={{ display: "block", fontSize: 13, color: BLUE_ACCENT, marginBottom: 3 }}>
                       {step.n} — {step.b}
                     </b>
-                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{step.s}</span>
+                    <span style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5 }}>{step.s}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Right Form Card */}
-            <div className="card" style={{ padding: 36 }}>
+            {/* Right Form Card (Clean White Card) */}
+            <div className="card" style={{ padding: 36, background: "#ffffff", border: "1.5px solid #dbe5f2" }}>
+              <div style={{ display: "inline-block", background: "#eff6ff", color: BLUE_PRIMARY, padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 800, marginBottom: 10 }}>
+                MARKET RESEARCH ENQUIRY
+              </div>
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: 28,
-                  color: G,
+                  color: BLUE_HEADINGS,
                   marginBottom: 6,
                 }}
               >
-                Discuss a Testado Test
+                Request a Market Insights Test
               </h2>
-              <p style={{ color: "#667085", fontSize: 14, marginBottom: 24 }}>
-                Give us the basics first. We’ll speak with you about the best way to structure the testing requirement.
+              <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>
+                Share your initial requirements below. Our testing strategists will contact you to structure a targeted evaluation.
               </p>
 
               {submitted ? (
                 <div
                   style={{
-                    padding: "24px 20px",
-                    borderRadius: 8,
-                    background: "rgba(194,239,212,0.3)",
-                    border: `1.5px solid ${G}`,
-                    color: G,
+                    padding: "28px 24px",
+                    borderRadius: 14,
+                    background: "#eff6ff",
+                    border: `1.5px solid ${BLUE_PRIMARY}`,
+                    color: BLUE_HEADINGS,
                   }}
                 >
-                  <strong style={{ fontSize: 16, display: "block", marginBottom: 6 }}>
-                    ✓ Request received successfully!
+                  <strong style={{ fontSize: 18, display: "block", marginBottom: 8, color: BLUE_PRIMARY }}>
+                    Request Received Successfully!
                   </strong>
-                  <p style={{ fontSize: 14, margin: 0, lineHeight: 1.6 }}>
-                    We’ll review your testing goals and contact you directly to discuss setup and timeline.
+                  <p style={{ fontSize: 14, margin: 0, lineHeight: 1.65, color: "#334155" }}>
+                    We have received your testing enquiry. Our team will review your market validation goals and contact you directly to discuss the testing framework, participant demographics, and next steps.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div>
                     <label className="label" htmlFor="business-name">
-                      Your name <span style={{ color: G }}>*</span>
+                      Your name <span style={{ color: BLUE_PRIMARY }}>*</span>
                     </label>
                     <input
                       id="business-name"
@@ -285,21 +358,21 @@ export default function BusinessesPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
                       <label className="label" htmlFor="business-company">
-                        Business / Brand <span style={{ color: G }}>*</span>
+                        Business / Brand <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <input
                         id="business-company"
                         name="company"
                         className="input"
                         required
-                        placeholder="Company name"
+                        placeholder="Company or Brand name"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       />
                     </div>
                     <div>
                       <label className="label" htmlFor="business-phone">
-                        Phone number <span style={{ color: G }}>*</span>
+                        Phone number <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <input
                         id="business-phone"
@@ -307,7 +380,7 @@ export default function BusinessesPage() {
                         className="input"
                         type="tel"
                         required
-                        placeholder="+91 9325694956"
+                        placeholder="+91 0000000000"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       />
@@ -316,7 +389,7 @@ export default function BusinessesPage() {
 
                   <div>
                     <label className="label" htmlFor="business-email">
-                      Email address <span style={{ color: G }}>*</span>
+                      Email address <span style={{ color: BLUE_PRIMARY }}>*</span>
                     </label>
                     <input
                       id="business-email"
@@ -333,7 +406,7 @@ export default function BusinessesPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
                       <label className="label" htmlFor="business-test-type">
-                        Testing type <span style={{ color: G }}>*</span>
+                        What are you testing? <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <select
                         id="business-test-type"
@@ -344,15 +417,15 @@ export default function BusinessesPage() {
                         onChange={(e) => setFormData({ ...formData, testType: e.target.value })}
                       >
                         <option value="">Select type</option>
-                        <option value="Product">Product (App / Physical)</option>
-                        <option value="Service">Service</option>
-                        <option value="Idea">Idea</option>
-                        <option value="Concept">Concept</option>
+                        <option value="Product">Digital App / Software</option>
+                        <option value="Physical Product">Physical Product</option>
+                        <option value="Service">Service / Offering</option>
+                        <option value="Concept">New Concept / Value Proposition</option>
                       </select>
                     </div>
 
                     <div>
-                      <label className="label" htmlFor="business-stage">Stage</label>
+                      <label className="label" htmlFor="business-stage">Current stage</label>
                       <select
                         className="input"
                         id="business-stage"
@@ -360,17 +433,17 @@ export default function BusinessesPage() {
                         value={formData.stage}
                         onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
                       >
-                        <option value="Just an idea">Just an idea</option>
-                        <option value="Prototype">Prototype</option>
-                        <option value="Ready to test">Ready to test</option>
-                        <option value="Already launched">Already launched</option>
+                        <option value="Concept / Idea">Concept / Idea</option>
+                        <option value="Prototype / MVP">Prototype / MVP</option>
+                        <option value="Ready to launch">Ready to launch</option>
+                        <option value="Already launched (Optimizing)">Already launched (Optimizing)</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="label" htmlFor="business-target-customer">
-                      Target customer <span style={{ color: G }}>*</span>
+                      Target customer demographic <span style={{ color: BLUE_PRIMARY }}>*</span>
                     </label>
                     <textarea
                       id="business-target-customer"
@@ -378,7 +451,7 @@ export default function BusinessesPage() {
                       className="input"
                       rows={3}
                       required
-                      placeholder="Describe the people you want feedback from — e.g. age range, location, interests, habits."
+                      placeholder="Describe the audience you need market insights from (e.g. age range, city/location, spending habits, profession, interests)."
                       value={formData.targetCustomer}
                       onChange={(e) => setFormData({ ...formData, targetCustomer: e.target.value })}
                     />
@@ -386,7 +459,7 @@ export default function BusinessesPage() {
 
                   <div>
                     <label className="label" htmlFor="business-decision-question">
-                      Decision or question to answer <span style={{ color: G }}>*</span>
+                      Key market question or decision to validate <span style={{ color: BLUE_PRIMARY }}>*</span>
                     </label>
                     <textarea
                       id="business-decision-question"
@@ -394,7 +467,7 @@ export default function BusinessesPage() {
                       className="input"
                       rows={3}
                       required
-                      placeholder="e.g. Will people understand the offer? What makes them hesitate?"
+                      placeholder="e.g. Will users pay for this tier? What causes hesitation during signup? Is the core value proposition immediately obvious?"
                       value={formData.decisionQuestion}
                       onChange={(e) => setFormData({ ...formData, decisionQuestion: e.target.value })}
                     />
@@ -403,16 +476,15 @@ export default function BusinessesPage() {
                   <div
                     style={{
                       padding: "12px 14px",
-                      borderRadius: 8,
-                      background: "#f1f4f2",
+                      borderRadius: 10,
+                      background: "#eff6ff",
+                      border: "1px solid #bfdbfe",
                       fontSize: 12,
-                      color: "#475569",
+                      color: "#1e3a8a",
                       lineHeight: 1.5,
                     }}
                   >
-                    🔒 Please share only the information required for your enquiry. Do not submit passwords, financial
-                    details, government IDs, trade secrets, or confidential credentials. No payments are made through
-                    this website.
+                    🔒 <strong style={{ color: 'inherit' }}>Strict Privacy:</strong> Please share only non-confidential information suitable for initial scoping. Do not submit passwords, API keys, or financial credentials. No payments are made through this website.
                   </div>
 
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>
@@ -431,13 +503,13 @@ export default function BusinessesPage() {
                   </label>
 
                   {submissionError && (
-                    <p role="alert" style={{ color: "#b42318", fontSize: 13, margin: 0 }}>
+                    <p role="alert" style={{ color: "#dc2626", fontSize: 13, margin: 0, fontWeight: 600 }}>
                       {submissionError}
                     </p>
                   )}
 
-                  <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start" }}>
-                    {loading ? "Submitting..." : "Talk to Testado about my test →"}
+                  <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start", padding: "13px 30px" }}>
+                    {loading ? "Submitting..." : "Discuss Market Insights for My Launch ↗"}
                   </button>
                 </form>
               )}

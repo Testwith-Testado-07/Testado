@@ -113,11 +113,11 @@ export default function ClientsPage() {
         {/* Header row */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
           <div>
-            <Link href="/" style={{ color: "#224F34", fontWeight: 700, textDecoration: "none", fontSize: 13, display: "block", marginBottom: 6 }}>
+            <Link href="/" style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none", fontSize: 13, display: "block", marginBottom: 6 }}>
               ← Back to Home
             </Link>
-            <h1 style={{ fontSize: 28, fontWeight: 800, color: "#101828", margin: 0 }}>Client Database</h1>
-            <p style={{ color: "#667085", fontSize: 14, marginTop: 4 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: "#07172e", margin: 0 }}>Client Database</h1>
+            <p style={{ color: "#64748b", fontSize: 14, marginTop: 4 }}>
               {clients.length} client{clients.length !== 1 ? "s" : ""} saved
             </p>
           </div>
@@ -125,9 +125,9 @@ export default function ClientsPage() {
             href="/clients/new"
             id="add-client-btn"
             style={{
-              background: "#224F34", color: "#fff", padding: "12px 22px", borderRadius: 10,
+              background: "#2563eb", color: "#fff", padding: "12px 22px", borderRadius: 10,
               textDecoration: "none", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", gap: 8,
-              boxShadow: "0 4px 16px rgba(34,79,52,0.25)", transition: "all 0.2s",
+              boxShadow: "0 4px 16px rgba(37,99,235,0.25)", transition: "all 0.2s",
             }}
           >
             + Add Client
@@ -145,9 +145,9 @@ export default function ClientsPage() {
                   onClick={() => setFilter(filter === s ? "all" : s)}
                   style={{
                     padding: "8px 16px", borderRadius: 10, cursor: "pointer", fontFamily: "inherit",
-                    border: `2px solid ${filter === s ? m.color : "#e2e8e4"}`,
+                    border: `2px solid ${filter === s ? m.color : "#dbe5f2"}`,
                     background: filter === s ? m.bg : "#fff",
-                    color: filter === s ? m.color : "#667085",
+                    color: filter === s ? m.color : "#64748b",
                     fontWeight: 600, fontSize: 13, transition: "all 0.18s",
                     display: "flex", alignItems: "center", gap: 8,
                   }}
@@ -169,9 +169,9 @@ export default function ClientsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
-              width: "100%", maxWidth: 400, padding: "10px 16px", border: "1.5px solid #e2e8e4",
+              width: "100%", maxWidth: 400, padding: "10px 16px", border: "1.5px solid #dbe5f2",
               borderRadius: 10, fontSize: 14, background: "#fff", outline: "none", fontFamily: "inherit",
-              color: "#101828",
+              color: "#081426",
             }}
           />
         </div>
@@ -185,11 +185,11 @@ export default function ClientsPage() {
 
         {/* Empty state */}
         {!loading && clients.length === 0 && (
-          <div style={{ textAlign: "center", padding: "80px 20px", background: "#fff", borderRadius: 18, border: "1px solid #e2e8e4" }}>
+          <div style={{ textAlign: "center", padding: "80px 20px", background: "#fff", borderRadius: 18, border: "1px solid #dbe5f2" }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🧑‍💼</div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "0 0 8px" }}>No clients yet</h2>
-            <p style={{ color: "#667085", fontSize: 14, marginBottom: 24 }}>Add your first client to get started.</p>
-            <Link href="/clients/new" style={{ background: "#224F34", color: "#fff", padding: "12px 24px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#07172e", margin: "0 0 8px" }}>No clients yet</h2>
+            <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>Add your first client to get started.</p>
+            <Link href="/clients/new" style={{ background: "#2563eb", color: "#fff", padding: "12px 24px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               Add Your First Client
             </Link>
           </div>
@@ -197,9 +197,9 @@ export default function ClientsPage() {
 
         {/* Filtered empty */}
         {!loading && clients.length > 0 && filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: "48px 20px", color: "#667085" }}>
+          <div style={{ textAlign: "center", padding: "48px 20px", color: "#64748b" }}>
             <p>No clients match your search.</p>
-            <button onClick={() => { setSearch(""); setFilter("all"); }} style={{ background: "none", border: "none", color: "#224F34", fontWeight: 700, cursor: "pointer", textDecoration: "underline", fontFamily: "inherit" }}>
+            <button onClick={() => { setSearch(""); setFilter("all"); }} style={{ background: "none", border: "none", color: "#2563eb", fontWeight: 700, cursor: "pointer", textDecoration: "underline", fontFamily: "inherit" }}>
               Clear filters
             </button>
           </div>

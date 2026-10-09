@@ -56,8 +56,8 @@ export default function NewClientPage() {
       onBlur: () => setFocusedField(null),
       style: {
         ...inputStyle,
-        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#224F34" : "#e2e8e4",
-        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(34,79,52,0.08)" : "none",
+        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#2563eb" : "#dbe5f2",
+        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
       },
     };
   }
@@ -98,26 +98,26 @@ export default function NewClientPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F8F9FA", padding: "48px 20px", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#f4f8fd", padding: "48px 20px", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
         {/* Nav */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <Link href="/clients" style={{ color: "#224F34", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
+          <Link href="/clients" style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
             ← Back to Clients
           </Link>
         </div>
 
         {/* Form card */}
-        <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #e2e8e4", padding: "36px 40px", boxShadow: "0 10px 40px rgba(0,0,0,0.05)" }}>
+        <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #dbe5f2", padding: "36px 40px", boxShadow: "0 10px 40px rgba(7,23,46,0.05)" }}>
           {/* Header */}
           <div style={{ marginBottom: 32 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase", color: "#224F34", display: "block", marginBottom: 6 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase", color: "#2563eb", display: "block", marginBottom: 6 }}>
               Client Management
             </span>
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: "#101828", margin: 0 }}>Add New Client</h1>
-            <p style={{ color: "#667085", fontSize: 14, marginTop: 6 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 800, color: "#07172e", margin: 0 }}>Add New Client</h1>
+            <p style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>
               Save a client's contact details and project status.
             </p>
           </div>
@@ -130,7 +130,7 @@ export default function NewClientPage() {
                 <input
                   id="client-name"
                   type="text"
-                  placeholder="Jane Smith"
+                  placeholder="Contact full name"
                   value={form.name ?? ""}
                   onChange={(e) => set("name", e.target.value)}
                   {...field("name")}
@@ -223,8 +223,8 @@ export default function NewClientPage() {
                   ...inputStyle,
                   resize: "vertical",
                   minHeight: 100,
-                  borderColor: errors.notes ? "#FCA5A5" : focusedField === "notes" ? "#224F34" : "#e2e8e4",
-                  boxShadow: focusedField === "notes" && !errors.notes ? "0 0 0 3px rgba(34,79,52,0.08)" : "none",
+                  borderColor: errors.notes ? "#FCA5A5" : focusedField === "notes" ? "#2563eb" : "#dbe5f2",
+                  boxShadow: focusedField === "notes" && !errors.notes ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
                 }}
               />
               {errors.notes && <p style={{ color: "#DC2626", fontSize: 12, marginTop: 4 }}>{errors.notes}</p>}
@@ -238,7 +238,7 @@ export default function NewClientPage() {
               style={{
                 width: "100%",
                 padding: "13px",
-                background: submitting ? "#9de0b8" : "#224F34",
+                background: submitting ? "#93c5fd" : "#2563eb",
                 color: "#fff",
                 border: "none",
                 borderRadius: 10,
@@ -248,6 +248,7 @@ export default function NewClientPage() {
                 transition: "all 0.2s",
                 fontFamily: "inherit",
                 letterSpacing: 0.3,
+                boxShadow: "0 4px 16px rgba(37,99,235,0.25)",
               }}
             >
               {submitting ? "Saving…" : "Save Client →"}

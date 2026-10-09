@@ -5,7 +5,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function TestersPage() {
-  const G = "#224F34";
+  const BLUE_HEADINGS = "#07172e";
+  const BLUE_PRIMARY = "#2563eb";
+  const BLUE_ACCENT = "#78a8ff";
+  const BG_LIGHT_BLUE = "#f4f8fd";
+  const BG_ALT_BLUE = "#edf3fb";
+
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,66 +36,120 @@ export default function TestersPage() {
   };
 
   return (
-    <div style={{ background: "#F8F9FA", color: "#101828", fontFamily: "var(--font-inter), 'Inter', sans-serif" }}>
+    <div style={{ background: BG_LIGHT_BLUE, color: "#081426", fontFamily: "var(--font-inter), 'Inter', sans-serif", overflowX: "hidden" }}>
       <Navbar />
 
       <main>
-        {/* ── HERO ─────────────────────────────────────── */}
+        {/* ── HERO (Darker Blue Headings + Lightish Blue BG) ─── */}
         <section style={{ padding: "160px 40px 80px", maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-          <span className="section-label">For Testers</span>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "6px 16px",
+              borderRadius: 999,
+              background: "#eff6ff",
+              border: "1.5px solid #bfdbfe",
+              color: BLUE_PRIMARY,
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 1.5,
+              textTransform: "uppercase",
+              marginBottom: 16,
+            }}
+          >
+            100% Free to Join • Zero Fees • Zero Investment
+          </div>
           <div className="divider" />
           <h1
             style={{
               fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-              fontSize: "clamp(36px, 5.5vw, 64px)",
+              fontSize: "clamp(36px, 5.5vw, 68px)",
               fontWeight: 800,
-              color: G,
+              color: BLUE_HEADINGS,
               lineHeight: 1.15,
-              maxWidth: 960,
+              maxWidth: 980,
               margin: "20px auto",
+              letterSpacing: "-0.5px",
             }}
           >
-            Turn Your Honest Opinions into a{" "}
-            <em style={{ fontStyle: "italic" }}>Flexible Side-Income Stream.</em>
+            Earn Real Cash by Becoming a Tester —{" "}
+            <span style={{ color: BLUE_PRIMARY }}>Completely FREE.</span>
           </h1>
-          <p style={{ fontSize: 18, color: "#475569", maxWidth: 820, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            Testado gives people the chance to take part in eligible product, service and concept testing
-            opportunities. You test, tell us what you really think, and may get paid or rewarded for the
-            opportunities you are selected for.
+          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#475569", maxWidth: 840, margin: "0 auto 36px", lineHeight: 1.75 }}>
+            You don&apos;t need experience, and you will <strong>never be asked to pay a single rupee</strong>.
+            Sign up for free, get invited to test early-stage products, websites, and apps in your free time, share your honest reactions, and <strong>get paid directly</strong>.
           </p>
 
+          {/* 3 Core Value Highlights Emphasizing Free Earning */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
               gap: 20,
-              maxWidth: 960,
+              maxWidth: 1100,
               margin: "0 auto",
             }}
           >
-            <div className="card" style={{ padding: 24, textAlign: "left" }}>
-              <b style={{ color: G, display: "block", marginBottom: 4 }}>Earn for eligible tests</b>
-              <span style={{ fontSize: 14, color: "#667085" }}>
-                Payment or rewards apply to completed opportunities you are chosen for.
+            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
+              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
+                Join for FREE — No subscriptions or hidden fees.
+              </b>
+              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
+                Zero registration fees, zero deposits, and no catches. Creating your profile and receiving test invites is 100% free forever.
               </span>
             </div>
-            <div className="card" style={{ padding: 24, textAlign: "left" }}>
-              <b style={{ color: G, display: "block", marginBottom: 4 }}>Choose matching products</b>
-              <span style={{ fontSize: 14, color: "#667085" }}>
-                Take part in opportunities that fit your background and personal interests.
+            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
+              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
+                Get paid directly for sharing your genuine user experience.
+              </b>
+              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
+                Companies pay us for truthful evaluations. We pass earnings directly to you in cash payouts and rewards for each completed test.
               </span>
             </div>
-            <div className="card" style={{ padding: 24, textAlign: "left" }}>
-              <b style={{ color: G, display: "block", marginBottom: 4 }}>No sales or pitching</b>
-              <span style={{ fontSize: 14, color: "#667085" }}>
-                Your value is in honest, direct feedback on what works and what doesn&apos;t.
+            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
+              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
+                Flexible tasks you can complete anytime, anywhere.
+              </b>
+              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
+                Test websites, new apps, and physical products on your own schedule directly from your phone or laptop.
               </span>
             </div>
           </div>
         </section>
 
-        {/* ── APPLICATION SECTION ──────────────────────── */}
-        <section style={{ padding: "80px 40px 100px", background: "#ffffff" }}>
+        {/* ── WHY IS IT 100% FREE EXPLANATION BANNER ─────── */}
+        <section style={{ padding: "40px 40px", maxWidth: 1100, margin: "0 auto" }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #06101d 0%, #0d2244 100%)",
+              color: "#ffffff",
+              padding: "36px 40px",
+              borderRadius: 24,
+              display: "flex",
+              alignItems: "center",
+              gap: 28,
+              flexWrap: "wrap",
+              border: "1px solid rgba(120, 168, 255, 0.2)",
+              boxShadow: "0 14px 40px rgba(6, 16, 29, 0.15)",
+            }}
+          >
+            <div style={{ fontSize: 44, flexShrink: 0 }}></div>
+            <div style={{ flex: 1, minWidth: 280 }}>
+              <h3 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 8px", color: "#ffffff" }}>
+                How does it work? Why is testing 100% Free for you?
+              </h3>
+              <p style={{ margin: 0, fontSize: 14, color: "#cbd5e1", lineHeight: 1.7 }}>
+                Companies and founders pay Testado to test their new ideas and gather authentic user intelligence before launching.
+                We share those funds with you for your time and honest evaluations. That is why you <strong>never pay anything</strong> to test, and you <strong>get rewarded for your participation</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── APPLICATION SECTION (Lightish Blue Background) ── */}
+        <section style={{ padding: "70px 40px 100px", background: BG_ALT_BLUE }}>
           <div
             style={{
               maxWidth: 1140,
@@ -105,94 +164,102 @@ export default function TestersPage() {
             <div
               className="card"
               style={{
-                background: G,
+                background: "linear-gradient(145deg, #06101d 0%, #0b1d35 100%)",
                 color: "#ffffff",
                 padding: 36,
                 position: "sticky",
                 top: 100,
+                border: "1px solid rgba(120, 168, 255, 0.2)",
+                boxShadow: "0 18px 50px rgba(6, 16, 29, 0.25)",
               }}
             >
+              <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, color: BLUE_ACCENT, textTransform: "uppercase" }}>
+                ZERO BARRIER TO ENTRY
+              </span>
               <h3
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: 26,
-                  marginBottom: 12,
+                  margin: "8px 0 12px",
+                  color: "#ffffff",
                 }}
               >
-                How the tester side works
+                How You Earn as a Tester
               </h3>
-              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
-                We keep the first step simple. Give us the basic information needed to understand who you are
-                and what kinds of opportunities fit you.
+              <p style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
+                The process is straightforward and completely free from start to finish.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {[
-                  { n: "01", b: "Apply", s: "Share your contact details and general interests." },
-                  { n: "02", b: "We match", s: "When an opportunity fits your profile, you may be invited." },
-                  { n: "03", b: "Test & respond", s: "Complete the activity honestly and follow test instructions." },
-                  { n: "04", b: "Earn rewards", s: "Eligible completed opportunities include payments or rewards." },
+                  { n: "01", b: "Apply 100% Free", s: "Fill out the 60-second form below. No fee or credit card required." },
+                  { n: "02", b: "Get Matched", s: "Receive invitations when products matching your interests need testing." },
+                  { n: "03", b: "Test & Review", s: "Use the product or app honestly and give your genuine evaluation." },
+                  { n: "04", b: "Get Paid", s: "Receive payment or rewards directly for eligible completed tests." },
                 ].map((step) => (
                   <div
                     key={step.n}
                     style={{
-                      padding: "12px 16px",
-                      borderRadius: 8,
-                      background: "rgba(255,255,255,0.08)",
-                      border: "1px solid rgba(255,255,255,0.12)",
+                      padding: "14px 16px",
+                      borderRadius: 12,
+                      background: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid rgba(120, 168, 255, 0.15)",
                     }}
                   >
-                    <b style={{ display: "block", fontSize: 13, color: "var(--mint)", marginBottom: 2 }}>
+                    <b style={{ display: "block", fontSize: 13, color: BLUE_ACCENT, marginBottom: 3 }}>
                       {step.n} — {step.b}
                     </b>
-                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{step.s}</span>
+                    <span style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5 }}>{step.s}</span>
                   </div>
                 ))}
               </div>
 
-              <div style={{ marginTop: 24, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-                🔒 Tester applications are currently for people aged 18+.
+              <div style={{ marginTop: 24, fontSize: 12, color: "#94a3b8" }}>
+                Tester applications are currently open for individuals aged 18+.
               </div>
             </div>
 
-            {/* Right Application Form */}
-            <div className="card" style={{ padding: 36, border: "1.5px solid #e2e8e4" }}>
+            {/* Right Application Form (Clean White Card) */}
+            <div className="card" style={{ padding: 36, background: "#ffffff", border: "1.5px solid #dbe5f2" }}>
+              <div style={{ display: "inline-block", background: "#eff6ff", color: BLUE_PRIMARY, padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 800, marginBottom: 10 }}>
+                FREE REGISTRATION
+              </div>
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: 28,
-                  color: G,
+                  color: BLUE_HEADINGS,
                   marginBottom: 6,
                 }}
               >
-                Become a Testado Tester
+                Join as a Testado Tester
               </h2>
-              <p style={{ color: "#667085", fontSize: 14, marginBottom: 24 }}>
-                Only share the basic information needed for contact and matching. There is no payment required to apply.
+              <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>
+                Fill out the basic details so we can match you with suitable tests. <strong>There is never any cost to join.</strong>
               </p>
 
               {submitted ? (
                 <div
                   style={{
-                    padding: "24px 20px",
-                    borderRadius: 8,
-                    background: "rgba(194,239,212,0.3)",
-                    border: `1.5px solid ${G}`,
-                    color: G,
+                    padding: "28px 24px",
+                    borderRadius: 14,
+                    background: "#eff6ff",
+                    border: `1.5px solid ${BLUE_PRIMARY}`,
+                    color: BLUE_HEADINGS,
                   }}
                 >
-                  <strong style={{ fontSize: 16, display: "block", marginBottom: 6 }}>
-                    ✓ Application received successfully!
+                  <strong style={{ fontSize: 18, display: "block", marginBottom: 8, color: BLUE_PRIMARY }}>
+                    Application Received for FREE!
                   </strong>
-                  <p style={{ fontSize: 14, margin: 0, lineHeight: 1.6 }}>
-                    We’ll review your details and reach out when an eligible testing opportunity matches your profile.
+                  <p style={{ fontSize: 14, margin: 0, lineHeight: 1.65, color: "#334155" }}>
+                    Thank you! We will review your profile and contact you whenever an eligible testing opportunity matches your background. Remember, there is never any fee.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div>
                     <label className="label" htmlFor="tester-name">
-                      Full name <span style={{ color: G }}>*</span>
+                      Full name <span style={{ color: BLUE_PRIMARY }}>*</span>
                     </label>
                     <input
                       id="tester-name"
@@ -208,7 +275,7 @@ export default function TestersPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
                       <label className="label" htmlFor="tester-phone">
-                        Phone number <span style={{ color: G }}>*</span>
+                        Phone number <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <input
                         id="tester-phone"
@@ -223,7 +290,7 @@ export default function TestersPage() {
                     </div>
                     <div>
                       <label className="label" htmlFor="tester-email">
-                        Email address <span style={{ color: G }}>*</span>
+                        Email address <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <input
                         id="tester-email"
@@ -241,21 +308,21 @@ export default function TestersPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div>
                       <label className="label" htmlFor="tester-city">
-                        City <span style={{ color: G }}>*</span>
+                        City <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <input
                         id="tester-city"
                         name="city"
                         className="input"
                         required
-                        placeholder="e.g. Mumbai, Pune, Bangalore"
+                        placeholder="e.g. Mumbai, Delhi, Bangalore"
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       />
                     </div>
                     <div>
                       <label className="label" htmlFor="tester-age">
-                        Age Confirmation <span style={{ color: G }}>*</span>
+                        Age Confirmation <span style={{ color: BLUE_PRIMARY }}>*</span>
                       </label>
                       <select
                         id="tester-age"
@@ -295,7 +362,7 @@ export default function TestersPage() {
                       className="input"
                       id="tester-interests"
                       name="interests"
-                      placeholder="e.g. mobile apps, tech, gaming, fashion, food delivery, finance"
+                      placeholder="e.g. mobile apps, games, gadgets, e-commerce, food, fashion"
                       value={formData.interests}
                       onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
                     />
@@ -308,7 +375,7 @@ export default function TestersPage() {
                       rows={3}
                       id="tester-why"
                       name="why"
-                      placeholder="Tell us a little about yourself and what you enjoy testing."
+                      placeholder="Tell us a little about yourself and what kinds of products you enjoy testing."
                       value={formData.why}
                       onChange={(e) => setFormData({ ...formData, why: e.target.value })}
                     />
@@ -317,15 +384,15 @@ export default function TestersPage() {
                   <div
                     style={{
                       padding: "12px 14px",
-                      borderRadius: 8,
-                      background: "#f1f4f2",
+                      borderRadius: 10,
+                      background: "#eff6ff",
+                      border: "1px solid #bfdbfe",
                       fontSize: 12,
-                      color: "#475569",
+                      color: "#1e3a8a",
                       lineHeight: 1.5,
                     }}
                   >
-                    🔒 Please share only the information required for your application. Do not submit passwords,
-                    financial details, government IDs, or confidential documents. No payments are made through this website.
+                    🔒 <strong>100% Free Guarantee:</strong> Testado will never charge you any fee to apply, join, or receive testing opportunities. Do not submit passwords or financial information.
                   </div>
 
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>
@@ -339,13 +406,12 @@ export default function TestersPage() {
                       style={{ marginTop: 2 }}
                     />
                     <span>
-                      I understand that testing opportunities are not guaranteed and that payment/rewards apply only
-                      to eligible opportunities I am selected for and complete.
+                      I understand that applying is 100% free, testing opportunities depend on profile matching, and payments/rewards apply to eligible opportunities I complete.
                     </span>
                   </label>
 
-                  <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start" }}>
-                    {loading ? "Submitting..." : "Apply to become a tester →"}
+                  <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: "flex-start", padding: "13px 30px" }}>
+                    {loading ? "Submitting..." : "Apply Free to Become a Tester ↗"}
                   </button>
                 </form>
               )}
