@@ -89,7 +89,7 @@ export default function BusinessesPage() {
                 marginBottom: 16,
               }}
             >
-              For Businesses & Product Leaders • Market Intelligence
+              For Businesses and Product Leaders • Market Intelligence
             </span>
             <div style={{ width: 48, height: 3, background: BLUE_PRIMARY, margin: "12px auto 20px", borderRadius: 2 }} />
 

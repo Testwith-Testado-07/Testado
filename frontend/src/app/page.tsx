@@ -341,11 +341,8 @@ export default function LandingPage() {
               }}
             >
               <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f4f8fd)", border: "1px solid #dbe5f2" }}>
-                <div style={{ display: "inline-block", padding: "6px 12px", background: "#eff6ff", color: BLUE_PRIMARY, borderRadius: 8, fontSize: 11, fontWeight: 800, marginBottom: 16 }}>
-                  BUSINESS INTELLIGENCE
-                </div>
                 <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 14 }}>
-                  For Businesses & Product Leaders
+                  For Businesses and Product Leaders
                 </h4>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
                   Companies don&apos;t fail because of poor execution; they fail because they build things the market doesn&apos;t want.
@@ -355,16 +352,11 @@ export default function LandingPage() {
               </div>
 
               <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f0f7ff)", border: "1px solid #bfdbfe" }}>
-                <div style={{ display: "inline-block", padding: "6px 12px", background: "#eff6ff", color: BLUE_PRIMARY, borderRadius: 8, fontSize: 11, fontWeight: 800, marginBottom: 16 }}>
-                  100% FREE PARTICIPATION
-                </div>
                 <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 14 }}>
-                  For Testers Earning Flexible Income
+                  Earn Flexible Income as a Testado Tester
                 </h4>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
-                  Anyone 18+ can become a Testado tester completely for <strong>FREE</strong>. Never pay for access or buy inventory.
-                  Get matched with relevant products and services, experience them honestly, answer targeted questions, and receive cash rewards
-                  for every completed testing opportunity.
+                  Anyone 18 or older can join Testado completely free with zero membership fees or inventory requirements. Get matched with products and services tailored to you, share your authentic feedback, and earn direct cash rewards for every completed testing opportunity.
                 </p>
               </div>
             </div>
