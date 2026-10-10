@@ -101,7 +101,7 @@ export default function TestersPage() {
           </h1>
           <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#475569", maxWidth: 840, margin: "0 auto 36px", lineHeight: 1.75 }}>
             You don&apos;t need experience, and you will <strong>never be asked to pay a single rupee</strong>.
-            Sign up for free, get invited to test early-stage products, websites, and apps in your free time, share your honest reactions, and <strong>get paid directly</strong>.
+            Sign up for free, get invited to explore unreleased products in your free time, share your honest reactions, and <strong>get paid directly</strong>.
           </p>
 
           {/* 3 Core Value Highlights Emphasizing Free Earning */}
