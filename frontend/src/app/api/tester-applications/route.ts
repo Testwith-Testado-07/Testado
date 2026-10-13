@@ -60,8 +60,7 @@ export async function POST(request: Request) {
     !age ||
     !frequency ||
     interests === null ||
-    why === null ||
-    body.consent !== true
+    why === null
   ) {
     return Response.json({ error: "Please check the required application fields." }, { status: 400 });
   }

@@ -24,12 +24,10 @@ export default function TestersPage() {
     frequency: "Whenever a suitable opportunity comes up",
     interests: "",
     why: "",
-    consent: false,
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.consent) return;
     setLoading(true);
 
     setSubmissionError("");
@@ -37,7 +35,7 @@ export default function TestersPage() {
       const response = await fetch("/api/tester-applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, consent: true }),
       });
 
       if (!response.ok) {
@@ -387,21 +385,6 @@ export default function TestersPage() {
                   >
                     <strong>100% Free Guarantee:</strong> Testado will never charge you any fee to apply, join, or receive testing opportunities. Do not submit passwords or financial information.
                   </div>
-
-                  <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>
-                    <input
-                      type="checkbox"
-                      id="tester-consent"
-                      name="consent"
-                      required
-                      checked={formData.consent}
-                      onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-                      style={{ marginTop: 2 }}
-                    />
-                    <span>
-                      I understand that applying is 100% free, testing opportunities depend on profile matching, and payments/rewards apply to eligible opportunities I complete.
-                    </span>
-                  </label>
 
                   {submissionError && (
                     <p role="alert" style={{ color: "#dc2626", fontSize: 13, margin: 0 }}>
