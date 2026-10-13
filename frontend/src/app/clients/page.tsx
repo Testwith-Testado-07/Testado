@@ -186,7 +186,6 @@ export default function ClientsPage() {
         {/* Empty state */}
         {!loading && clients.length === 0 && (
           <div style={{ textAlign: "center", padding: "80px 20px", background: "#fff", borderRadius: 18, border: "1px solid #dbe5f2" }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🧑‍💼</div>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#07172e", margin: "0 0 8px" }}>No clients yet</h2>
             <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>Add your first client to get started.</p>
             <Link href="/clients/new" style={{ background: "#2563eb", color: "#fff", padding: "12px 24px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
@@ -255,7 +254,7 @@ export default function ClientsPage() {
                     title="Send email"
                     style={{ padding: "7px 12px", borderRadius: 8, border: "1.5px solid #e2e8e4", textDecoration: "none", fontSize: 14, color: "#344054", background: "#fff", cursor: "pointer" }}
                   >
-                    ✉️
+                    Email
                   </a>
                   <button
                     id={`delete-client-${client.id}`}
@@ -268,7 +267,7 @@ export default function ClientsPage() {
                       fontSize: 14, fontFamily: "inherit",
                     }}
                   >
-                    🗑
+                    Delete
                   </button>
                 </div>
               </div>

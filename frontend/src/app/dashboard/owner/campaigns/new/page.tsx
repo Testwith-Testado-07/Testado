@@ -5,17 +5,17 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
-  { href: "/dashboard/owner", icon: "📊", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", icon: "📋", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", icon: "➕", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", icon: "💳", label: "Billing" },
+  { href: "/dashboard/owner", label: "Overview" },
+  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
+  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
+  { href: "/dashboard/owner/billing", label: "Billing" },
 ];
 
 const QUESTION_TYPES = [
-  { value: "text", label: "Long Text", icon: "📝" },
-  { value: "rating", label: "Rating (1–10)", icon: "⭐" },
-  { value: "choice", label: "Multiple Choice", icon: "☑️" },
-  { value: "yesno", label: "Yes / No", icon: "✅" },
+  { value: "text", label: "Long Text" },
+  { value: "rating", label: "Rating (1–10)" },
+  { value: "choice", label: "Multiple Choice" },
+  { value: "yesno", label: "Yes / No" },
 ];
 
 interface Question {
@@ -258,7 +258,7 @@ export default function NewCampaignPage() {
                       }}
                     >
                       {QUESTION_TYPES.map((t) => (
-                        <option key={t.value} value={t.value}>{t.icon} {t.label}</option>
+                        <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
                     </select>
                     <button
@@ -396,7 +396,7 @@ export default function NewCampaignPage() {
                 disabled={submitting}
                 style={{ opacity: submitting ? 0.7 : 1 }}
               >
-                {submitting ? "Launching..." : "🚀 Launch Campaign"}
+                {submitting ? "Launching..." : "Launch Campaign"}
               </button>
             </div>
           </div>

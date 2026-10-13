@@ -32,12 +32,12 @@ export default function Footer() {
                 }}
               >
                 <Image
-                  src="/assets/testado-logo-transparent.png"
+                  src="/assets/testado-logo.png"
                   alt="Testado"
                   width={1531}
                   height={382}
                   sizes="170px"
-                  style={{ width: 170, height: 42, display: "block", filter: "brightness(0) invert(1)" }}
+                  style={{ width: 170, height: 42, display: "block" }}
                 />
               </div>
             </div>
@@ -45,7 +45,7 @@ export default function Footer() {
               Real People. Real Insights. Real Problems.
             </p>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, maxWidth: 360 }}>
-              We help businesses make confident launch decisions using targeted market insights and customer behavioral validation. Testers join 100% free to earn rewards testing new products.
+              We turn consumer feedback into business confidence. Brands gain the targeted market insights needed for successful launches, while our testers enjoy free access to new products and earn rewards for their participation.
             </p>
           </div>
 
@@ -69,10 +69,10 @@ export default function Footer() {
                 Why Testado
               </Link>
               <Link href="/businesses" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
-                For Businesses (Market Insights)
+                For Businesses
               </Link>
               <Link href="/testers" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
-                Become a Tester (100% Free)
+                Become a Tester
               </Link>
               <Link href="/about" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
                 About Testado

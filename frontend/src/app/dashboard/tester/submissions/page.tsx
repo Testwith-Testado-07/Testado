@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
-  { href: "/dashboard/tester", icon: "🔍", label: "Discover" },
-  { href: "/dashboard/tester/submissions", icon: "📨", label: "My Applications" },
-  { href: "/dashboard/tester/wallet", icon: "💰", label: "Wallet" },
+  { href: "/dashboard/tester", label: "Discover" },
+  { href: "/dashboard/tester/submissions", label: "My Applications" },
+  { href: "/dashboard/tester/wallet", label: "Wallet" },
 ];
 
 interface Application {
@@ -74,13 +74,12 @@ export default function TesterApplications() {
       {!loading && !errorMessage && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
           {[
-            { label: "Total Applications", value: applications.length, color: "#6c63ff", icon: "📨" },
-            { label: "Awaiting Review", value: pendingCount, color: "#fbbf24", icon: "⏳" },
-            { label: "Accepted", value: acceptedCount, color: "#00d4aa", icon: "✅" },
-            { label: "Not Accepted", value: rejectedCount, color: "#ff6b9d", icon: "✕" },
+            { label: "Total Applications", value: applications.length, color: "#6c63ff" },
+            { label: "Awaiting Review", value: pendingCount, color: "#fbbf24" },
+            { label: "Accepted", value: acceptedCount, color: "#00d4aa" },
+            { label: "Not Accepted", value: rejectedCount, color: "#ff6b9d" },
           ].map((stat) => (
             <div key={stat.label} className="card" style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 24, marginBottom: 10 }}>{stat.icon}</div>
               <div style={{ fontSize: 26, fontWeight: 800, color: stat.color, marginBottom: 4 }}>{stat.value}</div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>{stat.label}</div>
             </div>

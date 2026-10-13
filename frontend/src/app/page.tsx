@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import HomepageFollowSun from "@/components/HomepageFollowSun";
 
 export default function LandingPage() {
   const BLUE_DARK = "#06101d";      // Dark navy for contrast sections & cards
@@ -242,74 +243,6 @@ export default function LandingPage() {
             Two paths. One purpose: high-conviction decisions built with validated consumer intelligence.
           </p>
 
-          {/* High-priority Clickable Instagram Callout Strip (Navy Blue gradient) */}
-          <div style={{ maxWidth: 1060, margin: "36px auto 0" }}>
-            <div
-              style={{
-                background: "linear-gradient(135deg, #06101d 0%, #0d2244 100%)",
-                color: "#ffffff",
-                borderRadius: 20,
-                padding: "24px 34px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: 20,
-                textAlign: "left",
-                boxShadow: "0 14px 40px rgba(6, 16, 29, 0.25)",
-                border: "1px solid rgba(120, 168, 255, 0.2)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-                <div
-                  style={{
-                    width: 46,
-                    height: 46,
-                    borderRadius: 14,
-                    background: "linear-gradient(135deg, #5b72ff, #ff5f9d, #ffc857)",
-                    color: "#ffffff",
-                    display: "grid",
-                    placeItems: "center",
-                    fontSize: 22,
-                    fontWeight: 900,
-                    flexShrink: 0,
-                  }}
-                >
-                  ◎
-                </div>
-                <div>
-                  <strong style={{ fontSize: 16, display: "block", color: "#ffffff" }}>
-                    Want to talk before you submit a test request?
-                  </strong>
-                  <p style={{ margin: "2px 0 0", fontSize: 14, color: "#cbd5e1" }}>
-                    Message our team directly on Instagram: @testwithtestado
-                  </p>
-                </div>
-              </div>
-
-              <a
-                href="https://www.instagram.com/testwithtestado/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: 12,
-                  padding: "11px 24px",
-                  borderRadius: 999,
-                  background: "rgba(255, 255, 255, 0.12)",
-                  color: "#ffffff",
-                  border: "1px solid rgba(255, 255, 255, 0.25)",
-                  textDecoration: "none",
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  transition: "background 0.2s",
-                }}
-              >
-                Open Instagram ↗
-              </a>
-            </div>
-          </div>
         </section>
 
         {/* ── WHAT WE DO (Lightish Blue Section) ───────────────── */}
@@ -428,6 +361,8 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <HomepageFollowSun />
+
         {/* ── WHY THIS MATTERS ───────────────── */}
         <section
           style={{
@@ -489,7 +424,7 @@ export default function LandingPage() {
                   backdropFilter: "blur(10px)",
                 }}
               >
-                📊 Measure Genuine Purchase Intent & Value
+                Measure Genuine Purchase Intent & Value
               </div>
               <div
                 style={{
@@ -503,7 +438,7 @@ export default function LandingPage() {
                   backdropFilter: "blur(10px)",
                 }}
               >
-                ⚡ Eliminate Friction Before It Burns Capital
+                Eliminate Friction Before It Burns Capital
               </div>
               <div
                 style={{
@@ -517,7 +452,7 @@ export default function LandingPage() {
                   backdropFilter: "blur(10px)",
                 }}
               >
-                🎯 Make High-Conviction Go / Pivot Decisions
+                Make High-Conviction Go / Pivot Decisions
               </div>
             </div>
           </div>

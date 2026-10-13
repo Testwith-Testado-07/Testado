@@ -7,7 +7,6 @@ import { createClient } from "@/utils/supabase/client";
 
 interface NavItem {
   href: string;
-  icon: string;
   label: string;
 }
 
@@ -127,7 +126,6 @@ export function Sidebar({ role, navItems }: SidebarProps) {
           const active = exactActive || (item.href !== `/dashboard/${role}` && isActive);
           return (
             <Link key={item.href} href={item.href} className={`sidebar-link${active ? " active" : ""}`}>
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
               {item.label}
             </Link>
           );

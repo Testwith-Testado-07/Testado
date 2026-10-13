@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
-  { href: "/dashboard/owner", icon: "📊", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", icon: "📋", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", icon: "➕", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", icon: "💳", label: "Billing" },
+  { href: "/dashboard/owner", label: "Overview" },
+  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
+  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
+  { href: "/dashboard/owner/billing", label: "Billing" },
 ];
 
 interface OwnerCampaign {

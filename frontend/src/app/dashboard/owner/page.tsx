@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
-  { href: "/dashboard/owner", icon: "📊", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", icon: "📋", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", icon: "➕", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", icon: "💳", label: "Billing" },
+  { href: "/dashboard/owner", label: "Overview" },
+  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
+  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
+  { href: "/dashboard/owner/billing", label: "Billing" },
 ];
 
 interface OwnerDashboardCampaign {
@@ -94,28 +94,24 @@ export default function OwnerDashboard() {
       value: campaigns.filter((campaign) => campaign.status === "active").length,
       change: `${campaigns.length} total campaigns`,
       color: "#6c63ff",
-      icon: "📋",
     },
     {
       label: "Tester Applications",
       value: campaigns.reduce((total, campaign) => total + campaign.application_count, 0),
       change: "Across your campaigns",
       color: "#00d4aa",
-      icon: "📨",
     },
     {
       label: "Pending Review",
       value: campaigns.reduce((total, campaign) => total + campaign.pending_count, 0),
       change: "Applications awaiting a decision",
       color: "#fbbf24",
-      icon: "⏳",
     },
     {
       label: "Potential Reward Budget",
       value: `$${campaigns.reduce((total, campaign) => total + Number(campaign.reward_amount) * campaign.max_testers, 0).toFixed(2)}`,
       change: "Based on campaign tester limits",
       color: "#ff6b9d",
-      icon: "💸",
     },
   ];
 
@@ -123,7 +119,7 @@ export default function OwnerDashboard() {
     <DashboardLayout role="owner" navItems={NAV}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>{greeting}, {firstName} 👋</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>{greeting}, {firstName}</h1>
           <p style={{ color: "var(--muted)", fontSize: 14 }}>Here&apos;s what&apos;s happening with your campaigns today.</p>
         </div>
         <Link href="/dashboard/owner/campaigns/new" className="btn-primary">
@@ -146,8 +142,7 @@ export default function OwnerDashboard() {
           >
             {stats.map((s) => (
               <div key={s.label} className="stat-card">
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                  <span style={{ fontSize: 24 }}>{s.icon}</span>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
                   <span
                     style={{
                       fontSize: 11,

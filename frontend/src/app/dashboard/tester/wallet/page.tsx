@@ -2,9 +2,9 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 
 const NAV = [
-  { href: "/dashboard/tester", icon: "🔍", label: "Discover" },
-  { href: "/dashboard/tester/submissions", icon: "📨", label: "My Applications" },
-  { href: "/dashboard/tester/wallet", icon: "💰", label: "Wallet" },
+  { href: "/dashboard/tester", label: "Discover" },
+  { href: "/dashboard/tester/submissions", label: "My Applications" },
+  { href: "/dashboard/tester/wallet", label: "Wallet" },
 ];
 
 export default function TesterWallet() {
@@ -16,7 +16,6 @@ export default function TesterWallet() {
       </div>
 
       <div className="card" style={{ maxWidth: 680, padding: 32 }}>
-        <div style={{ fontSize: 32, marginBottom: 16 }}>💰</div>
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Payouts are not enabled yet</h2>
         <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.7 }}>
           Testado has not connected a payment provider, so there is no withdrawable balance or transaction history to show.

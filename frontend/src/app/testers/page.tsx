@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import TesterFeatures from "@/components/TesterFeatures";
 
 export default function TestersPage() {
   const BLUE_HEADINGS = "#07172e";
@@ -104,41 +105,7 @@ export default function TestersPage() {
             Sign up for free, get invited to explore unreleased products in your free time, share your honest reactions, and <strong>get paid directly</strong>.
           </p>
 
-          {/* 3 Core Value Highlights Emphasizing Free Earning */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: 20,
-              maxWidth: 1100,
-              margin: "0 auto",
-            }}
-          >
-            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
-              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
-                Join for FREE — No subscriptions or hidden fees.
-              </b>
-              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
-                Zero registration fees, zero deposits, and no catches. Creating your profile and receiving test invites is 100% free forever.
-              </span>
-            </div>
-            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
-              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
-                Get paid directly for sharing your genuine user experience.
-              </b>
-              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
-                Companies pay us for truthful evaluations. We pass earnings directly to you in cash payouts and rewards for each completed test.
-              </span>
-            </div>
-            <div className="card" style={{ padding: 28, textAlign: "left", background: "#ffffff", border: "1.5px solid #bfdbfe", boxShadow: "0 6px 24px rgba(37, 99, 235, 0.08)" }}>
-              <b style={{ color: BLUE_HEADINGS, display: "block", fontSize: 17, marginBottom: 8 }}>
-                Flexible tasks you can complete anytime, anywhere.
-              </b>
-              <span style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
-                Test websites, new apps, and physical products on your own schedule directly from your phone or laptop.
-              </span>
-            </div>
-          </div>
+          <TesterFeatures />
         </section>
 
         {/* ── WHY IS IT 100% FREE EXPLANATION BANNER ─────── */}
@@ -418,7 +385,7 @@ export default function TestersPage() {
                       lineHeight: 1.5,
                     }}
                   >
-                    🔒 <strong>100% Free Guarantee:</strong> Testado will never charge you any fee to apply, join, or receive testing opportunities. Do not submit passwords or financial information.
+                    <strong>100% Free Guarantee:</strong> Testado will never charge you any fee to apply, join, or receive testing opportunities. Do not submit passwords or financial information.
                   </div>
 
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>

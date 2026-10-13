@@ -484,7 +484,7 @@ export default function BusinessesPage() {
                       lineHeight: 1.5,
                     }}
                   >
-                    🔒 <strong style={{ color: 'inherit' }}>Strict Privacy:</strong> Please share only non-confidential information suitable for initial scoping. Do not submit passwords, API keys, or financial credentials. No payments are made through this website.
+                    <strong style={{ color: 'inherit' }}>Strict Privacy:</strong> Please share only non-confidential information suitable for initial scoping. Do not submit passwords, API keys, or financial credentials. No payments are made through this website.
                   </div>
 
                   <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 13, color: "#475569", cursor: "pointer" }}>

@@ -356,7 +356,6 @@ export default function OnboardingPage() {
         {/* DONE state */}
         {isDone && (
           <div className="card" style={{ padding: 48, textAlign: "center" }}>
-            <div style={{ fontSize: 64, marginBottom: 24 }}>🎉</div>
             <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 12 }}>
               You&apos;re all set!
             </h1>

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 const NAV = [
-  { href: "/dashboard/tester", icon: "🔍", label: "Discover" },
-  { href: "/dashboard/tester/submissions", icon: "📨", label: "My Applications" },
-  { href: "/dashboard/tester/wallet", icon: "💰", label: "Wallet" },
+  { href: "/dashboard/tester", label: "Discover" },
+  { href: "/dashboard/tester/submissions", label: "My Applications" },
+  { href: "/dashboard/tester/wallet", label: "Wallet" },
 ];
 
 interface ProductCampaign {
@@ -128,7 +128,7 @@ export default function TesterDiscover() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>
-            Discover Product Tests 🔍{firstName ? `, ${firstName}` : ""}
+            Discover Product Tests{firstName ? `, ${firstName}` : ""}
           </h1>
           <p style={{ color: "var(--muted)", fontSize: 14 }}>
             {loading
@@ -163,11 +163,10 @@ export default function TesterDiscover() {
       {!loading && !errorMessage && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
           {[
-            { label: "Available Now", value: campaigns.length, icon: "📋", color: "#6c63ff" },
-            { label: "Applications Sent", value: applications.length, icon: "📨", color: "#00d4aa" },
+            { label: "Available Now", value: campaigns.length, color: "#6c63ff" },
+            { label: "Applications Sent", value: applications.length, color: "#00d4aa" },
           ].map((s) => (
             <div key={s.label} className="card" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ fontSize: 28 }}>{s.icon}</div>
               <div>
                 <div style={{ fontWeight: 800, fontSize: 22, color: s.color }}>{s.value}</div>
                 <div style={{ fontSize: 12, color: "var(--muted)" }}>{s.label}</div>
