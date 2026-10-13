@@ -7,7 +7,7 @@ interface ProfileRoleQuery {
   role: UserRole;
 }
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({
     request: {
       headers: request.headers,
