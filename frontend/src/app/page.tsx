@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import HomepageFollowSun from "@/components/HomepageFollowSun";
 
 export default function LandingPage() {
   const BLUE_DARK = "#06101d";      // Dark navy for contrast sections & cards
@@ -360,8 +359,6 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
-        <HomepageFollowSun />
 
         {/* ── WHY THIS MATTERS ───────────────── */}
         <section
