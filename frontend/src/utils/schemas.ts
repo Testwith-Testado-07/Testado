@@ -1,30 +1,5 @@
 import { z } from "zod";
 
-/** ── Todo Schemas ──────────────────────────────────────── */
-
-export const TodoCategory = z.enum(["work", "personal", "urgent", "other"]);
-export const TodoPriority = z.enum(["low", "medium", "high"]);
-
-export const CreateTodoSchema = z.object({
-  task: z
-    .string()
-    .min(1, "Task cannot be empty.")
-    .max(500, "Task must be 500 characters or fewer.")
-    .trim(),
-  category: TodoCategory.default("other"),
-  priority: TodoPriority.default("medium"),
-  due_date: z
-    .string()
-    .optional()
-    .nullable()
-    .refine(
-      (v) => !v || !isNaN(Date.parse(v)),
-      "Please enter a valid date."
-    ),
-});
-
-export type CreateTodoInput = z.infer<typeof CreateTodoSchema>;
-
 /** ── Client Schemas ─────────────────────────────────────── */
 
 export const ProjectStatus = z.enum([

@@ -25,22 +25,6 @@ export function Skeleton({ width = "100%", height = 20, borderRadius = 6, style 
   );
 }
 
-/** Skeleton for a single todo row */
-export function TodoSkeleton() {
-  return (
-    <div style={{
-      display: "flex", alignItems: "center", gap: 14,
-      padding: "14px 0", borderBottom: "1px solid #f0f4f1",
-    }}>
-      <Skeleton width={20} height={20} borderRadius={4} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-        <Skeleton width="70%" height={14} />
-        <Skeleton width="35%" height={11} borderRadius={4} />
-      </div>
-      <Skeleton width={60} height={26} borderRadius={20} />
-    </div>
-  );
-}
 
 /** Skeleton for a client card */
 export function ClientCardSkeleton() {
