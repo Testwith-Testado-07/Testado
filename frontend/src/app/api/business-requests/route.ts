@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
-const allowedTestTypes = new Set(["Product", "Service", "Idea", "Concept"]);
+const allowedTestTypes = new Set(["Product", "Physical Product", "Service", "Idea", "Concept"]);
 const allowedStages = new Set([
     "Concept / Idea",
     "Prototype / MVP",

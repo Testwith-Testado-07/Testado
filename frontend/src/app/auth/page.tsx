@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/components/Toast";
+import { sendWelcomeEmail } from "@/utils/emailjs";
 
 function AuthContent() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -13,12 +15,22 @@ function AuthContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [confirmationNotice, setConfirmationNotice] = useState<string | null>(null);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam === "confirmation_failed") {
+      toast.error("Email confirmation link was invalid or expired. Please try signing in or registering again.");
+    }
+  }, [searchParams, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setConfirmationNotice(null);
 
     try {
       if (mode === "login") {
@@ -58,6 +70,7 @@ function AuthContent() {
               full_name: name,
               role: role,
             },
+            emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
           },
         });
 
@@ -75,10 +88,24 @@ function AuthContent() {
           console.warn("Profile upsert notice:", profileError);
         }
 
+        // Send welcome email via EmailJS (gracefully ignored if template/key not yet configured)
+        try {
+          await sendWelcomeEmail({
+            to_name: name || email,
+            to_email: email,
+            role: role === "owner" ? "Product Owner" : "Tester",
+          });
+        } catch (emailErr) {
+          console.warn("EmailJS welcome email notice:", emailErr);
+        }
+
         if (!data.session) {
-          throw new Error(
-            "Email confirmation is enabled in Supabase. Disable it in your project's Auth settings to allow direct sign-in."
+          setConfirmationNotice(
+            "Account created! We sent a confirmation link to your email. Please check your inbox to activate your account."
           );
+          toast.success("Account created! Please check your email to confirm.");
+          setMode("login");
+          return;
         }
 
         toast.success("Account created successfully!");
@@ -140,6 +167,23 @@ function AuthContent() {
                       : "Choose your path and start building better product decisions."}
                   </p>
                 </div>
+
+                {confirmationNotice && (
+                  <div
+                    style={{
+                      background: "rgba(37, 99, 235, 0.08)",
+                      border: "1px solid rgba(37, 99, 235, 0.3)",
+                      borderRadius: "8px",
+                      padding: "12px 16px",
+                      marginBottom: "16px",
+                      color: "#1e40af",
+                      fontSize: "13px",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    ✉️ {confirmationNotice}
+                  </div>
+                )}
 
                 {mode === "register" && (
                   <div className="auth-role-group">

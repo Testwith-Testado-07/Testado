@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TesterFeatures from "@/components/TesterFeatures";
+import { sendTesterApplicationEmail } from "@/utils/emailjs";
 
 export default function TestersPage() {
   const BLUE_HEADINGS = "#07172e";
@@ -29,23 +30,47 @@ export default function TestersPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
     setSubmissionError("");
-    try {
-      const response = await fetch("/api/tester-applications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, consent: true }),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        setSubmissionError(
-          response.status === 503
-            ? "Email delivery is not configured yet. Your application was not sent."
-            : (errorData?.error || "We couldn't send your application. Please try again shortly.")
-        );
-        return;
+    try {
+      let emailjsSent = false;
+      if (
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY &&
+        process.env.NEXT_PUBLIC_EMAILJS_TESTER_TEMPLATE_ID
+      ) {
+        try {
+          await sendTesterApplicationEmail({
+            from_name: formData.name,
+            from_email: formData.email,
+            phone: formData.phone,
+            city: formData.city,
+            age: formData.age,
+            frequency: formData.frequency,
+            interests: formData.interests,
+            why: formData.why,
+          });
+          emailjsSent = true;
+        } catch (emailjsErr) {
+          console.warn("EmailJS send failed, falling back to API route:", emailjsErr);
+        }
+      }
+
+      if (!emailjsSent) {
+        const response = await fetch("/api/tester-applications", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, consent: true }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          setSubmissionError(
+            response.status === 503
+              ? "Email delivery is not configured yet. Your application was not sent."
+              : (errorData?.error || "We couldn't send your application. Please try again shortly.")
+          );
+          return;
+        }
       }
 
       setSubmitted(true);

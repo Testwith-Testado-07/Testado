@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { sendBusinessRequestEmail } from "@/utils/emailjs";
 
 export default function BusinessesPage() {
   const BLUE_HEADINGS = "#07172e";
@@ -34,20 +35,45 @@ export default function BusinessesPage() {
     setSubmissionError("");
 
     try {
-      const response = await fetch("/api/business-requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      let emailjsSent = false;
+      if (
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY &&
+        process.env.NEXT_PUBLIC_EMAILJS_BUSINESS_TEMPLATE_ID
+      ) {
+        try {
+          await sendBusinessRequestEmail({
+            from_name: formData.name,
+            from_email: formData.email,
+            company: formData.company,
+            phone: formData.phone,
+            test_type: formData.testType,
+            stage: formData.stage,
+            target_customer: formData.targetCustomer,
+            decision_question: formData.decisionQuestion,
+            additional_info: formData.additionalInfo,
+          });
+          emailjsSent = true;
+        } catch (emailjsErr) {
+          console.warn("EmailJS send failed, falling back to API route:", emailjsErr);
+        }
+      }
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        setSubmissionError(
-          response.status === 503
-            ? "Email delivery is not configured yet. Your request was not sent."
-            : (errorData?.error || "We couldn't send your request. Please try again shortly.")
-        );
-        return;
+      if (!emailjsSent) {
+        const response = await fetch("/api/business-requests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          setSubmissionError(
+            response.status === 503
+              ? "Email delivery is not configured yet. Your request was not sent."
+              : (errorData?.error || "We couldn't send your request. Please try again shortly.")
+          );
+          return;
+        }
       }
 
       setSubmitted(true);
