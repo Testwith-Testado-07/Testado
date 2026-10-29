@@ -1,13 +1,16 @@
 "use client";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { useEffect, useState } from "react";
+import { ArrowRight, ArrowUpRight, CircleCheck, ClipboardList, Compass, Users } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-
-const NAV = [
-  { href: "/dashboard/tester", label: "Discover" },
-  { href: "/dashboard/tester/submissions", label: "My Applications" },
-  { href: "/dashboard/tester/wallet", label: "Wallet" },
-];
+import { MetricCard, MetricCardSkeleton, MetricGrid } from "@/components/dashboard/MetricCard";
+import { ProjectCardSkeleton } from "@/components/Skeleton";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { useToast } from "@/components/Toast";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProductCampaign {
   id: string;
@@ -35,6 +38,7 @@ export default function TesterDiscover() {
   const [loading, setLoading] = useState(true);
   const [applyingTo, setApplyingTo] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const supabase = createClient();
@@ -97,12 +101,11 @@ export default function TesterDiscover() {
 
   const applyToCampaign = async (campaignId: string) => {
     if (!testerId) {
-      setErrorMessage("Sign in to apply for a product test.");
+      toast.error("Sign in to apply for a product test.");
       return;
     }
 
     setApplyingTo(campaignId);
-    setErrorMessage("");
     try {
       const supabase = createClient();
       const { data, error } = await supabase
@@ -112,8 +115,9 @@ export default function TesterDiscover() {
         .single();
       if (error) throw error;
       setApplications((current) => [...current, data as CampaignApplication]);
+      toast.success("Application sent. The product owner will review it shortly.");
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Your application could not be sent.");
+      toast.error(error instanceof Error ? error.message : "Your application could not be sent.");
     } finally {
       setApplyingTo("");
     }
@@ -124,129 +128,129 @@ export default function TesterDiscover() {
     return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
   });
   return (
-    <DashboardLayout role="tester" navItems={NAV}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
-        <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>
-            Discover Product Tests{firstName ? `, ${firstName}` : ""}
-          </h1>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>
-            {loading
-              ? "Loading available product tests…"
-              : errorMessage
-                ? "Product tests could not be loaded."
-                : `${campaigns.length} active product ${campaigns.length === 1 ? "test" : "tests"} available.`}
-          </p>
-        </div>
-        <div>
-          <select
-            id="campaign-sort"
-            name="sort"
-            value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
-            style={{
-              background: "var(--card)", border: "1px solid var(--card-border)",
-              borderRadius: 10, padding: "10px 16px", color: "var(--foreground)",
-              fontSize: 13, fontWeight: 600, cursor: "pointer",
-            }}
-          >
-            <option value="newest">Sort: Newest First</option>
-            <option value="reward">Sort: Highest Reward</option>
-          </select>
-        </div>
-      </div>
+    <>
+      <PageHeader
+        title={`Discover product tests${firstName ? `, ${firstName}` : ""}`}
+        description={loading
+          ? "Loading available product tests…"
+          : errorMessage
+            ? "Product tests could not be loaded."
+            : `${campaigns.length} active product ${campaigns.length === 1 ? "test" : "tests"} available.`}
+        actions={
+          <>
+            <label htmlFor="campaign-sort" className="sr-only">Sort product tests</label>
+            <NativeSelect
+              id="campaign-sort"
+              name="sort"
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              className="h-10 w-52 bg-white text-sm font-semibold"
+            >
+              <option value="newest">Sort: Newest first</option>
+              <option value="reward">Sort: Highest reward</option>
+            </NativeSelect>
+          </>
+        }
+      />
 
-      {errorMessage && (
-        <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{errorMessage}</p>
+      {errorMessage && <Alert>{errorMessage}</Alert>}
+
+      {loading ? (
+        <MetricGrid>
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+        </MetricGrid>
+      ) : !errorMessage && (
+        <MetricGrid>
+          <MetricCard label="Available now" value={campaigns.length} hint="Active tests matching your profile" icon={Compass} />
+          <MetricCard
+            label="Applications sent"
+            value={applications.length}
+            hint={`${applications.filter((item) => item.status === "pending").length} awaiting a decision`}
+            icon={ClipboardList}
+            tone="amber"
+          />
+          <MetricCard
+            label="Accepted"
+            value={applications.filter((item) => item.status === "accepted").length}
+            hint="Tests you can start now"
+            icon={CircleCheck}
+            tone="emerald"
+          />
+        </MetricGrid>
       )}
 
-      {!loading && !errorMessage && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
-          {[
-            { label: "Available Now", value: campaigns.length, color: "#6c63ff" },
-            { label: "Applications Sent", value: applications.length, color: "#00d4aa" },
-          ].map((s) => (
-            <div key={s.label} className="card" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div>
-                <div style={{ fontWeight: 800, fontSize: 22, color: s.color }}>{s.value}</div>
-                <div style={{ fontSize: 12, color: "var(--muted)" }}>{s.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 20 }}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(340px,100%),1fr))] gap-5">
         {loading ? (
-          <p style={{ color: "var(--muted)" }}>Loading product tests…</p>
+          [1, 2, 3].map((i) => <ProjectCardSkeleton key={i} />)
         ) : errorMessage ? null : sortedCampaigns.length === 0 ? (
-          <div className="card" style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40 }}>
-            <h2 style={{ fontSize: 18, marginBottom: 8 }}>No product tests are live yet</h2>
-            <p style={{ color: "var(--muted)", fontSize: 14 }}>Check back soon when product owners publish a test.</p>
+          <div className="col-span-full">
+            <EmptyState
+              icon={Compass}
+              title="No product tests are live yet"
+              description="Check back soon. New tests show up here as soon as product owners publish them."
+            />
           </div>
         ) : sortedCampaigns.map((c) => {
           const application = applications.find((item) => item.campaign_id === c.id);
           return (
-            <div
-              key={c.id}
-              className="card"
-              style={{ display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", padding: 0, transition: "all 0.2s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(37, 99, 235, 0.4)"; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 35px rgba(37, 99, 235, 0.12)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-            >
-              <div style={{ padding: "20px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div>
-                  <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, marginBottom: 4 }}>PRODUCT TEST</div>
-                  <h3 style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3, marginBottom: 0 }}>{c.title}</h3>
+            <Card key={c.id} interactive className="group overflow-hidden">
+              <CardHeader className="flex-row items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Product test</p>
+                  <CardTitle className="transition-colors duration-200 group-hover:text-primary">{c.title}</CardTitle>
                 </div>
-                <div
-                  style={{
-                    background: "#eff6ff", border: "1.5px solid #bfdbfe",
-                    borderRadius: 10, padding: "8px 14px", textAlign: "center", flexShrink: 0, marginLeft: 12,
-                  }}
-                >
-                  <div style={{ fontWeight: 800, fontSize: 20, color: "#2563eb" }}>${Number(c.reward_amount).toFixed(2)}</div>
-                  <div style={{ fontSize: 10, color: "#1d4ed8", fontWeight: 700 }}>REWARD</div>
+                <div className="shrink-0 rounded-xl border-[1.5px] border-blue-200 bg-blue-50 px-3.5 py-2 text-center transition-colors duration-300 group-hover:border-blue-300 group-hover:bg-blue-100/70">
+                  <div className="text-xl font-extrabold text-primary tabular-nums">${Number(c.reward_amount).toFixed(2)}</div>
+                  <div className="text-[10px] font-bold text-[var(--blue-hover)]">REWARD</div>
                 </div>
-              </div>
+              </CardHeader>
 
-              <div style={{ padding: "14px 20px", flex: 1 }}>
-                <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 14 }}>
-                  {c.description}
-                </p>
-                <p style={{ fontSize: 12, color: "var(--muted)" }}>
+              <CardContent className="flex-1 space-y-3.5">
+                <p className="text-[13px] leading-relaxed text-muted-foreground">{c.description}</p>
+                <p className="flex flex-wrap items-center gap-x-1.5 text-xs text-muted-foreground">
+                  <Users className="size-3.5" aria-hidden="true" />
                   Up to {c.max_testers} testers
                   {c.target_countries.length > 0 && ` · Preferred countries: ${c.target_countries.join(", ")}`}
                   {c.target_ages.length > 0 && ` · Ages ${c.target_ages.join(", ")}`}
                 </p>
                 {c.product_url && (
-                  <a href={c.product_url} target="_blank" rel="noopener noreferrer" style={{ color: "#2563eb", fontSize: 13, fontWeight: 600 }}>
-                    Open product ↗
+                  <a
+                    href={c.product_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[13px] font-semibold text-primary underline-offset-4 hover:underline"
+                  >
+                    Open product
+                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
                   </a>
                 )}
-              </div>
+              </CardContent>
 
-              <div style={{ padding: "0 20px 20px" }}>
+              <CardFooter>
                 {application ? (
                   <span className={`badge badge-${application.status}`} style={{ display: "inline-flex" }}>
                     Application {application.status}
                   </span>
                 ) : (
-                  <button
+                  <Button
                     type="button"
-                    className="btn-primary"
                     onClick={() => applyToCampaign(c.id)}
                     disabled={applyingTo === c.id}
-                    style={{ width: "100%", justifyContent: "center" }}
+                    className="group/apply h-11 w-full"
                   >
-                    {applyingTo === c.id ? "Sending application…" : "Apply to test →"}
-                  </button>
+                    {applyingTo === c.id ? "Sending application…" : "Apply to test"}
+                    {applyingTo !== c.id && (
+                      <ArrowRight className="transition-transform duration-200 group-hover/apply:translate-x-0.5" aria-hidden="true" />
+                    )}
+                  </Button>
                 )}
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           );
         })}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

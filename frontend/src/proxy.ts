@@ -45,15 +45,15 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   });
 
   const { pathname } = request.nextUrl;
-  const isOwnerRoute = pathname.startsWith('/owner') || pathname.startsWith('/dashboard/owner');
-  const isTesterRoute = pathname.startsWith('/tester') || pathname.startsWith('/dashboard/tester');
+  const isOwnerRoute = pathname.startsWith('/dashboard/owner');
+  const isTesterRoute = pathname.startsWith('/dashboard/tester');
 
   // Verify auth session against Supabase Auth
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 2. Check if the user is authenticated. If not, redirect any request for /owner or /tester to /auth
+  // 2. Check if the user is authenticated. If not, redirect any dashboard request to /auth
   if (!user && (isOwnerRoute || isTesterRoute)) {
     const authUrl = request.nextUrl.clone();
     authUrl.pathname = '/auth';
@@ -94,8 +94,8 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     };
 
     // 4. Enforce strict boundaries:
-    // - If role is 'tester' and path starts with /owner, redirect to /tester/dashboard
-    // - If role is 'owner' and path starts with /tester, redirect to /owner/dashboard
+    // - If role is 'tester' and path is an owner dashboard route, redirect to /dashboard/tester
+    // - If role is 'owner' and path is a tester dashboard route, redirect to /dashboard/owner
     if (role === 'tester' && isOwnerRoute) {
       return copyCookiesAndRedirect('/dashboard/tester');
     }
@@ -110,8 +110,6 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
 export const config = {
   matcher: [
-    '/owner/:path*',
-    '/tester/:path*',
     '/dashboard/owner/:path*',
     '/dashboard/tester/:path*',
     '/dashboard/owner',

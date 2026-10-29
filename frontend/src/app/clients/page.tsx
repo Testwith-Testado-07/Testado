@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { useToast, ToastContainer } from "@/components/Toast";
-import { ClientCardSkeleton, SkeletonStyles } from "@/components/Skeleton";
+import { useToast } from "@/components/Toast";
+import { ClientCardSkeleton } from "@/components/Skeleton";
 
 type ProjectStatus = "prospect" | "active" | "on_hold" | "completed" | "churned";
 
@@ -53,7 +53,7 @@ const ALL_STATUSES: ProjectStatus[] = ["prospect", "active", "on_hold", "complet
 
 export default function ClientsPage() {
   const supabase = createClient();
-  const { toasts, toast, removeToast } = useToast();
+  const { toast } = useToast();
 
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,22 +61,23 @@ export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const loadClients = useCallback(async () => {
-    setLoading(true);
-    const { data, error } = await supabase
+  useEffect(() => {
+    let cancelled = false;
+    supabase
       .from("clients")
       .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      setClients(data ?? []);
-    }
-    setLoading(false);
-  }, [supabase]);
-
-  useEffect(() => { loadClients(); }, [loadClients]);
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          toast.error(error.message);
+        } else {
+          setClients(data ?? []);
+        }
+        setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [supabase, toast]);
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
@@ -106,8 +107,6 @@ export default function ClientsPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#F8F9FA", padding: "48px 20px", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
-      <SkeletonStyles />
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
 
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         {/* Header row */}

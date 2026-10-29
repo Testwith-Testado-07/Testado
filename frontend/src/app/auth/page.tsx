@@ -59,7 +59,12 @@ function AuthContent() {
         }
 
         toast.success("Signed in successfully!");
-        window.location.href = userRole === "owner" ? "/dashboard/owner" : "/dashboard/tester";
+        // Return to the page the proxy bounced them from, but only within their own dashboard
+        const home = `/dashboard/${userRole}`;
+        const redirectedFrom = searchParams.get("redirectedFrom");
+        window.location.href = redirectedFrom && (redirectedFrom === home || redirectedFrom.startsWith(`${home}/`))
+          ? redirectedFrom
+          : home;
       } else {
         // Sign up — send full_name AND role via user_metadata so it is saved in auth.users immediately
         const { data, error } = await supabase.auth.signUp({

@@ -1,15 +1,16 @@
 "use client";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { LoaderCircle, Megaphone, Plus } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-
-const NAV = [
-  { href: "/dashboard/owner", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", label: "Billing" },
-];
+import { cn } from "@/lib/utils";
+import { CampaignRowSkeleton } from "@/components/Skeleton";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { useToast } from "@/components/Toast";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface OwnerCampaign {
   id: string;
@@ -37,7 +38,7 @@ export default function CampaignsPage() {
   const [applications, setApplications] = useState<CampaignApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
-  const [actionError, setActionError] = useState("");
+  const { toast } = useToast();
   const [updatingApplication, setUpdatingApplication] = useState("");
 
   useEffect(() => {
@@ -94,7 +95,6 @@ export default function CampaignsPage() {
 
   const reviewApplication = async (applicationId: string, status: "accepted" | "rejected") => {
     setUpdatingApplication(applicationId);
-    setActionError("");
     try {
       const supabase = createClient();
       const { data, error } = await supabase
@@ -109,8 +109,9 @@ export default function CampaignsPage() {
           ? { ...application, status: data.status as CampaignApplication["status"] }
           : application
       ));
+      toast.success(status === "accepted" ? "Tester accepted." : "Application rejected.");
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "The application could not be updated.");
+      toast.error(error instanceof Error ? error.message : "The application could not be updated.");
     } finally {
       setUpdatingApplication("");
     }
@@ -121,36 +122,35 @@ export default function CampaignsPage() {
     : allCampaigns.filter((campaign) => campaign.status === activeFilter.toLowerCase());
 
   return (
-    <DashboardLayout role="owner" navItems={NAV}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
-        <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>Campaigns</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>{allCampaigns.length} campaigns total</p>
-        </div>
-        <Link href="/dashboard/owner/campaigns/new" className="btn-primary">
-          + New Campaign
-        </Link>
-      </div>
+    <>
+      <PageHeader
+        title="Campaigns"
+        description={loading ? "Loading campaigns…" : `${allCampaigns.length} ${allCampaigns.length === 1 ? "campaign" : "campaigns"} total`}
+        actions={
+          <Button asChild>
+            <Link href="/dashboard/owner/campaigns/new">
+              <Plus aria-hidden="true" />
+              New campaign
+            </Link>
+          </Button>
+        }
+      />
 
-      {loadError && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{loadError}</p>}
-      {actionError && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{actionError}</p>}
+      {loadError && <Alert>{loadError}</Alert>}
 
-      {/* Filter tabs */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+      <div role="group" aria-label="Filter campaigns by status" className="mb-6 inline-flex flex-wrap gap-1 rounded-full border border-border bg-white p-1 shadow-soft">
         {FILTER_OPTIONS.map((f) => {
           const isActive = activeFilter === f;
           return (
             <button
               key={f}
+              type="button"
               onClick={() => setActiveFilter(f)}
-              style={{
-                padding: "7px 18px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                border: `1px solid ${isActive ? "#6c63ff" : "var(--card-border)"}`,
-                background: isActive ? "rgba(108,99,255,0.15)" : "transparent",
-                color: isActive ? "#a78bfa" : "var(--muted)",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
+              aria-pressed={isActive}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all duration-200",
+                isActive ? "bg-primary text-white shadow-glow" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
             >
               {f}
             </button>
@@ -158,14 +158,20 @@ export default function CampaignsPage() {
         })}
       </div>
 
-      {/* Campaign cards */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div className="flex flex-col gap-4">
         {loading ? (
-          <p style={{ color: "var(--muted)" }}>Loading campaigns…</p>
+          [1, 2, 3].map((i) => <CampaignRowSkeleton key={i} />)
         ) : loadError && allCampaigns.length === 0 ? null : campaigns.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "48px 0", color: "var(--muted)" }}>
-            No {activeFilter.toLowerCase()} campaigns found.
-          </div>
+          <EmptyState
+            icon={Megaphone}
+            title={activeFilter === "All" ? "No campaigns yet" : `No ${activeFilter.toLowerCase()} campaigns`}
+            description={activeFilter === "All" ? "Create a campaign to start collecting tester applications." : "Try a different filter to see your other campaigns."}
+            action={activeFilter === "All" && (
+              <Button asChild>
+                <Link href="/dashboard/owner/campaigns/new">Create a campaign</Link>
+              </Button>
+            )}
+          />
         ) : campaigns.map((campaign) => {
           const campaignApplications = applications.filter((application) => application.campaign_id === campaign.id);
           const pendingCount = campaignApplications.filter((application) => application.status === "pending").length;
@@ -175,98 +181,93 @@ export default function CampaignsPage() {
           const reward = Number(campaign.reward_amount);
 
           return (
-            <div
-              key={campaign.id}
-              className="card"
-              style={{ padding: "20px 24px", transition: "all 0.2s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#6c63ff55"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--card-border)"; }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-                <div style={{ flex: 1, minWidth: 180 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6, flexWrap: "wrap" }}>
-                    <h2 style={{ fontWeight: 700, fontSize: 16, margin: 0 }}>{campaign.title}</h2>
+            <Card key={campaign.id} className="p-6 transition-[border-color,box-shadow] duration-300 hover:border-blue-200 hover:shadow-lift">
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="min-w-[180px] flex-1">
+                  <div className="mb-1.5 flex flex-wrap items-center gap-2.5">
+                    <h2 className="text-base font-bold">{campaign.title}</h2>
                     <span className={`badge badge-${campaign.status}`}>{campaign.status}</span>
                     {pendingCount > 0 && <span className="badge badge-pending">{pendingCount} to review</span>}
                   </div>
-                  <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                  <p className="text-xs text-muted-foreground">
                     Published {new Date(campaign.created_at).toLocaleDateString()}
-                  </div>
+                  </p>
                 </div>
 
-                <div style={{ width: 180, flexShrink: 0 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 12, color: "var(--muted)" }}>Testers</span>
-                    <span style={{ fontSize: 12, fontWeight: 700 }}>{applicantCount}/{campaign.max_testers}</span>
+                <div className="w-44 shrink-0">
+                  <div className="mb-1.5 flex justify-between text-xs">
+                    <span className="text-muted-foreground">Testers</span>
+                    <span className="font-bold tabular-nums">{applicantCount}/{campaign.max_testers}</span>
                   </div>
-                  <div style={{ height: 6, background: "var(--card-border)", borderRadius: 3 }}>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-border">
                     <div
-                      style={{
-                        height: 6,
-                        width: `${Math.min((applicantCount / campaign.max_testers) * 100, 100)}%`,
-                        background: "#6c63ff",
-                        borderRadius: 3,
-                      }}
+                      className="h-full rounded-full bg-primary transition-[width] duration-500"
+                      style={{ width: `${Math.min((applicantCount / campaign.max_testers) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
 
-                <div style={{ textAlign: "right", minWidth: 100, flexShrink: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 16, color: "#00d4aa" }}>${reward.toFixed(2)}/ea</div>
-                  <div style={{ fontSize: 12, color: "var(--muted)" }}>Up to ${(reward * campaign.max_testers).toFixed(2)}</div>
+                <div className="min-w-24 shrink-0 text-right">
+                  <div className="text-base font-bold text-emerald-600 tabular-nums">${reward.toFixed(2)}/ea</div>
+                  <div className="text-xs text-muted-foreground tabular-nums">Up to ${(reward * campaign.max_testers).toFixed(2)}</div>
                 </div>
               </div>
 
-              <div style={{ borderTop: "1px solid var(--card-border)", marginTop: 18, paddingTop: 16 }}>
-                <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Tester applications</h3>
+              <div className="mt-5 border-t border-border pt-4">
+                <h3 className="mb-3 text-sm font-bold">Tester applications</h3>
                 {loadError ? (
-                  <p role="alert" style={{ color: "#ff6b9d", fontSize: 13 }}>Applications could not be loaded. Refresh the page to try again.</p>
+                  <p role="alert" className="text-[13px] text-red-600">Applications could not be loaded. Refresh the page to try again.</p>
                 ) : campaignApplications.length === 0 ? (
-                  <p style={{ color: "var(--muted)", fontSize: 13 }}>No testers have applied yet.</p>
+                  <p className="text-[13px] text-muted-foreground">No testers have applied yet.</p>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {campaignApplications.map((application) => (
-                      <div
-                        key={application.id}
-                        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
-                      >
-                        <div>
-                          <span style={{ fontSize: 13, fontWeight: 600 }}>{application.tester_name}</span>
-                          <span style={{ color: "var(--muted)", fontSize: 12, marginLeft: 10 }}>
-                            Applied {new Date(application.created_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                        {application.status === "pending" ? (
-                          <div style={{ display: "flex", gap: 8 }}>
-                            <button
-                              type="button"
-                              className="btn-secondary"
-                              disabled={updatingApplication === application.id}
-                              onClick={() => reviewApplication(application.id, "rejected")}
-                            >
-                              Reject
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-primary"
-                              disabled={updatingApplication === application.id}
-                              onClick={() => reviewApplication(application.id, "accepted")}
-                            >
-                              {updatingApplication === application.id ? "Saving…" : "Accept"}
-                            </button>
+                  <ul className="flex flex-col divide-y divide-border">
+                    {campaignApplications.map((application) => {
+                      const isUpdating = updatingApplication === application.id;
+                      return (
+                        <li key={application.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+                          <div className="flex items-center gap-3">
+                            <span className="grid size-8 place-items-center rounded-full bg-blue-50 text-xs font-bold text-primary">
+                              {application.tester_name.charAt(0).toUpperCase()}
+                            </span>
+                            <div>
+                              <p className="text-[13px] font-semibold">{application.tester_name}</p>
+                              <p className="text-xs text-muted-foreground">Applied {new Date(application.created_at).toLocaleDateString()}</p>
+                            </div>
                           </div>
-                        ) : (
-                          <span className={`badge badge-${application.status}`}>{application.status}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                          {application.status === "pending" ? (
+                            <div className="flex gap-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                disabled={isUpdating}
+                                onClick={() => reviewApplication(application.id, "rejected")}
+                              >
+                                Reject
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                disabled={isUpdating}
+                                onClick={() => reviewApplication(application.id, "accepted")}
+                              >
+                                {isUpdating && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+                                {isUpdating ? "Saving…" : "Accept"}
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className={`badge badge-${application.status}`}>{application.status}</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 )}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

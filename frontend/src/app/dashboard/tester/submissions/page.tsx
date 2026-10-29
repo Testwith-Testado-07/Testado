@@ -1,13 +1,16 @@
 "use client";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { CircleCheck, CircleX, ClipboardList, Hourglass } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-
-const NAV = [
-  { href: "/dashboard/tester", label: "Discover" },
-  { href: "/dashboard/tester/submissions", label: "My Applications" },
-  { href: "/dashboard/tester/wallet", label: "Wallet" },
-];
+import { cn } from "@/lib/utils";
+import { CampaignRowSkeleton } from "@/components/Skeleton";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard, MetricCardSkeleton, MetricGrid } from "@/components/dashboard/MetricCard";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface Application {
   id: string;
@@ -16,10 +19,10 @@ interface Application {
   campaign: { title: string; reward_amount: number | string } | null;
 }
 
-const STATUS_COLORS: Record<Application["status"], string> = {
-  pending: "#fbbf24",
-  accepted: "#00d4aa",
-  rejected: "#ff6b9d",
+const STATUS_BORDER: Record<Application["status"], string> = {
+  pending: "border-l-amber-500",
+  accepted: "border-l-emerald-500",
+  rejected: "border-l-red-400",
 };
 
 export default function TesterApplications() {
@@ -63,66 +66,63 @@ export default function TesterApplications() {
   const rejectedCount = applications.filter((application) => application.status === "rejected").length;
 
   return (
-    <DashboardLayout role="tester" navItems={NAV}>
-      <div style={{ marginBottom: 36 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>My Applications</h1>
-        <p style={{ color: "var(--muted)", fontSize: 14 }}>Track product tests you have applied to.</p>
-      </div>
+    <>
+      <PageHeader
+        title="My applications"
+        description={loading ? "Loading your applications…" : `Track the ${applications.length} product ${applications.length === 1 ? "test" : "tests"} you have applied to.`}
+      />
 
-      {errorMessage && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{errorMessage}</p>}
+      {errorMessage && <Alert>{errorMessage}</Alert>}
 
-      {!loading && !errorMessage && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
-          {[
-            { label: "Total Applications", value: applications.length, color: "#6c63ff" },
-            { label: "Awaiting Review", value: pendingCount, color: "#fbbf24" },
-            { label: "Accepted", value: acceptedCount, color: "#00d4aa" },
-            { label: "Not Accepted", value: rejectedCount, color: "#ff6b9d" },
-          ].map((stat) => (
-            <div key={stat.label} className="card" style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 26, fontWeight: 800, color: stat.color, marginBottom: 4 }}>{stat.value}</div>
-              <div style={{ fontSize: 12, color: "var(--muted)" }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
+      {loading ? (
+        <MetricGrid>
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+        </MetricGrid>
+      ) : !errorMessage && (
+        <MetricGrid>
+          <MetricCard label="Awaiting review" value={pendingCount} hint="The product owner hasn't decided yet" icon={Hourglass} tone="amber" />
+          <MetricCard label="Accepted" value={acceptedCount} hint="Tests you can start now" icon={CircleCheck} tone="emerald" />
+          <MetricCard label="Not accepted" value={rejectedCount} hint="Keep applying, new tests go live often" icon={CircleX} tone="violet" />
+        </MetricGrid>
       )}
 
       {loading ? (
-        <p style={{ color: "var(--muted)" }}>Loading your applications…</p>
+        <div className="flex flex-col gap-3.5">
+          {[1, 2, 3].map((i) => <CampaignRowSkeleton key={i} />)}
+        </div>
       ) : !errorMessage && applications.length === 0 ? (
-        <div className="card" style={{ textAlign: "center", padding: 40 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 8 }}>No applications yet</h2>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>Explore available product tests and apply to one that interests you.</p>
-        </div>
+        <EmptyState
+          icon={ClipboardList}
+          title="No applications yet"
+          description="Explore available product tests and apply to one that interests you."
+          action={
+            <Button asChild>
+              <Link href="/dashboard/tester">Discover product tests</Link>
+            </Button>
+          }
+        />
       ) : !errorMessage ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <ul className="flex flex-col gap-3.5">
           {applications.map((application) => (
-            <div
-              key={application.id}
-              className="card"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 16,
-                flexWrap: "wrap",
-                borderLeft: `3px solid ${STATUS_COLORS[application.status]}`,
-              }}
-            >
-              <div>
-                <h2 style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>
-                  {application.campaign?.title || "Product test no longer available"}
-                </h2>
-                <p style={{ color: "var(--muted)", fontSize: 12 }}>
-                  Applied {new Date(application.created_at).toLocaleDateString()}
-                  {application.campaign && ` · Reward $${Number(application.campaign.reward_amount).toFixed(2)}`}
-                </p>
-              </div>
-              <span className={`badge badge-${application.status}`}>{application.status}</span>
-            </div>
+            <li key={application.id}>
+              <Card className={cn("flex-row flex-wrap items-center justify-between gap-4 border-l-[3px] p-5", STATUS_BORDER[application.status])}>
+                <div className="min-w-0">
+                  <h2 className="mb-1 text-[15px] font-bold">
+                    {application.campaign?.title || "Product test no longer available"}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    Applied {new Date(application.created_at).toLocaleDateString()}
+                    {application.campaign && ` · Reward $${Number(application.campaign.reward_amount).toFixed(2)}`}
+                  </p>
+                </div>
+                <span className={`badge badge-${application.status}`}>{application.status}</span>
+              </Card>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : null}
-    </DashboardLayout>
+    </>
   );
 }

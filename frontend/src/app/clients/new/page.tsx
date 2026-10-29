@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { CreateClientSchema, formatZodError, type CreateClientInput } from "@/utils/schemas";
-import { useToast, ToastContainer } from "@/components/Toast";
+import { useToast } from "@/components/Toast";
 
 const STATUS_OPTIONS: { value: CreateClientInput["status"]; label: string; color: string }[] = [
   { value: "prospect",  label: "Prospect",   color: "#6366F1" },
@@ -14,19 +14,6 @@ const STATUS_OPTIONS: { value: CreateClientInput["status"]; label: string; color
   { value: "completed", label: "Completed",  color: "#2563EB" },
   { value: "churned",   label: "Churned",    color: "#DC2626" },
 ];
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "11px 14px",
-  border: "1.5px solid #e2e8e4",
-  borderRadius: 8,
-  fontSize: 14,
-  color: "#101828",
-  background: "#fff",
-  outline: "none",
-  fontFamily: "inherit",
-  transition: "border-color 0.2s, box-shadow 0.2s",
-};
 
 const labelStyle: React.CSSProperties = {
   display: "block",
@@ -41,25 +28,16 @@ const labelStyle: React.CSSProperties = {
 export default function NewClientPage() {
   const supabase = createClient();
   const router = useRouter();
-  const { toasts, toast, removeToast } = useToast();
+  const { toast } = useToast();
 
   const [form, setForm] = useState<Partial<CreateClientInput>>({
     status: "prospect",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   function field(name: string): React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> {
-    return {
-      onFocus: () => setFocusedField(name),
-      onBlur: () => setFocusedField(null),
-      style: {
-        ...inputStyle,
-        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#2563eb" : "#dbe5f2",
-        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
-      },
-    };
+    return { className: "input", "aria-invalid": errors[name] ? true : undefined };
   }
 
   const set = (k: keyof CreateClientInput, v: string) => {
@@ -99,7 +77,6 @@ export default function NewClientPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#f4f8fd", padding: "48px 20px", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
 
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
         {/* Nav */}
@@ -118,7 +95,7 @@ export default function NewClientPage() {
             </span>
             <h1 style={{ fontSize: 26, fontWeight: 800, color: "#07172e", margin: 0 }}>Add New Client</h1>
             <p style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>
-              Save a client's contact details and project status.
+              Save a client&apos;s contact details and project status.
             </p>
           </div>
 
@@ -217,15 +194,9 @@ export default function NewClientPage() {
                 placeholder="Any relevant context about this client..."
                 value={form.notes ?? ""}
                 onChange={(e) => set("notes", e.target.value)}
-                onFocus={() => setFocusedField("notes")}
-                onBlur={() => setFocusedField(null)}
-                style={{
-                  ...inputStyle,
-                  resize: "vertical",
-                  minHeight: 100,
-                  borderColor: errors.notes ? "#FCA5A5" : focusedField === "notes" ? "#2563eb" : "#dbe5f2",
-                  boxShadow: focusedField === "notes" && !errors.notes ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
-                }}
+                className="input"
+                aria-invalid={errors.notes ? true : undefined}
+                style={{ resize: "vertical", minHeight: 100 }}
               />
               {errors.notes && <p style={{ color: "#DC2626", fontSize: 12, marginTop: 4 }}>{errors.notes}</p>}
             </div>

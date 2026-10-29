@@ -129,7 +129,7 @@ export default function OnboardingPage() {
   }
 
   if (!role) {
-    return <main role="alert" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#ff6b9d" }}>{errorMessage}</main>;
+    return <main role="alert" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#dc2626" }}>{errorMessage}</main>;
   }
 
   return (
@@ -144,11 +144,11 @@ export default function OnboardingPage() {
         overflow: "hidden",
       }}
     >
-      <div className="orb" style={{ width: 500, height: 500, background: "rgba(108,99,255,0.1)", top: -100, right: -100 }} />
-      <div className="orb" style={{ width: 400, height: 400, background: "rgba(0,212,170,0.08)", bottom: -100, left: -100 }} />
+      <div className="orb" style={{ width: 500, height: 500, background: "rgba(37,99,235,0.1)", top: -100, right: -100 }} />
+      <div className="orb" style={{ width: 400, height: 400, background: "rgba(56,189,248,0.12)", bottom: -100, left: -100 }} />
 
       <div style={{ width: "100%", maxWidth: 560, position: "relative", zIndex: 1 }}>
-        {errorMessage && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{errorMessage}</p>}
+        {errorMessage && <p role="alert" style={{ color: "#dc2626", marginBottom: 20 }}>{errorMessage}</p>}
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
                     key={s.id}
                     style={{
                       height: 4, width: 40, borderRadius: 4,
-                      background: i <= step ? "#6c63ff" : "var(--card-border)",
+                      background: i <= step ? "#2563eb" : "var(--card-border)",
                       transition: "background 0.3s",
                     }}
                   />
@@ -187,7 +187,7 @@ export default function OnboardingPage() {
 
         {/* OWNER: Company Details */}
         {role === "owner" && steps[step]?.id === "company" && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Tell us about your company</h1>
             <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 32 }}>
               This helps us match your campaigns with the right testers.
@@ -229,7 +229,7 @@ export default function OnboardingPage() {
 
         {/* TESTER: Demographics */}
         {role === "tester" && steps[step]?.id === "demographics" && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Tell us about yourself</h1>
             <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 32 }}>
               We use this to match you with relevant campaigns.
@@ -245,9 +245,9 @@ export default function OnboardingPage() {
                       onClick={() => setAgeRange(a)}
                       style={{
                         padding: "8px 18px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                        border: `1px solid ${ageRange === a ? "#6c63ff" : "var(--card-border)"}`,
-                        background: ageRange === a ? "rgba(108,99,255,0.15)" : "transparent",
-                        color: ageRange === a ? "#a78bfa" : "var(--muted)",
+                        border: `1px solid ${ageRange === a ? "#2563eb" : "var(--card-border)"}`,
+                        background: ageRange === a ? "rgba(37,99,235,0.15)" : "transparent",
+                        color: ageRange === a ? "#1d4ed8" : "var(--muted)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{a}</button>
@@ -264,9 +264,9 @@ export default function OnboardingPage() {
                       onClick={() => setGender(g)}
                       style={{
                         padding: "8px 14px", borderRadius: 999, fontSize: 12, fontWeight: 600,
-                        border: `1px solid ${gender === g ? "#6c63ff" : "var(--card-border)"}`,
-                        background: gender === g ? "rgba(108,99,255,0.15)" : "transparent",
-                        color: gender === g ? "#a78bfa" : "var(--muted)",
+                        border: `1px solid ${gender === g ? "#2563eb" : "var(--card-border)"}`,
+                        background: gender === g ? "rgba(37,99,235,0.15)" : "transparent",
+                        color: gender === g ? "#1d4ed8" : "var(--muted)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{g}</button>
@@ -298,7 +298,7 @@ export default function OnboardingPage() {
 
         {/* TESTER: Interests & Devices */}
         {role === "tester" && steps[step]?.id === "interests" && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Your interests & devices</h1>
             <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 32 }}>
               Get campaigns that match what you actually care about.
@@ -314,9 +314,9 @@ export default function OnboardingPage() {
                       onClick={() => toggleItem(interest, selectedInterests, setSelectedInterests)}
                       style={{
                         padding: "8px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                        border: `1px solid ${selectedInterests.includes(interest) ? "#00d4aa" : "var(--card-border)"}`,
-                        background: selectedInterests.includes(interest) ? "rgba(0,212,170,0.12)" : "transparent",
-                        color: selectedInterests.includes(interest) ? "#00d4aa" : "var(--muted)",
+                        border: `1px solid ${selectedInterests.includes(interest) ? "#059669" : "var(--card-border)"}`,
+                        background: selectedInterests.includes(interest) ? "rgba(5,150,105,0.12)" : "transparent",
+                        color: selectedInterests.includes(interest) ? "#059669" : "var(--muted)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{interest}</button>
@@ -333,9 +333,9 @@ export default function OnboardingPage() {
                       onClick={() => toggleItem(device, selectedDevices, setSelectedDevices)}
                       style={{
                         padding: "8px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                        border: `1px solid ${selectedDevices.includes(device) ? "#6c63ff" : "var(--card-border)"}`,
-                        background: selectedDevices.includes(device) ? "rgba(108,99,255,0.12)" : "transparent",
-                        color: selectedDevices.includes(device) ? "#a78bfa" : "var(--muted)",
+                        border: `1px solid ${selectedDevices.includes(device) ? "#2563eb" : "var(--card-border)"}`,
+                        background: selectedDevices.includes(device) ? "rgba(37,99,235,0.12)" : "transparent",
+                        color: selectedDevices.includes(device) ? "#1d4ed8" : "var(--muted)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{device}</button>
@@ -355,7 +355,7 @@ export default function OnboardingPage() {
 
         {/* DONE state */}
         {isDone && (
-          <div className="card" style={{ padding: 48, textAlign: "center" }}>
+          <div className="card card--static" style={{ padding: 48, textAlign: "center" }}>
             <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 12 }}>
               You&apos;re all set!
             </h1>

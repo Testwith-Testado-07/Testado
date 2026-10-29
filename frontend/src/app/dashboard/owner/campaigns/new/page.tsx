@@ -1,15 +1,11 @@
 "use client";
 import { useState } from "react";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-
-const NAV = [
-  { href: "/dashboard/owner", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", label: "Billing" },
-];
+import { useToast } from "@/components/Toast";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { Alert } from "@/components/ui/alert";
+import { Input, NativeSelect, Textarea } from "@/components/ui/input";
 
 const QUESTION_TYPES = [
   { value: "text", label: "Long Text" },
@@ -43,6 +39,8 @@ export default function NewCampaignPage() {
   ]);
   const [targetCountries, setTargetCountries] = useState("");
   const [targetAges, setTargetAges] = useState<string[]>([]);
+
+  const { toast } = useToast();
 
   const STEPS = ["Campaign Basics", "Survey Questions", "Target Audience", "Review & Launch"];
 
@@ -96,6 +94,7 @@ export default function NewCampaignPage() {
       });
       if (error) throw error;
 
+      toast.success("Campaign launched. Testers can now discover it.");
       router.push("/dashboard/owner/campaigns");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "The campaign could not be published.");
@@ -104,25 +103,23 @@ export default function NewCampaignPage() {
   };
 
   return (
-    <DashboardLayout role="owner" navItems={NAV}>
+    <>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
         {/* Header */}
-        <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>Create a Campaign</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>
-            Define your product test, set your reward, and launch to matched testers.
-          </p>
-        </div>
+        <PageHeader
+          title="Create a campaign"
+          description="Define your product test, set your reward, and launch to matched testers."
+        />
 
         {/* Progress Steps */}
-        <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 40, overflowX: "auto" }}>
+        <ol aria-label="Campaign setup progress" style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 40, overflowX: "auto", listStyle: "none", padding: 0 }}>
           {STEPS.map((s, i) => (
-            <div key={s} style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 0 }}>
+            <li key={s} aria-current={i === step ? "step" : undefined} style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
                 <div
                   style={{
                     width: 36, height: 36, borderRadius: "50%",
-                    background: i < step ? "#00d4aa" : i === step ? "#6c63ff" : "var(--card-border)",
+                    background: i < step ? "#059669" : i === step ? "#2563eb" : "var(--card-border)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontWeight: 700, fontSize: 13,
                     color: i <= step ? "white" : "var(--muted)",
@@ -145,59 +142,56 @@ export default function NewCampaignPage() {
                 <div
                   style={{
                     height: 2, flex: 1,
-                    background: i < step ? "#6c63ff" : "var(--card-border)",
+                    background: i < step ? "#2563eb" : "var(--card-border)",
                     transition: "background 0.3s",
                     marginBottom: 26,
                   }}
                 />
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
 
         {/* Step 0: Basics */}
         {step === 0 && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 28 }}>Campaign Basics</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
               <div>
                 <label className="label" htmlFor="campaign-title">Campaign Title *</label>
-                <input id="campaign-title" name="title" className="input" placeholder="e.g. Mobile App UX Feedback" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <Input id="campaign-title" name="title" placeholder="e.g. Mobile App UX Feedback" value={title} onChange={(e) => setTitle(e.target.value)} />
               </div>
               <div>
                 <label className="label" htmlFor="campaign-description">Description *</label>
-                <textarea
-                  className="input"
+                <Textarea
                   id="campaign-description"
                   name="description"
                   rows={4}
                   placeholder="Describe what you want testers to do and what kind of feedback you're looking for..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  style={{ resize: "vertical" }}
                 />
               </div>
               <div>
                 <label className="label" htmlFor="campaign-product-url">Product URL *</label>
-                <input id="campaign-product-url" name="productUrl" type="url" className="input" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
+                <Input id="campaign-product-url" name="productUrl" type="url" placeholder="https://your-app.com" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
                 <div>
                   <label className="label" htmlFor="campaign-reward">Reward per Tester (USD) *</label>
                   <div style={{ position: "relative" }}>
                     <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }}>$</span>
-                    <input
-                      className="input" type="number" placeholder="8.00" min="1"
+                    <Input
+                      className="pl-7" type="number" placeholder="8.00" min="1"
                       id="campaign-reward" name="rewardPerTester"
                       value={rewardPerTester} onChange={(e) => setRewardPerTester(e.target.value)}
-                      style={{ paddingLeft: 28 }}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="label" htmlFor="campaign-max-testers">Max Testers *</label>
-                  <input
-                    className="input" type="number" placeholder="50" min="1"
+                  <Input
+                    type="number" placeholder="50" min="1"
                     id="campaign-max-testers" name="maxTesters"
                     value={maxTesters} onChange={(e) => setMaxTesters(e.target.value)}
                   />
@@ -207,11 +201,11 @@ export default function NewCampaignPage() {
                 <div
                   style={{
                     padding: "14px 18px", borderRadius: 10,
-                    background: "rgba(108,99,255,0.1)", border: "1px solid rgba(108,99,255,0.25)",
+                    background: "rgba(37,99,235,0.1)", border: "1px solid rgba(37,99,235,0.25)",
                   }}
                 >
-                  <span style={{ color: "#a78bfa", fontWeight: 600, fontSize: 14 }}>
-                    Total campaign budget: <strong style={{ color: "#6c63ff" }}>${totalBudget.toFixed(2)}</strong>
+                  <span style={{ color: "#1d4ed8", fontWeight: 600, fontSize: 14 }}>
+                    Total campaign budget: <strong style={{ color: "#2563eb" }}>${totalBudget.toFixed(2)}</strong>
                   </span>
                 </div>
               )}
@@ -229,7 +223,7 @@ export default function NewCampaignPage() {
 
         {/* Step 1: Questions */}
         {step === 1 && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Survey Questions</h2>
             <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 28 }}>
               Add questions testers will answer when submitting feedback.
@@ -241,40 +235,36 @@ export default function NewCampaignPage() {
                   style={{
                     padding: 20, borderRadius: 12,
                     border: "1px solid var(--card-border)",
-                    background: "rgba(255,255,255,0.02)",
+                    background: "var(--bg)",
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <span style={{ color: "var(--muted)", fontWeight: 700, fontSize: 12, minWidth: 20 }}>Q{i + 1}</span>
-                    <select
+                    <NativeSelect
                       id={`question-type-${q.id}`}
                       name={`question-type-${q.id}`}
+                      aria-label={`Question ${i + 1} type`}
                       value={q.type}
                       onChange={(e) => updateQuestion(q.id, "type", e.target.value)}
-                      style={{
-                        background: "var(--card)", border: "1px solid var(--card-border)",
-                        borderRadius: 8, padding: "6px 10px", color: "var(--foreground)",
-                        fontSize: 12, fontWeight: 600, cursor: "pointer",
-                      }}
+                      className="h-8 w-auto rounded-lg bg-white px-2.5 pr-8 text-xs font-semibold"
                     >
                       {QUESTION_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
-                    </select>
+                    </NativeSelect>
                     <button
+                      type="button"
                       onClick={() => removeQuestion(q.id)}
-                      style={{
-                        marginLeft: "auto", background: "none", border: "none",
-                        color: "#ff6b9d", cursor: "pointer", fontSize: 14, fontWeight: 700,
-                      }}
+                      aria-label={`Remove question ${i + 1}`}
+                      className="ml-auto grid size-8 place-items-center rounded-lg text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
                     >
                       ✕
                     </button>
                   </div>
-                  <input
-                    className="input"
+                  <Input
                     id={`question-text-${q.id}`}
                     name={`question-text-${q.id}`}
+                    aria-label={`Question ${i + 1}`}
                     placeholder="Enter your question..."
                     value={q.text}
                     onChange={(e) => updateQuestion(q.id, "text", e.target.value)}
@@ -300,7 +290,7 @@ export default function NewCampaignPage() {
 
         {/* Step 2: Audience */}
         {step === 2 && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Target Audience</h2>
             <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 28 }}>
               Narrow down who sees your campaign. Leave blank to show to all testers.
@@ -308,8 +298,7 @@ export default function NewCampaignPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               <div>
                 <label className="label" htmlFor="campaign-countries">Countries (comma-separated)</label>
-                <input
-                  className="input"
+                <Input
                   id="campaign-countries"
                   name="targetCountries"
                   placeholder="e.g. United States, United Kingdom, India"
@@ -318,18 +307,19 @@ export default function NewCampaignPage() {
                 />
               </div>
               <div>
-                <div className="label">Age Ranges</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                <div className="label" id="campaign-ages-label">Age Ranges</div>
+                <div role="group" aria-labelledby="campaign-ages-label" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["18–24", "25–34", "35–44", "45–54", "55+"].map((age) => (
                     <button
                       key={age}
                       type="button"
                       onClick={() => toggleAge(age)}
+                      aria-pressed={targetAges.includes(age)}
                       style={{
                         padding: "8px 18px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                        border: `1px solid ${targetAges.includes(age) ? "#6c63ff" : "var(--card-border)"}`,
-                        background: targetAges.includes(age) ? "rgba(108,99,255,0.15)" : "transparent",
-                        color: targetAges.includes(age) ? "#a78bfa" : "var(--muted)",
+                        border: `1px solid ${targetAges.includes(age) ? "#2563eb" : "var(--card-border)"}`,
+                        background: targetAges.includes(age) ? "rgba(37,99,235,0.15)" : "transparent",
+                        color: targetAges.includes(age) ? "#1d4ed8" : "var(--muted)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{age}</button>
@@ -346,13 +336,9 @@ export default function NewCampaignPage() {
 
         {/* Step 3: Review */}
         {step === 3 && (
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card--static" style={{ padding: "clamp(24px, 4vw, 36px)" }}>
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 28 }}>Review & Launch</h2>
-            {submitError && (
-              <p role="alert" style={{ color: "#ff6b9d", fontSize: 14, marginBottom: 20 }}>
-                {submitError}
-              </p>
-            )}
+            {submitError && <Alert>{submitError}</Alert>}
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {/* Summary items */}
               {[
@@ -380,7 +366,7 @@ export default function NewCampaignPage() {
               <div
                 style={{
                   padding: "16px 20px", borderRadius: 12,
-                  background: "rgba(0,212,170,0.08)", border: "1px solid rgba(0,212,170,0.25)",
+                  background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.25)",
                   fontSize: 13, color: "var(--muted)", lineHeight: 1.7,
                 }}
               >
@@ -394,7 +380,6 @@ export default function NewCampaignPage() {
                 className="btn-primary"
                 onClick={handleLaunch}
                 disabled={submitting}
-                style={{ opacity: submitting ? 0.7 : 1 }}
               >
                 {submitting ? "Launching..." : "Launch Campaign"}
               </button>
@@ -402,6 +387,6 @@ export default function NewCampaignPage() {
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

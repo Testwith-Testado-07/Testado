@@ -1,15 +1,14 @@
 "use client";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowRight, CircleDollarSign, Megaphone, Plus, Rocket, Users } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-
-const NAV = [
-  { href: "/dashboard/owner", label: "Overview" },
-  { href: "/dashboard/owner/campaigns", label: "Campaigns" },
-  { href: "/dashboard/owner/campaigns/new", label: "New Campaign" },
-  { href: "/dashboard/owner/billing", label: "Billing" },
-];
+import { MetricCard, MetricCardSkeleton, MetricGrid } from "@/components/dashboard/MetricCard";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface OwnerDashboardCampaign {
   id: string;
@@ -88,187 +87,134 @@ export default function OwnerDashboard() {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  const stats = [
-    {
-      label: "Active Campaigns",
-      value: campaigns.filter((campaign) => campaign.status === "active").length,
-      change: `${campaigns.length} total campaigns`,
-      color: "#6c63ff",
-    },
-    {
-      label: "Tester Applications",
-      value: campaigns.reduce((total, campaign) => total + campaign.application_count, 0),
-      change: "Across your campaigns",
-      color: "#00d4aa",
-    },
-    {
-      label: "Pending Review",
-      value: campaigns.reduce((total, campaign) => total + campaign.pending_count, 0),
-      change: "Applications awaiting a decision",
-      color: "#fbbf24",
-    },
-    {
-      label: "Potential Reward Budget",
-      value: `$${campaigns.reduce((total, campaign) => total + Number(campaign.reward_amount) * campaign.max_testers, 0).toFixed(2)}`,
-      change: "Based on campaign tester limits",
-      color: "#ff6b9d",
-    },
-  ];
+  const pendingCount = campaigns.reduce((total, campaign) => total + campaign.pending_count, 0);
 
   return (
-    <DashboardLayout role="owner" navItems={NAV}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
-        <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>{greeting}, {firstName}</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>Here&apos;s what&apos;s happening with your campaigns today.</p>
-        </div>
-        <Link href="/dashboard/owner/campaigns/new" className="btn-primary">
-          + New Campaign
-        </Link>
-      </div>
+    <>
+      <PageHeader
+        title={`${greeting}, ${firstName}`}
+        description="Here's what's happening with your campaigns today."
+        actions={
+          <Button asChild>
+            <Link href="/dashboard/owner/campaigns/new">
+              <Plus aria-hidden="true" />
+              New campaign
+            </Link>
+          </Button>
+        }
+      />
 
-      {loadError && <p role="alert" style={{ color: "#ff6b9d", marginBottom: 20 }}>{loadError}</p>}
-      {loading && <p style={{ color: "var(--muted)" }}>Loading your campaigns…</p>}
+      {loadError && <Alert>{loadError}</Alert>}
+      {loading ? (
+        <MetricGrid>
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+          <MetricCardSkeleton />
+        </MetricGrid>
+      ) : !loadError && (
+        <MetricGrid>
+          <MetricCard
+            label="Active campaigns"
+            value={campaigns.filter((campaign) => campaign.status === "active").length}
+            hint={`${campaigns.length} total ${campaigns.length === 1 ? "campaign" : "campaigns"}`}
+            icon={Megaphone}
+          />
+          <MetricCard
+            label="Tester applications"
+            value={campaigns.reduce((total, campaign) => total + campaign.application_count, 0)}
+            hint={pendingCount > 0 ? `${pendingCount} awaiting your review` : "Nothing waiting on review"}
+            icon={Users}
+            tone={pendingCount > 0 ? "amber" : "emerald"}
+          />
+          <MetricCard
+            label="Potential reward budget"
+            value={`$${campaigns.reduce((total, campaign) => total + Number(campaign.reward_amount) * campaign.max_testers, 0).toFixed(2)}`}
+            hint="Based on campaign tester limits"
+            icon={CircleDollarSign}
+            tone="violet"
+          />
+        </MetricGrid>
+      )}
+
+      {!loading && !loadError && campaigns.length === 0 && (
+        <EmptyState
+          icon={Rocket}
+          title="Launch your first campaign"
+          description="Describe what you want validated and Testado will match it with testers from your target audience."
+          action={
+            <Button asChild>
+              <Link href="/dashboard/owner/campaigns/new">Create a campaign</Link>
+            </Button>
+          }
+        />
+      )}
 
       {campaigns.length > 0 && (
-        <>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: 20,
-              marginBottom: 36,
-            }}
-          >
-            {stats.map((s) => (
-              <div key={s.label} className="stat-card">
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "3px 10px",
-                      borderRadius: 999,
-                      background: s.color + "22",
-                      color: s.color,
-                    }}
-                  >
-                    LIVE
-                  </span>
-                </div>
-                <div style={{ fontSize: 34, fontWeight: 800, marginBottom: 4 }}>{s.value}</div>
-                <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 6 }}>{s.label}</div>
-                <div style={{ fontSize: 12, color: s.color, fontWeight: 600 }}>{s.change}</div>
-              </div>
-            ))}
+        <Card className="overflow-hidden">
+          <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
+            <h2 className="text-[17px] font-bold">Your campaigns</h2>
+            <Link
+              href="/dashboard/owner/campaigns"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              View all
+              <ArrowRight className="size-3.5" aria-hidden="true" />
+            </Link>
           </div>
 
-          <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "20px 24px",
-                borderBottom: "1px solid var(--card-border)",
-              }}
-            >
-              <h2 style={{ fontSize: 17, fontWeight: 700 }}>Your Campaigns</h2>
-              <Link
-                href="/dashboard/owner/campaigns"
-                style={{ fontSize: 13, color: "#6c63ff", fontWeight: 600, textDecoration: "none" }}
-              >
-                View all →
-              </Link>
-            </div>
-
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] border-collapse text-left">
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--card-border)" }}>
-                  {[
-                    "Campaign",
-                    "Status",
-                    "Applicants",
-                    "Pending",
-                    "Reward",
-                    "Potential Budget",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      style={{
-                        padding: "12px 24px",
-                        textAlign: "left",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: "var(--muted)",
-                        textTransform: "uppercase",
-                        letterSpacing: 0.8,
-                      }}
-                    >
+                <tr className="border-b border-border bg-muted/50">
+                  {["Campaign", "Status", "Applicants", "Pending", "Reward", "Potential budget"].map((h) => (
+                    <th key={h} scope="col" className="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {campaigns.map((c, i) => (
-                  <tr
-                    key={c.id}
-                    style={{
-                      borderBottom: i < campaigns.length - 1 ? "1px solid var(--card-border)" : "none",
-                      transition: "background 0.15s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                  >
-                    <td style={{ padding: "16px 24px" }}>
-                      <Link
-                        href="/dashboard/owner/campaigns"
-                        style={{ fontWeight: 600, fontSize: 14, color: "var(--foreground)", textDecoration: "none" }}
-                      >
+              <tbody className="divide-y divide-border">
+                {campaigns.map((c) => (
+                  <tr key={c.id} className="transition-colors hover:bg-[#f8fbff]">
+                    <td className="px-6 py-4">
+                      <Link href="/dashboard/owner/campaigns" className="text-sm font-semibold text-foreground hover:text-primary">
                         {c.title}
                       </Link>
                     </td>
-                    <td style={{ padding: "16px 24px" }}>
+                    <td className="px-6 py-4">
                       <span className={`badge badge-${c.status}`}>
-                        {c.status === "active" ? "● " : c.status === "draft" ? "○ " : "✓ "}
                         {c.status.charAt(0).toUpperCase() + c.status.slice(1)}
                       </span>
                     </td>
-                    <td style={{ padding: "16px 24px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={{ flex: 1, height: 6, background: "var(--card-border)", borderRadius: 3, minWidth: 80 }}>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-1.5 min-w-20 flex-1 overflow-hidden rounded-full bg-border">
                           <div
-                            style={{
-                              height: 6,
-                              width: `${Math.min((c.application_count / c.max_testers) * 100, 100)}%`,
-                              background: c.status === "active" ? "#6c63ff" : c.status === "completed" ? "#00d4aa" : "#3a3f5c",
-                              borderRadius: 3,
-                              transition: "width 0.5s",
-                            }}
+                            className={c.status === "active" ? "h-full rounded-full bg-primary transition-[width] duration-500" : c.status === "completed" ? "h-full rounded-full bg-emerald-600" : "h-full rounded-full bg-slate-400"}
+                            style={{ width: `${Math.min((c.application_count / c.max_testers) * 100, 100)}%` }}
                           />
                         </div>
-                        <span style={{ fontSize: 12, color: "var(--muted)", whiteSpace: "nowrap" }}>
+                        <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
                           {c.application_count}/{c.max_testers}
                         </span>
                       </div>
                     </td>
-                    <td style={{ padding: "16px 24px" }}>
+                    <td className="px-6 py-4">
                       {c.pending_count > 0 ? (
                         <span className="badge badge-pending">{c.pending_count} pending</span>
                       ) : (
-                        <span style={{ color: "var(--muted)", fontSize: 13 }}>—</span>
+                        <span className="text-sm text-muted-foreground">—</span>
                       )}
                     </td>
-                    <td style={{ padding: "16px 24px", fontWeight: 600, fontSize: 14, color: "#00d4aa" }}>${Number(c.reward_amount).toFixed(2)}</td>
-                    <td style={{ padding: "16px 24px", fontSize: 13, color: "var(--muted)" }}>${(Number(c.reward_amount) * c.max_testers).toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-emerald-600 tabular-nums">${Number(c.reward_amount).toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground tabular-nums">${(Number(c.reward_amount) * c.max_testers).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </>
+        </Card>
       )}
-    </DashboardLayout>
+    </>
   );
 }

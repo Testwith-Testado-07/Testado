@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Hero from "@/components/landing/Hero";
 
 export default function LandingPage() {
   const BLUE_DARK = "#06101d";      // Dark navy for contrast sections & cards
@@ -40,48 +41,18 @@ export default function LandingPage() {
       <Navbar />
 
       <main>
-        {/* ── HERO ─────────────────────────────────────── */}
+        <Hero />
+
+        {/* ── CHOOSE YOUR PATH ─────────────────────────── */}
         <section
           style={{
-            padding: "160px 40px 90px",
+            padding: "0 40px 90px",
             maxWidth: 1240,
             margin: "0 auto",
             textAlign: "center",
             position: "relative",
           }}
         >
-          <span className="section-label">Targeted Consumer Testing & Market Intelligence</span>
-          <div className="divider" />
-
-          <h1
-            style={{
-              fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-              fontSize: "clamp(42px, 6vw, 76px)",
-              fontWeight: 800,
-              lineHeight: 1.1,
-              color: BLUE_HEADINGS,
-              maxWidth: 980,
-              margin: "24px auto 20px",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            Don’t Just Launch.<br />
-            <span style={{ color: BLUE_PRIMARY }}>Know the Market Before You Bet on It.</span>
-          </h1>
-
-          <p
-            style={{
-              fontSize: "clamp(16px, 2vw, 19px)",
-              color: "#475569",
-              maxWidth: 820,
-              margin: "0 auto 40px",
-              lineHeight: 1.7,
-            }}
-          >
-            Testado helps businesses gain validated <strong>market insights</strong> from their exact target demographic —
-            evaluating customer demand, spotting friction, and de-risking launches before committing heavy capital.
-          </p>
-
           {/* Dual Choice Cards */}
           <div
             style={{

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { UpdateProfileSchema, formatZodError } from "@/utils/schemas";
-import { useToast, ToastContainer } from "@/components/Toast";
-import { Skeleton, SkeletonStyles } from "@/components/Skeleton";
+import { useToast } from "@/components/Toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Profile {
   id: string;
@@ -18,19 +18,6 @@ interface Profile {
   role: string;
   created_at: string;
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "11px 14px",
-  border: "1.5px solid #e2e8e4",
-  borderRadius: 8,
-  fontSize: 14,
-  color: "#101828",
-  background: "#fff",
-  outline: "none",
-  fontFamily: "inherit",
-  transition: "border-color 0.2s, box-shadow 0.2s",
-};
 
 const labelStyle: React.CSSProperties = {
   display: "block",
@@ -49,32 +36,34 @@ function getInitials(name: string | null, email: string | null): string {
 
 export default function ProfilePage() {
   const supabase = createClient();
-  const { toasts, toast, removeToast } = useToast();
+  const { toast } = useToast();
 
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Partial<Profile>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const loadProfile = useCallback(async () => {
-    setLoading(true);
-    const { data: { user: u } } = await supabase.auth.getUser();
-    setUser(u);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: { user: u } } = await supabase.auth.getUser();
+      if (cancelled) return;
+      setUser(u);
 
-    if (u) {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", u.id).single();
-      if (error) {
-        toast.error(error.message);
-      } else {
-        setProfile(data ?? {});
+      if (u) {
+        const { data, error } = await supabase.from("profiles").select("*").eq("id", u.id).single();
+        if (cancelled) return;
+        if (error) {
+          toast.error(error.message);
+        } else {
+          setProfile(data ?? {});
+        }
       }
-    }
-    setLoading(false);
-  }, [supabase]);
-
-  useEffect(() => { loadProfile(); }, [loadProfile]);
+      setLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [supabase, toast]);
 
   const set = (k: keyof Profile, v: string) => {
     setProfile((p) => ({ ...p, [k]: v }));
@@ -82,15 +71,7 @@ export default function ProfilePage() {
   };
 
   function fieldProps(name: string): React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
-    return {
-      onFocus: () => setFocusedField(name),
-      onBlur: () => setFocusedField(null),
-      style: {
-        ...inputStyle,
-        borderColor: errors[name] ? "#FCA5A5" : focusedField === name ? "#2563eb" : "#dbe5f2",
-        boxShadow: focusedField === name && !errors[name] ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
-      },
-    };
+    return { className: "input", "aria-invalid": errors[name] ? true : undefined };
   }
 
   const handleSave = async (e: React.FormEvent) => {
@@ -131,8 +112,6 @@ export default function ProfilePage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#F8F9FA", padding: "48px 20px", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
-      <SkeletonStyles />
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
 
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
         {/* Nav */}
@@ -145,7 +124,7 @@ export default function ProfilePage() {
         {/* Avatar + header */}
         <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 28 }}>
           {loading ? (
-            <Skeleton width={72} height={72} borderRadius="50%" />
+            <Skeleton className="size-18 shrink-0 rounded-full" />
           ) : (
             <div style={{
               width: 72, height: 72, borderRadius: "50%",
@@ -160,8 +139,8 @@ export default function ProfilePage() {
           <div>
             {loading ? (
               <>
-                <Skeleton width={180} height={20} style={{ marginBottom: 8 }} />
-                <Skeleton width={240} height={14} />
+                <Skeleton className="mb-2 h-5 w-45" />
+                <Skeleton className="h-3.5 w-60" />
               </>
             ) : (
               <>
@@ -220,7 +199,7 @@ export default function ProfilePage() {
                       value={profile.username ?? ""}
                       onChange={(e) => set("username", e.target.value.toLowerCase())}
                       {...fieldProps("username")}
-                      style={{ ...(fieldProps("username").style as React.CSSProperties), paddingLeft: 28 }}
+                      style={{ paddingLeft: 28 }}
                     />
                   </div>
                   {errors.username && <p style={{ color: "#DC2626", fontSize: 12, marginTop: 4 }}>{errors.username}</p>}
@@ -235,13 +214,9 @@ export default function ProfilePage() {
                   placeholder="Tell us a little about yourself…"
                   value={profile.bio ?? ""}
                   onChange={(e) => set("bio", e.target.value)}
-                  onFocus={() => setFocusedField("bio")}
-                  onBlur={() => setFocusedField(null)}
-                  style={{
-                    ...inputStyle, resize: "vertical",
-                    borderColor: errors.bio ? "#FCA5A5" : focusedField === "bio" ? "#2563eb" : "#dbe5f2",
-                    boxShadow: focusedField === "bio" && !errors.bio ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
-                  }}
+                  className="input"
+                  aria-invalid={errors.bio ? true : undefined}
+                  style={{ resize: "vertical" }}
                 />
                 {errors.bio && <p style={{ color: "#DC2626", fontSize: 12, marginTop: 4 }}>{errors.bio}</p>}
                 <p style={{ fontSize: 11, color: "#98A2B3", margin: "4px 0 0", textAlign: "right" }}>

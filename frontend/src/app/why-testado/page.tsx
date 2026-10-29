@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default function WhyTestadoPage() {
   const BLUE_HEADINGS = "#07172e";
   const BLUE_PRIMARY = "#2563eb";
-  const BLUE_ACCENT = "#78a8ff";
   const BG_LIGHT_BLUE = "#f4f8fd";
   const BG_ALT_BLUE = "#edf3fb";
 

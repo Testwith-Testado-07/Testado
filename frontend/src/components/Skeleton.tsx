@@ -1,59 +1,55 @@
-import React from "react";
-
-interface SkeletonProps {
-  width?: string | number;
-  height?: string | number;
-  borderRadius?: string | number;
-  style?: React.CSSProperties;
-}
-
-/** A single shimmering skeleton placeholder */
-export function Skeleton({ width = "100%", height = 20, borderRadius = 6, style }: SkeletonProps) {
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        width,
-        height,
-        borderRadius,
-        background: "linear-gradient(90deg, #e8edf0 25%, #f4f7f5 50%, #e8edf0 75%)",
-        backgroundSize: "200% 100%",
-        animation: "skeleton-shimmer 1.4s infinite",
-        ...style,
-      }}
-    />
-  );
-}
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 /** Skeleton for a client card */
 export function ClientCardSkeleton() {
   return (
-    <div style={{
-      background: "#fff", border: "1px solid #e2e8e4", borderRadius: 14,
-      padding: 24, display: "flex", flexDirection: "column", gap: 12,
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <Skeleton width={44} height={44} borderRadius="50%" />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-          <Skeleton width="55%" height={16} />
-          <Skeleton width="70%" height={12} />
+    <div className="flex flex-col gap-3.5 rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="flex items-center gap-3.5">
+        <Skeleton className="size-11 rounded-full" />
+        <div className="flex flex-1 flex-col gap-2">
+          <Skeleton className="h-4 w-[55%]" />
+          <Skeleton className="h-3 w-[70%]" />
         </div>
-        <Skeleton width={72} height={24} borderRadius={20} />
+        <Skeleton className="h-6 w-18 rounded-full" />
       </div>
-      <Skeleton width="40%" height={12} />
+      <Skeleton className="h-3 w-2/5" />
     </div>
   );
 }
 
-/** Injects the shimmer keyframe globally once */
-export function SkeletonStyles() {
+/** Skeleton for a single row-style card, e.g. owner campaigns or tester applications. */
+export function CampaignRowSkeleton() {
   return (
-    <style>{`
-      @keyframes skeleton-shimmer {
-        0%   { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-    `}</style>
+    <div className="flex flex-wrap items-center gap-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="min-w-[180px] flex-1 space-y-2.5">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-3 w-28" />
+      </div>
+      <Skeleton className="h-6 w-44 rounded-full" />
+      <Skeleton className="h-8 w-24" />
+    </div>
+  );
+}
+
+/** Skeleton matching the tester "product test" card: header + reward chip, copy lines, CTA. */
+export function ProjectCardSkeleton() {
+  return (
+    <div className="flex flex-col rounded-2xl border border-border bg-card shadow-soft">
+      <div className="flex items-start justify-between gap-4 p-5 pb-0">
+        <div className="flex-1 space-y-2.5">
+          <Skeleton className="h-2.5 w-20" />
+          <Skeleton className="h-4.5 w-3/4" />
+        </div>
+        <Skeleton className="h-14 w-20 rounded-xl" />
+      </div>
+      <div className="space-y-2.5 p-5">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[92%]" />
+        <Skeleton className="h-3 w-3/5" />
+      </div>
+      <div className="p-5 pt-0">
+        <Skeleton className="h-11 w-full rounded-full" />
+      </div>
+    </div>
   );
 }

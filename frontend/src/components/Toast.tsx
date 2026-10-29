@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { CircleAlert, CircleCheck, Info, TriangleAlert, X, type LucideIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 
@@ -10,126 +13,89 @@ export interface Toast {
   type: ToastType;
 }
 
-interface ToastItemProps {
-  toast: Toast;
-  onRemove: (id: string) => void;
-}
-
-const ICONS: Record<ToastType, string> = {
-  success: "Check",
-  error: "Error",
-  info: "Info",
-  warning: "Warn",
+const STYLES: Record<ToastType, { icon: LucideIcon; accent: string }> = {
+  success: { icon: CircleCheck, accent: "text-emerald-600" },
+  error: { icon: CircleAlert, accent: "text-red-600" },
+  info: { icon: Info, accent: "text-blue-600" },
+  warning: { icon: TriangleAlert, accent: "text-amber-600" },
 };
 
-const COLORS: Record<ToastType, { bg: string; border: string; text: string; icon: string }> = {
-  success: { bg: "#ECFDF5", border: "#6EE7B7", text: "#065F46", icon: "#059669" },
-  error:   { bg: "#FEF2F2", border: "#FCA5A5", text: "#991B1B", icon: "#DC2626" },
-  info:    { bg: "#EFF6FF", border: "#93C5FD", text: "#1E40AF", icon: "#2563EB" },
-  warning: { bg: "#FFFBEB", border: "#FCD34D", text: "#92400E", icon: "#D97706" },
-};
+const EXIT_MS = 250;
 
-function ToastItem({ toast, onRemove }: ToastItemProps) {
-  const [visible, setVisible] = useState(false);
-  const c = COLORS[toast.type];
+function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) => void }) {
+  const [leaving, setLeaving] = useState(false);
+  const { icon: Icon, accent } = STYLES[toast.type];
 
   useEffect(() => {
-    // Animate in
-    const tIn = setTimeout(() => setVisible(true), 10);
-    // Auto-dismiss after 4s
-    const tOut = setTimeout(() => {
-      setVisible(false);
-      setTimeout(() => onRemove(toast.id), 350);
-    }, 4000);
-    return () => { clearTimeout(tIn); clearTimeout(tOut); };
-  }, [toast.id, onRemove]);
+    if (leaving) {
+      const t = setTimeout(() => onRemove(toast.id), EXIT_MS);
+      return () => clearTimeout(t);
+    }
+    // Errors stay up a little longer so they can be read
+    const t = setTimeout(() => setLeaving(true), toast.type === "error" ? 6000 : 4000);
+    return () => clearTimeout(t);
+  }, [leaving, toast.id, toast.type, onRemove]);
 
   return (
     <div
-      role="alert"
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: 12,
-        padding: "14px 18px",
-        background: c.bg,
-        border: `1.5px solid ${c.border}`,
-        borderRadius: 12,
-        boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
-        minWidth: 280,
-        maxWidth: 380,
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateX(0)" : "translateX(40px)",
-        transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
-        cursor: "pointer",
-      }}
-      onClick={() => { setVisible(false); setTimeout(() => onRemove(toast.id), 350); }}
+      role={toast.type === "error" ? "alert" : "status"}
+      className={cn(
+        "pointer-events-auto flex w-full items-start gap-3 rounded-xl border border-border bg-white/95 py-3.5 pr-3 pl-4 shadow-lift backdrop-blur-md sm:w-[380px]",
+        leaving
+          ? "animate-out fade-out-0 slide-out-to-right-4 fill-mode-forwards"
+          : "animate-in fade-in-0 slide-in-from-bottom-3 duration-300"
+      )}
     >
-      {/* Icon circle */}
-      <div style={{
-        width: 28, height: 28, borderRadius: "50%", background: c.icon,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        color: "#fff", fontWeight: 800, fontSize: 13, flexShrink: 0,
-      }}>
-        {ICONS[toast.type]}
-      </div>
-
-      {/* Message */}
-      <p style={{ margin: 0, fontSize: 14, color: c.text, fontWeight: 500, lineHeight: 1.5, flex: 1 }}>
-        {toast.message}
-      </p>
+      <Icon className={cn("mt-0.5 size-5 shrink-0", accent)} aria-hidden="true" />
+      <p className="flex-1 text-sm font-medium leading-relaxed text-foreground">{toast.message}</p>
+      <button
+        type="button"
+        onClick={() => setLeaving(true)}
+        aria-label="Dismiss notification"
+        className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      >
+        <X className="size-4" />
+      </button>
     </div>
   );
 }
 
-interface ToastContainerProps {
-  toasts: Toast[];
-  onRemove: (id: string) => void;
-}
+type ToastApi = Record<ToastType, (message: string) => void>;
 
-export function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
-  return (
-    <div
-      aria-live="polite"
-      style={{
-        position: "fixed",
-        bottom: 24,
-        right: 24,
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        pointerEvents: "none",
-      }}
-    >
-      {toasts.map((t) => (
-        <div key={t.id} style={{ pointerEvents: "all" }}>
-          <ToastItem toast={t} onRemove={onRemove} />
-        </div>
-      ))}
-    </div>
-  );
-}
+const ToastContext = createContext<ToastApi | null>(null);
 
-/** Hook to manage toasts */
-export function useToast() {
+/** Mounted once in the root layout so any page can raise toasts and they survive navigation. */
+export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-
-  const addToast = useCallback((message: string, type: ToastType = "info") => {
-    const id = crypto.randomUUID();
-    setToasts((prev) => [...prev, { id, message, type }]);
-  }, []);
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const toast = {
-    success: (msg: string) => addToast(msg, "success"),
-    error:   (msg: string) => addToast(msg, "error"),
-    info:    (msg: string) => addToast(msg, "info"),
-    warning: (msg: string) => addToast(msg, "warning"),
-  };
+  const toast = useMemo<ToastApi>(() => {
+    const add = (type: ToastType) => (message: string) =>
+      setToasts((prev) => [...prev.slice(-3), { id: crypto.randomUUID(), message, type }]);
+    return { success: add("success"), error: add("error"), info: add("info"), warning: add("warning") };
+  }, []);
 
-  return { toasts, toast, removeToast };
+  return (
+    <ToastContext.Provider value={toast}>
+      {children}
+      <div
+        aria-live="polite"
+        className="pointer-events-none fixed inset-x-4 bottom-4 z-[9999] flex flex-col items-end gap-2.5 sm:inset-x-auto sm:right-6 sm:bottom-6"
+      >
+        {toasts.map((t) => (
+          <ToastItem key={t.id} toast={t} onRemove={removeToast} />
+        ))}
+      </div>
+    </ToastContext.Provider>
+  );
+}
+
+/** Returns a stable `toast` object, so it is safe in effect dependency arrays. */
+export function useToast() {
+  const toast = useContext(ToastContext);
+  if (!toast) throw new Error("useToast must be used inside <ToastProvider>");
+  return { toast };
 }
