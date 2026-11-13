@@ -46,9 +46,15 @@ export default function CampaignsPage() {
     let cancelled = false;
 
     const loadCampaigns = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Sign in to view your campaigns.");
+
       const { data: campaignRows, error: campaignError } = await supabase
         .from("campaigns")
         .select("id, title, status, reward_amount, max_testers, created_at")
+        // RLS lets every signed-in user read active campaigns (testers need them), so scope to this owner
+        .eq("owner_id", user.id)
         .order("created_at", { ascending: false });
       if (campaignError) throw campaignError;
 

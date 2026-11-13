@@ -41,6 +41,8 @@ export default function OwnerDashboard() {
       const { data: campaignRows, error: campaignError } = await supabase
         .from("campaigns")
         .select("id, title, status, reward_amount, max_testers")
+        // RLS lets every signed-in user read active campaigns (testers need them), so scope to this owner
+        .eq("owner_id", user.id)
         .order("created_at", { ascending: false });
       if (campaignError) throw campaignError;
 
