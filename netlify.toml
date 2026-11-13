@@ -1,0 +1,5 @@
+# The Next.js app lives in frontend/; publish is relative to base.
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
