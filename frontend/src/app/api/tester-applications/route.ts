@@ -1,5 +1,7 @@
 import { Resend } from "resend";
 
+import { guardPublicForm } from "@/lib/spam-guard";
+
 export const runtime = "nodejs";
 
 const allowedAgeRanges = new Set(["18–24", "25–34", "35–44", "45+"]);
@@ -43,6 +45,9 @@ export async function POST(request: Request) {
   }
 
   const body = payload as Record<string, unknown>;
+  const blocked = await guardPublicForm(request, body, "tester-application");
+  if (blocked) return blocked;
+
   const name = readText(body.name, 120);
   const phone = readText(body.phone, 50);
   const email = readText(body.email, 254);

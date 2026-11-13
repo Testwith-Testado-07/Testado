@@ -42,13 +42,13 @@ export function Sidebar({ id, role, collapsed, mobileOpen, onToggleCollapsed, on
         <div className={cn("mb-8 flex items-center justify-between px-3", collapsed && "lg:justify-center lg:px-0")}>
           <Link href="/" aria-label="Testado home" className="flex items-center">
             <Image
-              src="/assets/testado-logo-transparent.png"
+              src="/assets/testado-logo.svg"
               alt=""
-              width={1531}
-              height={382}
+              width={482}
+              height={140}
               loading="eager"
               sizes="140px"
-              className={cn("block h-[35px] w-[140px] brightness-0 invert", collapsed && "lg:hidden")}
+              className={cn("block h-auto w-[136px] brightness-0 invert", collapsed && "lg:hidden")}
             />
             <span
               aria-hidden="true"

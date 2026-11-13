@@ -154,10 +154,10 @@ function AuthContent() {
 
         <div className="auth-form-wrap">
               <Image
-                src="/assets/testado-logo-transparent.png"
+                src="/assets/testado-logo.svg"
                 alt="Testado"
-                width={1531}
-                height={382}
+                width={482}
+                height={140}
                 loading="eager"
                 sizes="220px"
                 className="auth-logo"

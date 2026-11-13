@@ -32,18 +32,15 @@ export default function Footer() {
                 }}
               >
                 <Image
-                  src="/assets/testado-logo.png"
+                  src="/assets/testado-logo.svg"
                   alt="Testado"
-                  width={1531}
-                  height={382}
+                  width={482}
+                  height={140}
                   sizes="170px"
-                  style={{ width: 170, height: 42, display: "block" }}
+                  style={{ width: 160, height: "auto", display: "block", filter: "brightness(0) invert(1)" }}
                 />
               </div>
             </div>
-            <p style={{ fontSize: 12, letterSpacing: "1.5px", fontWeight: 700, color: BLUE_LIGHT, marginBottom: 8, textTransform: "uppercase" }}>
-              Real People. Real Insights. Real Problems.
-            </p>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, maxWidth: 360 }}>
               We turn consumer feedback into business confidence. Brands gain the targeted market insights needed for successful launches, while our testers enjoy free access to new products and earn rewards for their participation.
             </p>
@@ -56,8 +53,6 @@ export default function Footer() {
                 fontFamily: "var(--font-inter), 'Inter', sans-serif",
                 fontSize: 12,
                 fontWeight: 700,
-                letterSpacing: 2,
-                textTransform: "uppercase",
                 color: "#ffffff",
                 marginBottom: 18,
               }}
@@ -90,13 +85,11 @@ export default function Footer() {
                 fontFamily: "var(--font-inter), 'Inter', sans-serif",
                 fontSize: 12,
                 fontWeight: 700,
-                letterSpacing: 2,
-                textTransform: "uppercase",
                 color: "#ffffff",
                 marginBottom: 18,
               }}
             >
-              Direct Connect
+              Get in touch
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 14 }}>
               <a

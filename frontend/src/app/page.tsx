@@ -1,9 +1,10 @@
-"use client";
-
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/landing/Hero";
+
+// Picks up newly published test reports in the hero without a redeploy
+export const revalidate = 300;
 
 export default function LandingPage() {
   const BLUE_DARK = "#06101d";      // Dark navy for contrast sections & cards

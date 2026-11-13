@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { HoneypotField } from "@/components/HoneypotField";
 import { sendBusinessRequestEmail } from "@/utils/emailjs";
 
 export default function BusinessesPage() {
@@ -28,52 +29,51 @@ export default function BusinessesPage() {
     consent: false,
   });
 
+  // Lets the API reject forms submitted faster than a person could fill them in
+  const startedAt = useRef(0);
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.consent) return;
+    const website = String(new FormData(e.currentTarget).get("website") ?? "");
     setLoading(true);
     setSubmissionError("");
 
     try {
-      let emailjsSent = false;
-      if (
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY &&
-        process.env.NEXT_PUBLIC_EMAILJS_BUSINESS_TEMPLATE_ID
-      ) {
-        try {
-          await sendBusinessRequestEmail({
-            from_name: formData.name,
-            from_email: formData.email,
-            company: formData.company,
-            phone: formData.phone,
-            test_type: formData.testType,
-            stage: formData.stage,
-            target_customer: formData.targetCustomer,
-            decision_question: formData.decisionQuestion,
-            additional_info: formData.additionalInfo,
-          });
-          emailjsSent = true;
-        } catch (emailjsErr) {
-          console.warn("EmailJS send failed, falling back to API route:", emailjsErr);
-        }
-      }
+      // The API route is rate limited and screens out bots, so it always goes first
+      const response = await fetch("/api/business-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, website, startedAt: startedAt.current }),
+      });
 
-      if (!emailjsSent) {
-        const response = await fetch("/api/business-requests", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+      const emailjsReady = Boolean(
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY && process.env.NEXT_PUBLIC_EMAILJS_BUSINESS_TEMPLATE_ID
+      );
+      if ((response.status === 503 || response.status === 502) && emailjsReady) {
+        // Server email is missing or failed after passing the spam checks; send from the browser instead
+        await sendBusinessRequestEmail({
+          from_name: formData.name,
+          from_email: formData.email,
+          company: formData.company,
+          phone: formData.phone,
+          test_type: formData.testType,
+          stage: formData.stage,
+          target_customer: formData.targetCustomer,
+          decision_question: formData.decisionQuestion,
+          additional_info: formData.additionalInfo,
         });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          setSubmissionError(
-            response.status === 503
-              ? "Email delivery is not configured yet. Your request was not sent."
-              : (errorData?.error || "We couldn't send your request. Please try again shortly.")
-          );
-          return;
-        }
+      } else if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        setSubmissionError(
+          response.status === 503
+            ? "Email delivery is not configured yet. Your request was not sent."
+            : (errorData?.error || "We couldn't send your request. Please try again shortly.")
+        );
+        return;
       }
 
       setSubmitted(true);
@@ -365,6 +365,7 @@ export default function BusinessesPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  <HoneypotField />
                   <div>
                     <label className="label" htmlFor="business-name">
                       Your name <span style={{ color: BLUE_PRIMARY }}>*</span>

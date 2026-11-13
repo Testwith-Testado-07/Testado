@@ -958,8 +958,7 @@ select.input {
 .auth-logo {
   display: block;
   width: 220px;
-  height: 55px;
-  object-fit: contain;
+  height: auto;
   margin: 0 auto 34px;
 }
 

@@ -1,50 +1,5 @@
 import { z } from "zod";
 
-/** ── Client Schemas ─────────────────────────────────────── */
-
-export const ProjectStatus = z.enum([
-  "prospect",
-  "active",
-  "on_hold",
-  "completed",
-  "churned",
-]);
-
-export const CreateClientSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Name is required.")
-    .max(200, "Name must be 200 characters or fewer.")
-    .trim(),
-  email: z
-    .string()
-    .min(1, "Email is required.")
-    .email("Please enter a valid email address.")
-    .trim()
-    .toLowerCase(),
-  phone: z
-    .string()
-    .max(50, "Phone number is too long.")
-    .optional()
-    .nullable()
-    .transform((v) => v?.trim() || null),
-  company: z
-    .string()
-    .max(200, "Company name is too long.")
-    .optional()
-    .nullable()
-    .transform((v) => v?.trim() || null),
-  status: ProjectStatus.default("prospect"),
-  notes: z
-    .string()
-    .max(2000, "Notes must be 2000 characters or fewer.")
-    .optional()
-    .nullable()
-    .transform((v) => v?.trim() || null),
-});
-
-export type CreateClientInput = z.infer<typeof CreateClientSchema>;
-
 /** ── Profile Schemas ────────────────────────────────────── */
 
 export const UpdateProfileSchema = z.object({

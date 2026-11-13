@@ -1,5 +1,7 @@
 import { Resend } from "resend";
 
+import { guardPublicForm } from "@/lib/spam-guard";
+
 export const runtime = "nodejs";
 
 const allowedTestTypes = new Set(["Product", "Physical Product", "Service", "Idea", "Concept"]);
@@ -44,6 +46,9 @@ export async function POST(request: Request) {
     }
 
     const body = payload as Record<string, unknown>;
+    const blocked = await guardPublicForm(request, body, "business-request");
+    if (blocked) return blocked;
+
     const name = readText(body.name, 120);
     const company = readText(body.company, 160);
     const email = readText(body.email, 254);

@@ -52,13 +52,13 @@ export default function Navbar() {
         {/* Brand Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <Image
-            src="/assets/testado-logo-transparent.png"
+            src="/assets/testado-logo.svg"
             alt="Testado"
-            width={1531}
-            height={382}
+            width={482}
+            height={140}
             priority
             sizes="160px"
-            style={{ width: 160, height: 40, objectFit: "contain" }}
+            style={{ width: 150, height: "auto" }}
           />
         </Link>
 

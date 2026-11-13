@@ -153,13 +153,13 @@ export default function OnboardingPage() {
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
             <Image
-              src="/assets/testado-logo-transparent.png"
+              src="/assets/testado-logo.svg"
               alt="Testado - Real People. Real Insights. Real Problems."
-              width={1531}
-              height={382}
+              width={482}
+              height={140}
               loading="eager"
               sizes="220px"
-              style={{ width: 220, height: 55, objectFit: "contain" }}
+              style={{ width: 200, height: "auto" }}
             />
           </div>
 

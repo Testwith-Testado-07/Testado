@@ -1,22 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-/** Skeleton for a client card */
-export function ClientCardSkeleton() {
-  return (
-    <div className="flex flex-col gap-3.5 rounded-2xl border border-border bg-card p-6 shadow-soft">
-      <div className="flex items-center gap-3.5">
-        <Skeleton className="size-11 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2">
-          <Skeleton className="h-4 w-[55%]" />
-          <Skeleton className="h-3 w-[70%]" />
-        </div>
-        <Skeleton className="h-6 w-18 rounded-full" />
-      </div>
-      <Skeleton className="h-3 w-2/5" />
-    </div>
-  );
-}
-
 /** Skeleton for a single row-style card, e.g. owner campaigns or tester applications. */
 export function CampaignRowSkeleton() {
   return (

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { HoneypotField } from "@/components/HoneypotField";
 import TesterFeatures from "@/components/TesterFeatures";
 import { sendTesterApplicationEmail } from "@/utils/emailjs";
 
@@ -27,50 +28,49 @@ export default function TestersPage() {
     why: "",
   });
 
+  // Lets the API reject forms submitted faster than a person could fill them in
+  const startedAt = useRef(0);
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const website = String(new FormData(e.currentTarget).get("website") ?? "");
     setLoading(true);
     setSubmissionError("");
 
     try {
-      let emailjsSent = false;
-      if (
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY &&
-        process.env.NEXT_PUBLIC_EMAILJS_TESTER_TEMPLATE_ID
-      ) {
-        try {
-          await sendTesterApplicationEmail({
-            from_name: formData.name,
-            from_email: formData.email,
-            phone: formData.phone,
-            city: formData.city,
-            age: formData.age,
-            frequency: formData.frequency,
-            interests: formData.interests,
-            why: formData.why,
-          });
-          emailjsSent = true;
-        } catch (emailjsErr) {
-          console.warn("EmailJS send failed, falling back to API route:", emailjsErr);
-        }
-      }
+      // The API route is rate limited and screens out bots, so it always goes first
+      const response = await fetch("/api/tester-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, consent: true, website, startedAt: startedAt.current }),
+      });
 
-      if (!emailjsSent) {
-        const response = await fetch("/api/tester-applications", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, consent: true }),
+      const emailjsReady = Boolean(
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY && process.env.NEXT_PUBLIC_EMAILJS_TESTER_TEMPLATE_ID
+      );
+      if ((response.status === 503 || response.status === 502) && emailjsReady) {
+        // Server email is missing or failed after passing the spam checks; send from the browser instead
+        await sendTesterApplicationEmail({
+          from_name: formData.name,
+          from_email: formData.email,
+          phone: formData.phone,
+          city: formData.city,
+          age: formData.age,
+          frequency: formData.frequency,
+          interests: formData.interests,
+          why: formData.why,
         });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          setSubmissionError(
-            response.status === 503
-              ? "Email delivery is not configured yet. Your application was not sent."
-              : (errorData?.error || "We couldn't send your application. Please try again shortly.")
-          );
-          return;
-        }
+      } else if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        setSubmissionError(
+          response.status === 503
+            ? "Email delivery is not configured yet. Your application was not sent."
+            : (errorData?.error || "We couldn't send your application. Please try again shortly.")
+        );
+        return;
       }
 
       setSubmitted(true);
@@ -268,6 +268,7 @@ export default function TestersPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  <HoneypotField />
                   <div>
                     <label className="label" htmlFor="tester-name">
                       Full name <span style={{ color: BLUE_PRIMARY }}>*</span>
