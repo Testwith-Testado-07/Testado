@@ -256,7 +256,7 @@ export default function NewCampaignPage() {
                       type="button"
                       onClick={() => removeQuestion(q.id)}
                       aria-label={`Remove question ${i + 1}`}
-                      className="ml-auto grid size-8 place-items-center rounded-lg text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+                      className="ml-auto grid size-8 place-items-center rounded-lg text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
                     >
                       ✕
                     </button>

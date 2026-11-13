@@ -138,13 +138,14 @@ export async function POST(request: Request) {
             }
 
             if (!anyDelivered) {
-                return Response.json({ error: lastErrorMessage || "Email delivery failed." }, { status: 502 });
+                console.error("Business request email delivery failed:", lastErrorMessage);
+                return Response.json({ error: "We couldn't send your request. Please try again later." }, { status: 502 });
             }
         }
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Email delivery failed.";
         console.error("Business request email delivery failed:", message);
-        return Response.json({ error: message }, { status: 502 });
+        return Response.json({ error: "We couldn't send your request. Please try again later." }, { status: 502 });
     }
 
     return Response.json({ ok: true });

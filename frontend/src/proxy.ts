@@ -47,6 +47,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   const isOwnerRoute = pathname.startsWith('/dashboard/owner');
   const isTesterRoute = pathname.startsWith('/dashboard/tester');
+  const isAccountRoute = pathname === '/profile' || pathname === '/onboarding';
 
   // Verify auth session against Supabase Auth
   const {
@@ -54,7 +55,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   } = await supabase.auth.getUser();
 
   // 2. Check if the user is authenticated. If not, redirect any dashboard request to /auth
-  if (!user && (isOwnerRoute || isTesterRoute)) {
+  if (!user && (isOwnerRoute || isTesterRoute || isAccountRoute)) {
     const authUrl = request.nextUrl.clone();
     authUrl.pathname = '/auth';
     authUrl.searchParams.set('redirectedFrom', pathname);
@@ -114,5 +115,7 @@ export const config = {
     '/dashboard/tester/:path*',
     '/dashboard/owner',
     '/dashboard/tester',
+    '/profile',
+    '/onboarding',
   ],
 };

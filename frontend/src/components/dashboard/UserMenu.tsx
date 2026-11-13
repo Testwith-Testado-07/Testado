@@ -29,7 +29,7 @@ export function UserMenu({ role }: { role: DashboardRole }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-full border border-transparent py-1 pr-2.5 pl-1 outline-none transition-colors hover:border-border hover:bg-white focus-visible:ring-4 focus-visible:ring-ring/30 data-[state=open]:border-border data-[state=open]:bg-white">
-        <span className="grid size-9 place-items-center rounded-full bg-linear-to-br from-navy to-primary text-xs font-bold text-white shadow-soft">
+        <span className="grid size-9 place-items-center rounded-full bg-navy text-xs font-medium text-white shadow-soft">
           {user.initials}
         </span>
         <span className="hidden max-w-40 text-left sm:block">

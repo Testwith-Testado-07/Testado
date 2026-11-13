@@ -16,22 +16,22 @@ export default function LandingPage() {
   const steps = [
     {
       num: "01",
-      title: "Define the Market Objective",
+      title: "Define the market objective",
       desc: "We pinpoint what you need to validate — target customer profile, pricing tolerance, core value proposition, and critical launch risks.",
     },
     {
       num: "02",
-      title: "Target Your Verified Audience",
+      title: "Target a verified audience",
       desc: "We identify exact target demographic participants so the market insights reflect genuine potential buyers, not random crowds.",
     },
     {
       num: "03",
-      title: "Capture Behavioral Market Signals",
+      title: "Capture real behavior",
       desc: "Participants interact with your product, service, or concept to reveal actual usability, buying hesitation, and core appeal.",
     },
     {
       num: "04",
-      title: "Extract Actionable Market Insights",
+      title: "Turn it into decisions",
       desc: "We synthesize user behavior into structured market intelligence, recurring objections, demand validation, and go/no-go launch metrics.",
     },
   ];
@@ -89,50 +89,46 @@ export default function LandingPage() {
                   borderRadius: 999,
                   padding: "4px 12px",
                   fontSize: 11,
-                  fontWeight: 800,
-                  letterSpacing: 0.5,
-                  textTransform: "uppercase",
+                  fontWeight: 500,
                 }}
               >
-                100% Free to Join
+                Free to join
               </div>
 
               <div>
                 <span
                   style={{
                     fontSize: 11,
-                    fontWeight: 800,
-                    letterSpacing: 2,
-                    textTransform: "uppercase",
+                    fontWeight: 500,
                     color: BLUE_PRIMARY,
                     display: "block",
                     marginBottom: 12,
                   }}
                 >
-                  FOR EVERYDAY TESTERS
+                  For everyday testers
                 </span>
                 <h3
                   style={{
                     fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                     fontSize: 28,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: BLUE_HEADINGS,
                     marginBottom: 14,
                   }}
                 >
-                  Earn by Testing for FREE
+                  Get paid to test new products
                 </h3>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.65, marginBottom: 20 }}>
                   Join Testado completely <strong>free with zero fees or investments</strong>. Test early-stage apps, websites, and products in your free time, share your genuine reactions, and <strong>earn cash payouts & rewards</strong>.
                 </p>
                 <div style={{ display: "flex", gap: 14, fontSize: 13, color: "#1e3a8a", fontWeight: 600, marginBottom: 24, flexWrap: "wrap" }}>
-                  <span>✓ Zero Registration Fee</span>
-                  <span>✓ Direct Payouts</span>
-                  <span>✓ No Sales/Pitching</span>
+                  <span>No registration fee</span>
+                  <span>Direct payouts</span>
+                  <span>No selling or pitching</span>
                 </div>
               </div>
               <Link href="/testers" className="btn-primary" style={{ alignSelf: "flex-start" }}>
-                Join Free & Start Earning →
+                Join free and start earning
               </Link>
             </div>
 
@@ -160,51 +156,47 @@ export default function LandingPage() {
                   borderRadius: 999,
                   padding: "4px 12px",
                   fontSize: 11,
-                  fontWeight: 800,
-                  letterSpacing: 0.5,
-                  textTransform: "uppercase",
+                  fontWeight: 500,
                 }}
               >
-                Market Intelligence
+                Market insights
               </div>
 
               <div>
                 <span
                   style={{
                     fontSize: 11,
-                    fontWeight: 800,
-                    letterSpacing: 2,
-                    textTransform: "uppercase",
+                    fontWeight: 500,
                     color: BLUE_PRIMARY,
                     display: "block",
                     marginBottom: 12,
                   }}
                 >
-                  FOR BUSINESSES & FOUNDERS
+                  For businesses and founders
                 </span>
                 <h3
                   style={{
                     fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                     fontSize: 28,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: BLUE_HEADINGS,
                     marginBottom: 14,
                   }}
                 >
-                  De-Risk with Market Insights
+                  De-risk a launch before you spend
                 </h3>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.65, marginBottom: 20 }}>
                   Vague opinions won&apos;t save a failed launch. We deliver <strong>deep market insights</strong> —
                   measuring customer purchase intent, pricing sensitivity, value clarity, and adoption barriers before you burn your marketing budget.
                 </p>
                 <div style={{ display: "flex", gap: 14, fontSize: 13, color: "#1e3a8a", fontWeight: 600, marginBottom: 24, flexWrap: "wrap" }}>
-                  <span>✓ Purchase Intent Data</span>
-                  <span>✓ Friction & Objection Analysis</span>
-                  <span>✓ Go/No-Go Clarity</span>
+                  <span>Purchase intent data</span>
+                  <span>Friction and objection analysis</span>
+                  <span>A clear go or no-go</span>
                 </div>
               </div>
               <Link href="/businesses" className="btn-primary" style={{ alignSelf: "flex-start", background: BLUE_DARK, borderColor: BLUE_DARK }}>
-                Validate Your Market →
+                Validate your market
               </Link>
             </div>
           </div>
@@ -219,20 +211,19 @@ export default function LandingPage() {
         <section id="what-we-do" style={{ padding: "100px 40px", background: "#ffffff", borderTop: "1px solid #e2eaf5", borderBottom: "1px solid #e2eaf5" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 52 }}>
-              <span className="section-label">What We Do</span>
-              <div className="divider" />
+              <span className="section-label">What we do</span>
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: "clamp(30px, 4vw, 48px)",
-                  fontWeight: 800,
+                  fontWeight: 500,
                   color: BLUE_HEADINGS,
                   marginTop: 8,
                   lineHeight: 1.2,
                 }}
               >
-                Transforming Real Consumer Behavior into<br />
-                <span style={{ color: BLUE_PRIMARY }}>Actionable Market Insights</span>
+                Real consumer behavior, turned into<br />
+                <span style={{ color: BLUE_PRIMARY }}>market insights you can act on</span>
               </h2>
             </div>
 
@@ -245,7 +236,7 @@ export default function LandingPage() {
             >
               <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f4f8fd)", border: "1px solid #dbe5f2" }}>
                 <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 14 }}>
-                  For Businesses and Product Leaders
+                  For businesses and product leaders
                 </h4>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
                   Companies don&apos;t fail because of poor execution; they fail because they build things the market doesn&apos;t want.
@@ -256,7 +247,7 @@ export default function LandingPage() {
 
               <div className="card" style={{ padding: 36, background: "linear-gradient(145deg, #ffffff, #f0f7ff)", border: "1px solid #bfdbfe" }}>
                 <h4 style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: 23, color: BLUE_HEADINGS, marginBottom: 14 }}>
-                  Earn Flexible Income as a Testado Tester
+                  Earn flexible income as a Testado tester
                 </h4>
                 <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.7 }}>
                   Anyone 18 or older can join Testado completely free with zero membership fees or inventory requirements. Get matched with products and services tailored to you, share your authentic feedback, and earn direct cash rewards for every completed testing opportunity.
@@ -270,18 +261,17 @@ export default function LandingPage() {
         <section style={{ padding: "100px 40px", background: BG_ALT_BLUE }}>
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 60 }}>
-              <span className="section-label">How Testado Works</span>
-              <div className="divider" />
+              <span className="section-label">How Testado works</span>
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                   fontSize: "clamp(30px, 4vw, 48px)",
-                  fontWeight: 800,
+                  fontWeight: 500,
                   color: BLUE_HEADINGS,
                   marginTop: 8,
                 }}
               >
-                Turning Real Reactions into Definite Market Data
+                From real reactions to clear market data
               </h2>
               <p style={{ color: "#64748b", fontSize: 16, maxWidth: 640, margin: "12px auto 0" }}>
                 We bridge the gap between building an offer and knowing whether people will actually pay for it.
@@ -301,7 +291,7 @@ export default function LandingPage() {
                     style={{
                       fontFamily: "var(--font-inter), 'Inter', sans-serif",
                       fontSize: 12,
-                      fontWeight: 900,
+                      fontWeight: 500,
                       color: BLUE_PRIMARY,
                       background: "#eff6ff",
                       border: "1px solid #dbeafe",
@@ -311,13 +301,13 @@ export default function LandingPage() {
                       marginBottom: 20,
                     }}
                   >
-                    PHASE {s.num}
+                    Phase {s.num}
                   </div>
                   <h3
                     style={{
                       fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                       fontSize: 20,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: BLUE_HEADINGS,
                       marginBottom: 10,
                     }}
@@ -349,25 +339,22 @@ export default function LandingPage() {
                 color: BLUE_ACCENT,
                 border: "1px solid rgba(120, 168, 255, 0.3)",
                 fontSize: 11,
-                fontWeight: 800,
-                letterSpacing: 2,
-                textTransform: "uppercase",
+                fontWeight: 500,
                 marginBottom: 14,
               }}
             >
-              Why Market Insights Matter
+              Why market insights matter
             </span>
-            <div style={{ width: 48, height: 3, background: BLUE_PRIMARY, margin: "12px auto 20px", borderRadius: 2 }} />
             <h2
               style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(28px, 4vw, 48px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#ffffff",
                 marginBottom: 16,
               }}
             >
-              A Launch Must Be a Calculated Decision — <em style={{ fontStyle: "italic", color: BLUE_ACCENT }}>Not an Expensive Bet.</em>
+              A launch should be a calculated decision, <span style={{ color: BLUE_ACCENT }}>not an expensive bet</span>
             </h2>
             <p style={{ color: "#cbd5e1", fontSize: 16, maxWidth: 740, margin: "0 auto 40px", lineHeight: 1.7 }}>
               Testing with real customers isolates friction points, uncovers hidden customer objections, and proves market viability before you commit significant engineering and ad spend.
@@ -386,13 +373,13 @@ export default function LandingPage() {
                   borderRadius: 16,
                   border: "1px solid rgba(120, 168, 255, 0.25)",
                   background: "rgba(255, 255, 255, 0.05)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#ffffff",
                   fontSize: 15,
                   backdropFilter: "blur(10px)",
                 }}
               >
-                Measure Genuine Purchase Intent & Value
+                Measure real purchase intent and value
               </div>
               <div
                 style={{
@@ -400,13 +387,13 @@ export default function LandingPage() {
                   borderRadius: 16,
                   border: "1px solid rgba(120, 168, 255, 0.25)",
                   background: "rgba(255, 255, 255, 0.05)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#ffffff",
                   fontSize: 15,
                   backdropFilter: "blur(10px)",
                 }}
               >
-                Eliminate Friction Before It Burns Capital
+                Find friction before it burns capital
               </div>
               <div
                 style={{
@@ -414,13 +401,13 @@ export default function LandingPage() {
                   borderRadius: 16,
                   border: "1px solid rgba(120, 168, 255, 0.25)",
                   background: "rgba(255, 255, 255, 0.05)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#ffffff",
                   fontSize: 15,
                   backdropFilter: "blur(10px)",
                 }}
               >
-                Make High-Conviction Go / Pivot Decisions
+                Make confident go or pivot decisions
               </div>
             </div>
           </div>
@@ -437,45 +424,30 @@ export default function LandingPage() {
             color: "#ffffff",
           }}
         >
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%,-50%)",
-              width: 520,
-              height: 520,
-              borderRadius: "50%",
-              border: "1px solid rgba(120, 168, 255, 0.15)",
-              pointerEvents: "none",
-            }}
-          />
 
           <div style={{ position: "relative", zIndex: 1, maxWidth: 740, margin: "0 auto" }}>
             <span
               style={{
                 display: "block",
                 fontSize: 11,
-                fontWeight: 800,
-                letterSpacing: 2.5,
-                textTransform: "uppercase",
+                fontWeight: 500,
                 color: BLUE_ACCENT,
                 marginBottom: 16,
               }}
             >
-              Don’t Risk Your Launch on Assumptions
+              Don’t risk your launch on assumptions
             </span>
             <h2
               style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(34px, 5vw, 56px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 lineHeight: 1.15,
                 marginBottom: 18,
               }}
             >
-              Stop Guessing.<br />
-              <span style={{ color: BLUE_ACCENT }}>Start Validating with Real Insights.</span>
+              Stop guessing.<br />
+              <span style={{ color: BLUE_ACCENT }}>Validate with real customers first</span>
             </h2>
             <p style={{ fontSize: 16, color: "#cbd5e1", marginBottom: 36, lineHeight: 1.7 }}>
               Tell Testado what you are building and the market decisions you need to validate.
@@ -483,10 +455,10 @@ export default function LandingPage() {
             </p>
             <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/businesses#business-form" className="btn-primary" style={{ padding: "14px 32px", fontSize: 14 }}>
-                Request Business Market Insights →
+                Request market insights
               </Link>
               <Link href="/testers" className="btn-secondary" style={{ color: "#ffffff", borderColor: "rgba(255,255,255,0.4)", padding: "14px 30px" }}>
-                Join as a Tester (100% Free)
+                Join as a tester, free
               </Link>
             </div>
           </div>

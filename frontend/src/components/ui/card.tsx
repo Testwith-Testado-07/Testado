@@ -18,7 +18,7 @@ function Card({
       className={cn(
         "flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-soft",
         interactive &&
-          "transition-[transform,box-shadow,border-color] duration-300 ease-out-soft will-change-transform hover:-translate-y-1 hover:border-blue-200 hover:shadow-lift motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+          "transition-[border-color,box-shadow] duration-150 ease-out-soft hover:border-[var(--border-dark)] hover:shadow-soft",
         className
       )}
       {...props}
@@ -31,7 +31,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
-  return <h3 data-slot="card-title" className={cn("text-base font-bold leading-snug text-foreground", className)} {...props} />;
+  return <h3 data-slot="card-title" className={cn("text-base font-medium leading-snug text-foreground", className)} {...props} />;
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"p">) {

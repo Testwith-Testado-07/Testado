@@ -63,7 +63,6 @@ export default function WhyTestadoPage() {
           }}
         >
           <span className="section-label">Why Testado • Market Intelligence</span>
-          <div className="divider" />
 
           <h1
             style={{
@@ -145,7 +144,6 @@ export default function WhyTestadoPage() {
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 60 }}>
               <span className="section-label">The Testado Standard</span>
-              <div className="divider" />
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",
@@ -197,7 +195,6 @@ export default function WhyTestadoPage() {
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 54 }}>
               <span className="section-label">Concrete Outcomes</span>
-              <div className="divider" />
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",

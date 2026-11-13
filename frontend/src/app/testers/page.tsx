@@ -107,7 +107,6 @@ export default function TestersPage() {
           >
             100% Free to Join • Zero Fees • Zero Investment
           </div>
-          <div className="divider" />
           <h1
             style={{
               fontFamily: "var(--font-playfair), 'Playfair Display', serif",

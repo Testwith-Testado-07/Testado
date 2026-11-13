@@ -5,11 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold outline-none transition-all duration-200 ease-out-soft focus-visible:ring-4 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium outline-none transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out-soft active:scale-[0.98] focus-visible:ring-4 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-glow hover:bg-[var(--blue-hover)]",
+        default: "bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(7,23,46,0.12)] hover:bg-[var(--blue-hover)]",
         secondary: "bg-secondary text-secondary-foreground hover:bg-[var(--blue-soft)]",
         outline: "border border-border bg-card text-foreground shadow-soft hover:border-[var(--border-dark)] hover:bg-accent",
         ghost: "text-foreground hover:bg-white/60 hover:text-primary",

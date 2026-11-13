@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, CircleDollarSign, Megaphone, Plus, Rocket, Users } from "lucide-react";
+import { ArrowRight, Plus, Rocket } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { MetricCard, MetricCardSkeleton, MetricGrid } from "@/components/dashboard/MetricCard";
 import { EmptyState } from "@/components/dashboard/EmptyState";
@@ -21,7 +21,6 @@ interface OwnerDashboardCampaign {
 }
 
 export default function OwnerDashboard() {
-  const [firstName, setFirstName] = useState("there");
   const [campaigns, setCampaigns] = useState<OwnerDashboardCampaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -34,9 +33,6 @@ export default function OwnerDashboard() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
       if (!user) throw new Error("Sign in to view your owner dashboard.");
-
-      const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "there";
-      if (!cancelled) setFirstName(fullName.split(" ")[0]);
 
       const { data: campaignRows, error: campaignError } = await supabase
         .from("campaigns")
@@ -87,14 +83,12 @@ export default function OwnerDashboard() {
     };
   }, []);
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const pendingCount = campaigns.reduce((total, campaign) => total + campaign.pending_count, 0);
 
   return (
     <>
       <PageHeader
-        title={`${greeting}, ${firstName}`}
+        title="Overview"
         description="Here's what's happening with your campaigns today."
         actions={
           <Button asChild>
@@ -119,21 +113,16 @@ export default function OwnerDashboard() {
             label="Active campaigns"
             value={campaigns.filter((campaign) => campaign.status === "active").length}
             hint={`${campaigns.length} total ${campaigns.length === 1 ? "campaign" : "campaigns"}`}
-            icon={Megaphone}
           />
           <MetricCard
             label="Tester applications"
             value={campaigns.reduce((total, campaign) => total + campaign.application_count, 0)}
             hint={pendingCount > 0 ? `${pendingCount} awaiting your review` : "Nothing waiting on review"}
-            icon={Users}
-            tone={pendingCount > 0 ? "amber" : "emerald"}
           />
           <MetricCard
             label="Potential reward budget"
             value={`$${campaigns.reduce((total, campaign) => total + Number(campaign.reward_amount) * campaign.max_testers, 0).toFixed(2)}`}
             hint="Based on campaign tester limits"
-            icon={CircleDollarSign}
-            tone="violet"
           />
         </MetricGrid>
       )}
@@ -154,7 +143,7 @@ export default function OwnerDashboard() {
       {campaigns.length > 0 && (
         <Card className="overflow-hidden">
           <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
-            <h2 className="text-[17px] font-bold">Your campaigns</h2>
+            <h2 className="text-[17px] font-medium">Your campaigns</h2>
             <Link
               href="/dashboard/owner/campaigns"
               className="inline-flex items-center gap-1 text-sm font-semibold text-primary underline-offset-4 hover:underline"
@@ -169,7 +158,7 @@ export default function OwnerDashboard() {
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   {["Campaign", "Status", "Applicants", "Pending", "Reward", "Potential budget"].map((h) => (
-                    <th key={h} scope="col" className="px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <th key={h} scope="col" className="px-6 py-3 text-xs font-medium text-muted-foreground">
                       {h}
                     </th>
                   ))}

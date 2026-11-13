@@ -26,13 +26,13 @@ export const DASHBOARD_NAV: Record<DashboardRole, NavItem[]> = {
   ],
   tester: [
     { href: "/dashboard/tester", label: "Discover", icon: Compass },
-    { href: "/dashboard/tester/submissions", label: "My Applications", icon: ClipboardList },
+    { href: "/dashboard/tester/submissions", label: "My applications", icon: ClipboardList },
     { href: "/dashboard/tester/wallet", label: "Wallet", icon: Wallet },
   ],
 };
 
 export const ROLE_LABEL: Record<DashboardRole, string> = {
-  owner: "Product Owner",
+  owner: "Product owner",
   tester: "Tester",
 };
 

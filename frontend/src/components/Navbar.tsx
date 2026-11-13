@@ -17,10 +17,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: "What We Do", href: "/#what-we-do" },
+    { label: "What we do", href: "/#what-we-do" },
     { label: "Why Testado", href: "/why-testado" },
-    { label: "For Businesses", href: "/businesses" },
-    { label: "For Testers", href: "/testers" },
+    { label: "For businesses", href: "/businesses" },
+    { label: "For testers", href: "/testers" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];
@@ -66,30 +66,16 @@ export default function Navbar() {
         <div style={{ gap: 20, alignItems: "center" }} className="hidden lg:flex items-center">
           {navLinks.map((l) => {
             const isActive = pathname === l.href;
-            const isTester = l.href === "/testers";
-            const isBusiness = l.href === "/businesses";
             return (
               <Link
                 key={l.href}
                 href={l.href}
                 className="nav-link"
                 style={{
-                  color: isActive ? "#2563eb" : isBusiness ? "#07172e" : isTester ? "#1d4ed8" : "#334155",
-                  fontWeight: isActive ? 800 : isBusiness || isTester ? 700 : 600,
-                  fontSize: 13,
+                  color: isActive ? "#2563eb" : "#334155",
+                  fontWeight: 500,
+                  fontSize: 14,
                   padding: "6px 10px",
-                  borderRadius: 8,
-                  background: isTester
-                    ? "rgba(37, 99, 235, 0.06)"
-                    : isBusiness
-                    ? "rgba(7, 23, 46, 0.04)"
-                    : "transparent",
-                  border: isTester
-                    ? "1px solid rgba(37, 99, 235, 0.15)"
-                    : isBusiness
-                    ? "1px solid rgba(7, 23, 46, 0.1)"
-                    : "1px solid transparent",
-                  transition: "all 0.2s ease",
                 }}
               >
                 {l.label}
@@ -104,7 +90,7 @@ export default function Navbar() {
             href="/auth"
             style={{
               fontSize: 13,
-              fontWeight: 700,
+              fontWeight: 500,
               letterSpacing: 0.5,
               color: "#0a1728",
               textDecoration: "none",
@@ -114,10 +100,10 @@ export default function Navbar() {
             onMouseEnter={(e) => { e.currentTarget.style.color = "#2563eb"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "#0a1728"; }}
           >
-            Sign In
+            Sign in
           </Link>
           <Link href="/businesses#business-form" className="btn-primary" style={{ padding: "10px 20px", fontSize: 13 }}>
-            Get Market Insights
+            Get market insights
           </Link>
         </div>
 
@@ -161,7 +147,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               style={{
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: pathname === l.href ? "#2563eb" : "#081426",
                 textDecoration: "none",
                 padding: "8px 0",
@@ -185,13 +171,13 @@ export default function Navbar() {
               style={{
                 textAlign: "center",
                 fontSize: 13,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#2563eb",
                 padding: "8px 0",
                 textDecoration: "none",
               }}
             >
-              Sign In to Portal
+              Sign in
             </Link>
           </div>
         </div>

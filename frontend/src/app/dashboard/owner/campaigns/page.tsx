@@ -155,7 +155,7 @@ export default function CampaignsPage() {
               aria-pressed={isActive}
               className={cn(
                 "rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all duration-200",
-                isActive ? "bg-primary text-white shadow-glow" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                isActive ? "bg-primary text-white" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {f}
@@ -187,11 +187,11 @@ export default function CampaignsPage() {
           const reward = Number(campaign.reward_amount);
 
           return (
-            <Card key={campaign.id} className="p-6 transition-[border-color,box-shadow] duration-300 hover:border-blue-200 hover:shadow-lift">
+            <Card key={campaign.id} className="p-6 transition-[border-color,box-shadow] duration-150 hover:border-[var(--border-dark)]">
               <div className="flex flex-wrap items-center gap-6">
                 <div className="min-w-[180px] flex-1">
                   <div className="mb-1.5 flex flex-wrap items-center gap-2.5">
-                    <h2 className="text-base font-bold">{campaign.title}</h2>
+                    <h2 className="text-base font-medium">{campaign.title}</h2>
                     <span className={`badge badge-${campaign.status}`}>{campaign.status}</span>
                     {pendingCount > 0 && <span className="badge badge-pending">{pendingCount} to review</span>}
                   </div>
@@ -203,7 +203,7 @@ export default function CampaignsPage() {
                 <div className="w-44 shrink-0">
                   <div className="mb-1.5 flex justify-between text-xs">
                     <span className="text-muted-foreground">Testers</span>
-                    <span className="font-bold tabular-nums">{applicantCount}/{campaign.max_testers}</span>
+                    <span className="font-medium tabular-nums">{applicantCount}/{campaign.max_testers}</span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-border">
                     <div
@@ -214,13 +214,13 @@ export default function CampaignsPage() {
                 </div>
 
                 <div className="min-w-24 shrink-0 text-right">
-                  <div className="text-base font-bold text-emerald-600 tabular-nums">${reward.toFixed(2)}/ea</div>
+                  <div className="text-base font-medium text-emerald-600 tabular-nums">${reward.toFixed(2)}/ea</div>
                   <div className="text-xs text-muted-foreground tabular-nums">Up to ${(reward * campaign.max_testers).toFixed(2)}</div>
                 </div>
               </div>
 
               <div className="mt-5 border-t border-border pt-4">
-                <h3 className="mb-3 text-sm font-bold">Tester applications</h3>
+                <h3 className="mb-3 text-sm font-medium">Tester applications</h3>
                 {loadError ? (
                   <p role="alert" className="text-[13px] text-red-600">Applications could not be loaded. Refresh the page to try again.</p>
                 ) : campaignApplications.length === 0 ? (
@@ -232,7 +232,7 @@ export default function CampaignsPage() {
                       return (
                         <li key={application.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
                           <div className="flex items-center gap-3">
-                            <span className="grid size-8 place-items-center rounded-full bg-blue-50 text-xs font-bold text-primary">
+                            <span className="grid size-8 place-items-center rounded-full bg-blue-50 text-xs font-medium text-primary">
                               {application.tester_name.charAt(0).toUpperCase()}
                             </span>
                             <div>

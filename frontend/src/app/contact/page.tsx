@@ -24,7 +24,6 @@ export default function ContactPage() {
         {/* ── HERO ─────────────────────────────────────── */}
         <section style={{ padding: "160px 40px 80px", maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
           <span className="section-label">Contact Testado</span>
-          <div className="divider" />
           <h1
             style={{
               fontFamily: "var(--font-playfair), 'Playfair Display', serif",
@@ -148,7 +147,6 @@ export default function ContactPage() {
         <section style={{ padding: "90px 40px", background: BG_ALT_BLUE }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center" }}>
             <span className="section-label">Choose Your Route</span>
-            <div className="divider" />
             <h2
               style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",

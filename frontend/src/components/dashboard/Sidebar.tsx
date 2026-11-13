@@ -52,7 +52,7 @@ export function Sidebar({ id, role, collapsed, mobileOpen, onToggleCollapsed, on
             />
             <span
               aria-hidden="true"
-              className={cn("hidden size-10 place-items-center rounded-xl bg-primary font-serif text-lg font-extrabold shadow-glow", collapsed && "lg:grid")}
+              className={cn("hidden size-10 place-items-center rounded-xl bg-primary font-serif text-lg font-medium", collapsed && "lg:grid")}
             >
               T
             </span>
@@ -69,7 +69,7 @@ export function Sidebar({ id, role, collapsed, mobileOpen, onToggleCollapsed, on
 
         <p
           className={cn(
-            "mx-3 mb-6 inline-flex w-fit items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-300",
+            "mx-3 mb-6 text-xs text-white/50",
             collapsed && "lg:sr-only"
           )}
         >

@@ -37,33 +37,13 @@
     0 10px 28px -8px rgb(7 23 46 / 0.08);
   --shadow-lift:
     0 2px 4px rgb(7 23 46 / 0.04),
-    0 12px 24px -10px rgb(37 99 235 / 0.18),
-    0 28px 56px -16px rgb(37 99 235 / 0.2);
-  --shadow-glow:
-    0 1px 2px rgb(29 78 216 / 0.3),
-    0 10px 28px -6px rgb(37 99 235 / 0.55);
+    0 8px 24px rgb(7 23 46 / 0.08);
+  --shadow-glow: 0 1px 2px rgb(7 23 46 / 0.12);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-mesh-a: mesh-a 22s ease-in-out infinite;
-  --animate-mesh-b: mesh-b 28s ease-in-out infinite;
-  --animate-mesh-c: mesh-c 34s ease-in-out infinite;
   --animate-shimmer: shimmer 1.8s ease-in-out infinite;
 
-  @keyframes mesh-a {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50% { transform: translate3d(8%, 6%, 0) scale(1.12); }
-  }
-
-  @keyframes mesh-b {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-    50% { transform: translate3d(-10%, 8%, 0) scale(0.92); }
-  }
-
-  @keyframes mesh-c {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(0.95); }
-    50% { transform: translate3d(6%, -10%, 0) scale(1.1); }
-  }
 
   @keyframes shimmer {
     0% { transform: translateX(-100%); }
@@ -169,27 +149,24 @@ body {
   border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.5px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 1px 2px rgba(7, 23, 46, 0.12);
 }
 
 .btn-primary:hover {
   background: var(--blue-hover);
   border-color: var(--blue-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .btn-primary:focus-visible,
@@ -227,11 +204,10 @@ body {
   border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.5px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -241,8 +217,6 @@ body {
 .btn-secondary:hover {
   background: var(--blue-primary);
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.2);
 }
 
 .btn-teal,
@@ -253,11 +227,10 @@ body {
   border-radius: 999px;
   padding: 12px 28px;
   font-family: var(--font-inter), 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.5px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -268,7 +241,6 @@ body {
 .btn-mint:hover {
   background: var(--blue-soft);
   border-color: var(--blue-mid);
-  transform: translateY(-2px);
 }
 
 /* ─── Cards ─────────────────────────────────────────── */
@@ -277,14 +249,12 @@ body {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 28px;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 20px rgba(7, 23, 46, 0.04);
+  transition: border-color 0.15s ease;
+  box-shadow: 0 1px 2px rgba(7, 23, 46, 0.04);
 }
 
 .card:hover {
-  border-color: rgba(37, 99, 235, 0.4);
-  box-shadow: 0 14px 38px rgba(37, 99, 235, 0.1);
-  transform: translateY(-3px);
+  border-color: var(--border-dark);
 }
 
 /* Soft blurred background glow (onboarding) */
@@ -352,12 +322,10 @@ select.input {
 
 .label {
   display: block;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-body);
   margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
 }
 
 /* ─── Badges ────────────────────────────────────────── */
@@ -365,11 +333,14 @@ select.input {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 14px;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Status values arrive lowercase ("active", "pending"); show them in sentence case */
+.badge::first-letter {
   text-transform: uppercase;
 }
 
@@ -413,17 +384,11 @@ select.input {
 /* ─── Section typography helpers ────────────────────── */
 .section-label {
   font-family: var(--font-inter), 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--blue-primary);
   margin-bottom: 12px;
   display: inline-block;
-  background: #eef4ff;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(37, 99, 235, 0.15);
 }
 
 .tester-features {
@@ -847,15 +812,6 @@ select.input {
 
 .marquee-track {
   animation: marquee 24s linear infinite;
-}
-
-/* ─── Divider ───────────────────────────────────────── */
-.divider {
-  width: 48px;
-  height: 3px;
-  background: var(--blue-primary);
-  margin: 16px auto;
-  border-radius: 2px;
 }
 
 /* ─── Auth ──────────────────────────────────────────── */

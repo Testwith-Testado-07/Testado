@@ -191,7 +191,6 @@ export default function BusinessesPage() {
           <div style={{ maxWidth: 1140, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 54 }}>
               <span className="section-label">Actionable Market Intelligence</span>
-              <div className="divider" />
               <h2
                 style={{
                   fontFamily: "var(--font-playfair), 'Playfair Display', serif",

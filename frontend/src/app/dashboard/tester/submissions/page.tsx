@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CircleCheck, CircleX, ClipboardList, Hourglass } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { cn } from "@/lib/utils";
 import { CampaignRowSkeleton } from "@/components/Skeleton";
@@ -82,9 +82,9 @@ export default function TesterApplications() {
         </MetricGrid>
       ) : !errorMessage && (
         <MetricGrid>
-          <MetricCard label="Awaiting review" value={pendingCount} hint="The product owner hasn't decided yet" icon={Hourglass} tone="amber" />
-          <MetricCard label="Accepted" value={acceptedCount} hint="Tests you can start now" icon={CircleCheck} tone="emerald" />
-          <MetricCard label="Not accepted" value={rejectedCount} hint="Keep applying, new tests go live often" icon={CircleX} tone="violet" />
+          <MetricCard label="Awaiting review" value={pendingCount} hint="The product owner hasn't decided yet" />
+          <MetricCard label="Accepted" value={acceptedCount} hint="Tests you can start now" />
+          <MetricCard label="Not accepted" value={rejectedCount} hint="Keep applying, new tests go live often" />
         </MetricGrid>
       )}
 
@@ -109,7 +109,7 @@ export default function TesterApplications() {
             <li key={application.id}>
               <Card className={cn("flex-row flex-wrap items-center justify-between gap-4 border-l-[3px] p-5", STATUS_BORDER[application.status])}>
                 <div className="min-w-0">
-                  <h2 className="mb-1 text-[15px] font-bold">
+                  <h2 className="mb-1 text-[15px] font-medium">
                     {application.campaign?.title || "Product test no longer available"}
                   </h2>
                   <p className="text-xs text-muted-foreground">

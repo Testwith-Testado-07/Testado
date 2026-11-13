@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, CircleCheck, ClipboardList, Compass, Users } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Compass, Users } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { MetricCard, MetricCardSkeleton, MetricGrid } from "@/components/dashboard/MetricCard";
 import { ProjectCardSkeleton } from "@/components/Skeleton";
@@ -30,7 +30,6 @@ interface CampaignApplication {
 }
 
 export default function TesterDiscover() {
-  const [firstName, setFirstName] = useState("");
   const [testerId, setTesterId] = useState("");
   const [campaigns, setCampaigns] = useState<ProductCampaign[]>([]);
   const [applications, setApplications] = useState<CampaignApplication[]>([]);
@@ -51,8 +50,6 @@ export default function TesterDiscover() {
 
       if (!cancelled) {
         setTesterId(user.id);
-        const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "";
-        setFirstName(fullName.split(" ")[0]);
       }
 
       const { data: profile, error: profileError } = await supabase
@@ -130,7 +127,7 @@ export default function TesterDiscover() {
   return (
     <>
       <PageHeader
-        title={`Discover product tests${firstName ? `, ${firstName}` : ""}`}
+        title="Discover product tests"
         description={loading
           ? "Loading available product tests…"
           : errorMessage
@@ -163,20 +160,16 @@ export default function TesterDiscover() {
         </MetricGrid>
       ) : !errorMessage && (
         <MetricGrid>
-          <MetricCard label="Available now" value={campaigns.length} hint="Active tests matching your profile" icon={Compass} />
+          <MetricCard label="Available now" value={campaigns.length} hint="Active tests matching your profile" />
           <MetricCard
             label="Applications sent"
             value={applications.length}
             hint={`${applications.filter((item) => item.status === "pending").length} awaiting a decision`}
-            icon={ClipboardList}
-            tone="amber"
           />
           <MetricCard
             label="Accepted"
             value={applications.filter((item) => item.status === "accepted").length}
             hint="Tests you can start now"
-            icon={CircleCheck}
-            tone="emerald"
           />
         </MetricGrid>
       )}
@@ -198,12 +191,12 @@ export default function TesterDiscover() {
             <Card key={c.id} interactive className="group overflow-hidden">
               <CardHeader className="flex-row items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Product test</p>
+                  <p className="mb-1 text-xs text-muted-foreground">Product test</p>
                   <CardTitle className="transition-colors duration-200 group-hover:text-primary">{c.title}</CardTitle>
                 </div>
                 <div className="shrink-0 rounded-xl border-[1.5px] border-blue-200 bg-blue-50 px-3.5 py-2 text-center transition-colors duration-300 group-hover:border-blue-300 group-hover:bg-blue-100/70">
-                  <div className="text-xl font-extrabold text-primary tabular-nums">${Number(c.reward_amount).toFixed(2)}</div>
-                  <div className="text-[10px] font-bold text-[var(--blue-hover)]">REWARD</div>
+                  <div className="text-xl font-medium text-primary tabular-nums">${Number(c.reward_amount).toFixed(2)}</div>
+                  <div className="text-xs text-[var(--blue-hover)]">Reward</div>
                 </div>
               </CardHeader>
 

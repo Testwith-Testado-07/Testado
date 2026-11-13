@@ -40,7 +40,7 @@ function AuthContent() {
 
         // Fetch the user's role: first check user_metadata, then check profiles table
         const user = signInData.user;
-        let userRole: "owner" | "tester" = (user?.user_metadata?.role as "owner" | "tester") || "owner";
+        let userRole: "owner" | "tester" = (user?.user_metadata?.role as "owner" | "tester") || "tester";
 
         if (user?.id) {
           try {
