@@ -22,11 +22,6 @@ export const metadata: Metadata = {
   title: "Testado — Real People. Real Insights. Real Problems.",
   description:
     "Testado helps businesses understand whether products, services, concepts and ideas are likely to work with their target customers before launch.",
-  icons: {
-    icon: "/assets/testado-logo-transparent.png",
-    shortcut: "/assets/testado-logo-transparent.png",
-    apple: "/assets/testado-logo-transparent.png",
-  },
 };
 
 export default function RootLayout({
