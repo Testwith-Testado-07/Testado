@@ -19,24 +19,6 @@ interface Report {
   verdict_note: string | null;
 }
 
-/** Shown until a real result is published in the `published_reports` table. */
-const SAMPLE_REPORT: Report = {
-  title: "Weekly meal-kit subscription",
-  audience: "Pune · ages 25–34",
-  tester_count: 40,
-  headline_label: "Would buy at ₹499 a week",
-  headline_percent: 64,
-  breakdown: [
-    { label: "₹399", percent: 78 },
-    { label: "₹499", percent: 64, highlight: true },
-    { label: "₹599", percent: 31 },
-  ],
-  quote: "I’d try it, but ₹499 every week is more than I spend on groceries right now.",
-  quote_author: "Tester, 29, Pune",
-  verdict: "go",
-  verdict_note: "with a lower first-month price, retest at ₹449",
-};
-
 const VERDICTS: Record<Verdict, { label: string; dot: string }> = {
   go: { label: "Go", dot: "bg-emerald-600" },
   pivot: { label: "Pivot", dot: "bg-amber-500" },
@@ -68,7 +50,7 @@ async function getPublishedReport(): Promise<Report | null> {
   return { ...(data as Report), breakdown };
 }
 
-function TestReport({ report, isSample }: { report: Report; isSample: boolean }) {
+function TestReport({ report }: { report: Report }) {
   const verdict = VERDICTS[report.verdict] ?? VERDICTS.go;
   return (
     <figure className="rounded-2xl border border-border bg-card shadow-[0_8px_24px_rgba(7,23,46,0.06)]">
@@ -79,7 +61,7 @@ function TestReport({ report, isSample }: { report: Report; isSample: boolean })
             {report.audience} · {report.tester_count} testers
           </p>
         </div>
-        <span className="shrink-0 text-xs text-muted-foreground">{isSample ? "Sample report" : "Real test result"}</span>
+        <span className="shrink-0 text-xs text-muted-foreground">Real test result</span>
       </div>
 
       <div className="px-6 py-5">
@@ -125,7 +107,13 @@ export default async function Hero() {
 
   return (
     <section aria-labelledby="hero-heading" className="px-4 pt-32 pb-20 sm:px-10 lg:pt-40 lg:pb-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+      <div
+        className={
+          published
+            ? "mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16"
+            : "mx-auto max-w-3xl text-center"
+        }
+      >
         <div>
           <h1
             id="hero-heading"
@@ -136,12 +124,12 @@ export default async function Hero() {
             <span className="text-primary">Know the market first</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-[clamp(16px,1.6vw,19px)] leading-relaxed text-[var(--text-body)]">
+          <p className="mt-6 max-w-xl text-[clamp(16px,1.6vw,19px)] [.text-center_&]:mx-auto leading-relaxed text-[var(--text-body)]">
             Put your idea, prototype or product in front of the customers you actually want, and see whether they
             would buy before you spend. Testers join free and get paid for honest feedback.
           </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row [.text-center_&]:sm:justify-center">
             <Button asChild size="lg">
               <Link href="/businesses">Validate your idea</Link>
             </Button>
@@ -154,7 +142,7 @@ export default async function Hero() {
           </div>
         </div>
 
-        <TestReport report={published ?? SAMPLE_REPORT} isSample={!published} />
+        {published && <TestReport report={published} />}
       </div>
     </section>
   );

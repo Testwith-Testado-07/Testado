@@ -119,7 +119,7 @@ export default function TestersPage() {
               letterSpacing: "-0.5px",
             }}
           >
-            Earn Real Cash by Becoming a Tester —{" "}
+            Earn Real Rewards by Becoming a Tester —{" "}
             <span style={{ color: BLUE_PRIMARY }}>Completely FREE.</span>
           </h1>
           <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#475569", maxWidth: 840, margin: "0 auto 36px", lineHeight: 1.75 }}>

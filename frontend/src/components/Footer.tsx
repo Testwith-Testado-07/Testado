@@ -75,6 +75,9 @@ export default function Footer() {
               <Link href="/contact" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
                 Contact
               </Link>
+              <Link href="/privacy" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
+                Privacy policy
+              </Link>
             </div>
           </div>
 
