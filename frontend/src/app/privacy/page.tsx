@@ -13,9 +13,9 @@ export const metadata: Metadata = {
  * a line stays hidden while its value is empty so no placeholder text is published.
  */
 const OPERATOR = {
-  legalName: "",
+  legalName: "Aarav Shah (Testado)",
   address: "",
-  privacyEmail: "",
+  privacyEmail: "testwithtestado@gmail.com",
   phone: "+91 9325694956",
 };
 
