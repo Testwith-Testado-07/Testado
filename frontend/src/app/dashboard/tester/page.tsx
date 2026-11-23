@@ -11,6 +11,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { isHttpUrl } from "@/lib/utils";
 
 interface ProductCampaign {
   id: string;
@@ -208,7 +209,7 @@ export default function TesterDiscover() {
                   {c.target_countries.length > 0 && ` · Preferred countries: ${c.target_countries.join(", ")}`}
                   {c.target_ages.length > 0 && ` · Ages ${c.target_ages.join(", ")}`}
                 </p>
-                {c.product_url && (
+                {isHttpUrl(c.product_url) && (
                   <a
                     href={c.product_url}
                     target="_blank"
