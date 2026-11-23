@@ -1,4 +1,7 @@
 -- 08: Security hardening (role lock, profile privacy, input limits, stale permissive policies)
+-- NOTE: Only for databases built from migrations 01-07. The live database was built from
+-- frontend/supabase-all-tables.sql instead; run 09_bring_legacy_database_up_to_date.sql there,
+-- which includes everything in this file plus the pieces of 01, 05 and 06 that are missing.
 -- Safe to run more than once. Run in the Supabase SQL editor after 01-07.
 
 -- ── 1. Users must not change their own role ───────────────────────────────
