@@ -6,6 +6,7 @@ import { useToast } from "@/components/Toast";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Alert } from "@/components/ui/alert";
 import { Input, NativeSelect, Textarea } from "@/components/ui/input";
+import { isHttpUrl } from "@/lib/utils";
 
 const QUESTION_TYPES = [
   { value: "text", label: "Long Text" },
@@ -70,11 +71,15 @@ export default function NewCampaignPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
       if (!user) throw new Error("Sign in to publish a campaign.");
-      if (!Number.isFinite(Number(rewardPerTester)) || Number(rewardPerTester) <= 0) {
-        throw new Error("Enter a reward greater than zero.");
+      if (!isHttpUrl(productUrl)) {
+        throw new Error("Enter a product link that starts with http:// or https://.");
       }
-      if (!Number.isInteger(Number(maxTesters)) || Number(maxTesters) <= 0) {
-        throw new Error("Enter a whole number of testers greater than zero.");
+      // Same limits as the database constraints in migration 08
+      if (!Number.isFinite(Number(rewardPerTester)) || Number(rewardPerTester) <= 0 || Number(rewardPerTester) > 1000000) {
+        throw new Error("Enter a reward between 0 and 1,000,000.");
+      }
+      if (!Number.isInteger(Number(maxTesters)) || Number(maxTesters) <= 0 || Number(maxTesters) > 10000) {
+        throw new Error("Enter a whole number of testers between 1 and 10,000.");
       }
       if (questions.length === 0 || questions.some((question) => !question.text.trim())) {
         throw new Error("Add text to every survey question before publishing.");

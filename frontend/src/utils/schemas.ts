@@ -19,6 +19,7 @@ export const UpdateProfileSchema = z.object({
   website: z
     .string()
     .url("Please enter a valid URL (e.g. https://example.com).")
+    .refine((v) => /^https?:\/\//i.test(v), "The URL must start with http:// or https://.")
     .optional()
     .nullable()
     .or(z.literal("")),

@@ -82,16 +82,8 @@ function AuthContent() {
         if (error) throw error;
         if (!data.user) throw new Error("User creation failed");
 
-        // Attempt to create the profile record in profiles table
-        try {
-          await supabase.from("profiles").upsert({
-            id: data.user.id,
-            full_name: name,
-            role: role,
-          });
-        } catch (profileError: unknown) {
-          console.warn("Profile upsert notice:", profileError);
-        }
+        // The profile row (with role) is created by the on_auth_user_created database trigger.
+        // The browser never writes the role column.
 
         // Send welcome email via EmailJS (gracefully ignored if template/key not yet configured)
         try {
