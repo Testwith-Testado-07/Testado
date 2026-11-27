@@ -100,17 +100,32 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const { error } = await new Resend(apiKey).emails.send({
-      from: sender,
-      to: recipients,
-      replyTo: email,
-      subject: "New Testado tester application",
-      text: message,
-    });
+    const resend = new Resend(apiKey);
+    const send = (to: string[]) =>
+      resend.emails.send({
+        from: sender,
+        to,
+        replyTo: email,
+        subject: "New Testado tester application",
+        text: message,
+      });
+
+    const { error } = await send(recipients);
 
     if (error) {
-      console.error("Tester application email delivery failed:", error.message);
-      return Response.json({ error: "We couldn't deliver your application. Please try again later." }, { status: 502 });
+      // Resend's test sender rejects the whole send if any recipient isn't the account owner,
+      // so retry one by one and count it delivered if any inbox got it.
+      let anyDelivered = false;
+      for (const recipient of recipients) {
+        const single = await send([recipient]).catch(() => null);
+        if (single && !single.error) anyDelivered = true;
+        else console.warn("Tester application not delivered to one recipient:", single?.error?.message);
+      }
+
+      if (!anyDelivered) {
+        console.error("Tester application email delivery failed:", error.message);
+        return Response.json({ error: "We couldn't deliver your application. Please try again later." }, { status: 502 });
+      }
     }
   } catch (error: unknown) {
     console.error(
