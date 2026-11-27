@@ -33,8 +33,9 @@ export async function guardPublicForm(
     return Response.json({ ok: true });
   }
 
+  // Server-only key: the rate-limit function is not callable with the public key.
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) {
     console.warn("Form rate limiting skipped: Supabase is not configured.");
     return null;
