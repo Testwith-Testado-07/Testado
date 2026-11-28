@@ -1,3 +1,4 @@
+import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 
 import { guardPublicForm } from "@/lib/spam-guard";
@@ -31,6 +32,24 @@ function readRecipients(value: string | undefined): string[] {
     .split(",")
     .map((recipient) => recipient.trim())
     .filter((recipient) => recipient.length > 0);
+}
+
+/** Stores the application with the server-only key. Returns false if it couldn't be saved. */
+async function saveApplication(row: Record<string, string>): Promise<boolean> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !key) {
+    console.warn("Tester application not saved: Supabase is not configured.");
+    return false;
+  }
+
+  const supabase = createClient(url, key, { auth: { persistSession: false } });
+  const { error } = await supabase.from("tester_applications").insert(row);
+  if (error) {
+    console.error("Tester application not saved:", error.message);
+    return false;
+  }
+  return true;
 }
 
 export async function POST(request: Request) {
@@ -78,11 +97,24 @@ export async function POST(request: Request) {
     return Response.json({ error: "Please check your email, age range, and testing frequency." }, { status: 400 });
   }
 
+  // Save first so the application isn't lost if email delivery fails.
+  const saved = await saveApplication({
+    name,
+    phone,
+    email,
+    city,
+    age_range: age,
+    frequency,
+    interests,
+    why,
+  });
+
   const apiKey = process.env.RESEND_API_KEY;
   const recipients = readRecipients(process.env.BUSINESS_REQUEST_TO_EMAIL);
   const sender = process.env.BUSINESS_REQUEST_FROM_EMAIL?.replace(/^["']|["']$/g, "").trim();
 
   if (!apiKey || recipients.length === 0 || !sender) {
+    if (saved) return Response.json({ ok: true });
     return Response.json({ error: "Email delivery is not configured." }, { status: 503 });
   }
 
@@ -124,6 +156,7 @@ export async function POST(request: Request) {
 
       if (!anyDelivered) {
         console.error("Tester application email delivery failed:", error.message);
+        if (saved) return Response.json({ ok: true });
         return Response.json({ error: "We couldn't deliver your application. Please try again later." }, { status: 502 });
       }
     }
@@ -132,6 +165,7 @@ export async function POST(request: Request) {
       "Tester application email delivery failed:",
       error instanceof Error ? error.message : error
     );
+    if (saved) return Response.json({ ok: true });
     return Response.json({ error: "We couldn't deliver your application. Please try again later." }, { status: 502 });
   }
 
